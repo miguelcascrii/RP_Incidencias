@@ -1,0 +1,24 @@
+<ion-content [fullscreen]="true">
+  <ion-card class="ion-text-center" [hidden]="bModoCentroV">
+    <ion-card-header>
+      <ion-card-title>Bienvenido</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-label>Antes de comenzar debes de unirte a un centro</ion-label>
+      <ion-item>
+        <ion-input type="text" placeholder="Buscar" (input)="onInputChange($event)"></ion-input>
+
+      </ion-item>
+      <ion-card class="ion-text-start" [hidden]="ResultBusqueda">
+        <ion-label class="m-2">Resultado: </ion-label>
+        <ion-list>
+          
+          <ion-item *ngFor="let centro of ListaCentrosMostrar">
+            <ion-label (click)="CentroSelect(centro.codCentro,centro.nombre)">{{ centro.nombre }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+    </ion-card-content>
+    
+  </ion-card>
+</ion-content>

@@ -1,0 +1,35 @@
+<ion-app>
+  <ion-menu side="start" contentId="main-content" [hidden]="!SesionState">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{usuario?.email}}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-list>
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+            <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+          <ion-menu-toggle auto-hide="false">
+              <ion-item class="mt-3" (click)="CerrarSesion()"><ion-button>Cerrar Sesión</ion-button></ion-item>
+            
+          </ion-menu-toggle>
+      </ion-list>
+      
+    </ion-content>
+  </ion-menu>
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>GESTIÓN DE INCIDENCIAS</ion-title>
+        <ion-buttons slot="start" [hidden]="!SesionState">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding"> <ion-router-outlet id="main-content"></ion-router-outlet></ion-content>
+  </div>
+</ion-app>
