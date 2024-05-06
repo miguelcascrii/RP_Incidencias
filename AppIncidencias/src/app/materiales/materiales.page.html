@@ -1,0 +1,111 @@
+<ion-content [fullscreen]="true">
+
+
+  <ion-card style="margin: auto;" class="mt-3 w-75 " [hidden]="VisualFormNuevoMaterial">
+    <ion-card-header>
+      <ion-title>
+        Listado de Materiales
+      </ion-title>
+    </ion-card-header>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">CATEGORIA</th>
+        <th scope="col">MARCA</th>
+        <th scope="col">MODELO</th>
+        <th scope="col">STOCK</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr  *ngFor="let item of ListaMateriales">
+        <th scope="row"> {{item.familia}}</th>
+        <td> {{item.marca}}</td>
+        <td>{{item.modelo}}</td>
+        <td>{{item.stock}}</td>
+      </tr>
+     
+    </tbody>
+  </table>
+  <ion-button class="m-2" (click)="FormNuevoMat()" [hidden]="!btnTamPantalla"><ion-icon name="add-circle-outline"></ion-icon>Nuevo Material</ion-button>
+  
+</ion-card>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <ion-card [hidden]="!VisualFormNuevoMaterial">
+    <ion-card-header>
+      <ion-card-title>
+        Nuevo Material
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form (submit)="NuevoMaterial(newCategoria, newMarca, newModelo, newStock)">
+        <div class="mt-2 form-group">
+          <label>Categoría</label>
+          <ion-select class="form-control" id="newCategoria" placeholder="Seleccione una categoría" #newCategoria>
+            <ion-select-option value="Raton">Ratón</ion-select-option>
+            <ion-select-option value="disco">Disco</ion-select-option>
+            <ion-select-option value="teclado">Teclado</ion-select-option>
+            <ion-select-option value="monitor">Monitor</ion-select-option>
+            <ion-select-option value="placa_base">Placa Base</ion-select-option>
+            <ion-select-option value="microprocesador">Microprocesador</ion-select-option>
+            <ion-select-option value="altavoz">Altavoz</ion-select-option>
+            <ion-select-option value="tarjeta">Tarjeta</ion-select-option>
+            <ion-select-option value="otro">Otro</ion-select-option>
+          </ion-select>
+        </div>
+        <div class="mt-2 form-group">
+          <label>Marca</label>
+          <input type="text" class="form-control" id="newMarca" aria-describedby="marca" placeholder="Introduzca la marca" #newMarca>
+        </div>
+        <div class="mt-2 form-group">
+          <label>Modelo</label>
+          <input type="text" class="form-control" id="newModelo" aria-describedby="modelo" placeholder="Introduzca el modelo" #newModelo>
+        </div>
+        <div class="mt-2 form-group">
+          <label>Stock</label>
+          <input type="number" class="form-control" id="newStock" aria-describedby="stock" placeholder="Introduzca el stock" #newStock>
+        </div>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="auto">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </ion-col>
+            <ion-col class="ion-text-end">
+              <button type="button" class="btn btn-danger" (click)="FormNuevoMat()" [hidden]="VisualFormNuevoMaterial">Cancelar</button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+      
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="btnTamPantalla" [hidden]="VisualFormNuevoMaterial">
+    <ion-fab-button (click)="FormNuevoMat()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="btnTamPantalla" [hidden]="!VisualFormNuevoMaterial">
+    <ion-fab-button color="danger" (click)="FormNuevoMat()">
+      <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
+</ion-content>

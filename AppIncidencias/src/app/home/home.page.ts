@@ -14,6 +14,7 @@ import { LoadingController } from '@ionic/angular';
 })
 export class HomePage {
 
+  public CodigoCentro : any;
   ListaCentros: Centro[] = [];
   ListaCentrosMostrar: Centro[] = [];
   bModoCentroV: boolean = true;
@@ -28,36 +29,36 @@ export class HomePage {
     private loadingController: LoadingController
   ) { }
 
-  ngOnInit(): void {
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        console.log(user.email)
-        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
-          this.usuario = usuario;
-          if (this.usuario?.centro == '000') {
-            console.log("Sin centro")
-            this.bModoCentroV = false
-            this.cargarCentros();
-          } else {
-            console.log(usuario?.centro)
-            this.bModoCentroV = true
-          }
-        });
-
-      } else {
-        console.log('ERROR' + Error);
-      }
-    });
-  }
+ ngOnInit(): void {
+  this.afAuth.authState.subscribe(user => {
+    if (user) {
+      console.log(user.email);
+      this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
+        this.usuario = usuario;
+        if (this.usuario?.centro == '000') {
+          this.bModoCentroV = false;
+          this.cargarCentros();
+        } else {
+          this.CodigoCentro = usuario?.centro;
+          console.log(usuario?.centro);
+          this.bModoCentroV = true;
+        }
+      });
+    } else {
+      console.log('Usuario no autenticado');
+      // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
+    }
+  });
+}
 
   onInputChange(event: any) {
     const searchTerm = event.target.value as string;
     console.log("Término de búsqueda:", searchTerm);
+    this.ListaCentrosMostrar = [];
     this.miMetodoDeBusqueda(searchTerm);
   }
 
   miMetodoDeBusqueda(searchTerm: string) {
-    this.ListaCentrosMostrar = [];
     // Convertir el término de búsqueda a minúsculas
     const searchTermLower = searchTerm.toLowerCase();
     for (const centro of this.ListaCentros) {

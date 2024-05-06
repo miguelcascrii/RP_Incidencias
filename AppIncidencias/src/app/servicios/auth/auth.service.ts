@@ -8,7 +8,7 @@ import { Usuario } from '../../usuarios';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
-
+import { Material } from 'src/app/materiales';
 
 
 @Injectable({
@@ -87,4 +87,21 @@ export class AuthService {
     console.log("Actualizar tecnico, datos", usuario.email);
     this.firestore.collection("Usuarios").doc(usuario.id).update(usuario);
   }
+
+  
+/*##############################################
+
+              GESTIÓN DE MATERIALES
+
+  ##############################################*/
+
+  GuardarMaterial(material: Material) {
+    return this.firestore.collection('Materiales').doc(material.id).set(material);
+  }
+
+  ObtenerMateriales(): Observable<any> {
+    return this.firestore.collection('Materiales').snapshotChanges();
+  }
+
+  
 }
