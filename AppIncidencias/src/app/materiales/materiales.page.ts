@@ -16,7 +16,7 @@ export class MaterialesPage implements OnInit {
   usuario: Usuario | undefined;
   CodCentro : any
   VisualFormNuevoMaterial : Boolean = false;
-  btnTamPantalla : Boolean = false;
+  btnTamPantalla :any
   ListaMateriales : Material[] = []
 
 
@@ -41,15 +41,19 @@ export class MaterialesPage implements OnInit {
         console.log('Usuario no autenticado');
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
-      if (window.innerWidth <= 768) {
-        console.log("Dispositivo móvil");
-        this.btnTamPantalla = false
-      } else {
-        console.log("Pantalla de escritorio");
-        this.btnTamPantalla = true
-      }
+      this.TamañoPantalla()
     });
   
+  }
+
+  TamañoPantalla(){
+    if (window.innerWidth <= 768) {
+      console.log("Dispositivo móvil");
+      this.btnTamPantalla = false
+    } else {
+      console.log("Pantalla de escritorio");
+      this.btnTamPantalla = true
+    }
   }
 
   onResize(event: any) {

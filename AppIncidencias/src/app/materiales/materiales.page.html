@@ -31,23 +31,7 @@
 </ion-card>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <ion-card [hidden]="!VisualFormNuevoMaterial">
+<ion-card [hidden]="!VisualFormNuevoMaterial">
     <ion-card-header>
       <ion-card-title>
         Nuevo Material
@@ -87,7 +71,7 @@
               <button type="submit" class="btn btn-primary">Guardar</button>
             </ion-col>
             <ion-col class="ion-text-end">
-              <button type="button" class="btn btn-danger" (click)="FormNuevoMat()" [hidden]="VisualFormNuevoMaterial">Cancelar</button>
+              <button type="button" class="btn btn-danger" (click)="FormNuevoMat()" [hidden]="!btnTamPantalla" [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -97,15 +81,16 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="btnTamPantalla" [hidden]="VisualFormNuevoMaterial">
+ <div [hidden]="btnTamPantalla"> 
+  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed"  [hidden]="VisualFormNuevoMaterial">
     <ion-fab-button (click)="FormNuevoMat()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
+      <ion-icon name="add"></ion-icon>    </ion-fab-button>
   </ion-fab>
-  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="btnTamPantalla" [hidden]="!VisualFormNuevoMaterial">
+  <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="!VisualFormNuevoMaterial">
     <ion-fab-button color="danger" (click)="FormNuevoMat()">
       <ion-icon name="close"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+</div>
   
 </ion-content>
