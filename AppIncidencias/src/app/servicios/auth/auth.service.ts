@@ -19,8 +19,16 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private router: Router,
     private firestore: AngularFirestore
-  ) {}
+  ) { }
 
+
+  /**
+  * #########################################################
+  * 
+  *    AUTENTICACIÓN DE GOOGLE Y LOGOUT
+  * 
+  * #########################################################
+  */
   async loginGoogle() {
     try {
       const result = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
@@ -47,8 +55,18 @@ export class AuthService {
     }
   }
 
+  async logout() {
+    try {
+      await this.afAuth.signOut();
+      this.router.navigate(['/autenticacion']);
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error);
+      // Manejar el error de acuerdo a tus necesidades
+    }
+  }
+
   private guardarUsuario(usuario: Usuario) {
-      return this.firestore.collection('Usuarios').doc(usuario.email).set(usuario);
+    return this.firestore.collection('Usuarios').doc(usuario.email).set(usuario);
   }
 
   obtenerUsuarioPorEmail(email: string | null = null): Observable<Usuario | undefined> {
@@ -60,48 +78,59 @@ export class AuthService {
       );
   }
 
-  obtenerCentroUsuario(codigo: string | null = null): Observable<Usuario | undefined> {
-    return this.firestore.collection<Usuario>('Centros', ref => ref.where('codCentro', '==', codigo))
-      .valueChanges({ idField: 'id' })
-      .pipe(
-        // Utiliza el operador map para transformar la lista de usuarios en un solo usuario
-        map(usuarios => usuarios.length > 0 ? usuarios[0] : undefined)
-      );
-  }
-
-  async logout() {
-    try {
-      await this.afAuth.signOut();
-      this.router.navigate(['/autenticacion']);
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-      // Manejar el error de acuerdo a tus necesidades
-    }
-  }
-
-  ObtenerCentros(): Observable<any> {
-    return this.firestore.collection('Centros').snapshotChanges();
-  }
-
-  AsignarCentro(usuario: Usuario){
-    console.log("Actualizar tecnico, datos", usuario.email);
+  AsignarCentro(usuario: Usuario) {
     this.firestore.collection("Usuarios").doc(usuario.id).update(usuario);
   }
+  //------------------------------------
+  // FIN METODOS AUTENTICACION | LOGOUT
+  //------------------------------------
 
-  
-/*##############################################
 
-              GESTIÓN DE MATERIALES
+  // #####################################################################
+  //
+  // METODOS GENERALES, GUARDAR, BUSCAR POR ALGUN VALOR, EDITAR Y ELIMINAR
+  //
+  // #####################################################################
 
-  ##############################################*/
-
-  GuardarMaterial(material: Material) {
-    return this.firestore.collection('Materiales').doc(material.id).set(material);
+  //Metodo para guardar
+  GuardarCualDato(dato: any, NomColeccion: string) {
+    try {
+      return this.firestore.collection(NomColeccion).doc(dato.id).set(dato);
+    } catch (error) {
+      console.log("ERROR: "+error)
+      return error
+    }
+    
   }
-
-  ObtenerMateriales(): Observable<any> {
-    return this.firestore.collection('Materiales').snapshotChanges();
+  //Metodo de busqueda
+  DatoWhere(valor: string | null = null, NomColeccion: string, CampoBuscar: string): Observable<any> {
+    return this.firestore.collection<Usuario>(NomColeccion, ref => ref.where(CampoBuscar, '==', valor)).snapshotChanges();
   }
+  //Metodo para listar
+  ListarDatos(NomColeccion: string): Observable<any> {
+    return this.firestore.collection(NomColeccion).snapshotChanges();
+  }
+  //Metodo para actualizar
+  UpdateDatos(dato: any, NomColeccion: string) {
+    try {
+      this.firestore.collection(NomColeccion).doc(dato.id).update(dato);
 
-  
+    } catch (error) {
+      console.log("ERROR" + error)
+    }
+  }
+  //Metodo para eliminar registros
+  DeleteDatos(id: string, NomColeccion: string): Promise<any> {
+    return this.firestore.collection(NomColeccion).doc(id).delete();
+  }
+  // -----------------------
+  //  FIN METODOS GENERALES
+  // -----------------------
+
+
+
+
+
+
+
 }
