@@ -17,8 +17,11 @@ export class AppComponent implements OnInit{
 
   public appPages = [
     { title: 'Inicio', url: 'home', icon: 'home' },
-    { title: 'Usuario', url: 'info-usuario', icon: 'person' },
+    
     { title: 'Materiales', url: 'materiales', icon: 'construct' },
+
+    { title: 'Tecnicos', url: 'tecnicos', icon: 'people' },
+    { title: 'Usuario', url: 'info-usuario', icon: 'person' },
     
   ];
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];

@@ -28,6 +28,10 @@ const routes: Routes = [
     loadChildren: () => import('./materiales/materiales.module').then( m => m.MaterialesPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'tecnicos',
+    loadChildren: () => import('./tecnicos/tecnicos.module').then( m => m.TecnicosPageModule)
+  },
 ];
 
 @NgModule({

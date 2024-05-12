@@ -20,19 +20,13 @@ export class MaterialesPage implements OnInit {
   VisualFormNuevoMaterial: Boolean = false;
   btnTamPantalla: any
   ListaMateriales: Material[] = []
-  ModoDetalles: Boolean = false;
+  ModoDetalles: Boolean = true;
   ToastMSG: string = '';
   TitleForm: string = '';
+  TextModeEdit : String = 'Activar Modo Edición';
+  EditionMode : boolean  = false
 
   material: Material = {
-
-    familia: '',
-    stock: 0,
-    marca: '',
-    modelo: '',
-    codCentro: '',
-  };
-  materialVacio: Material = {
 
     familia: '',
     stock: 0,
@@ -76,16 +70,16 @@ export class MaterialesPage implements OnInit {
   }
 
   async NuevoMaterial(
-    newCategoria: string,
-    newMarca: string,
-    newModelo: string,
-    newStock: number
+    newCategoria: any,
+    newMarca: HTMLInputElement,
+    newModelo: HTMLInputElement,
+    newStock: HTMLInputElement,
   ) {
     const material: Material = {
-      familia: newCategoria,
-      stock: Number(newStock),
-      marca: newMarca,
-      modelo: newModelo,
+      familia: newCategoria.value,
+      stock: Number(newStock.value),
+      marca: newMarca.value,
+      modelo: newModelo.value,
       codCentro: this.CodCentro,
     };
 
@@ -97,26 +91,27 @@ export class MaterialesPage implements OnInit {
       position: 'top',
       color: 'success',
     });
-    this.FormNuevoMat();
+    this.ngOnInit
+    this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial
     toast.present();
   }
 
   async ActualizarMaterial(
-    newCategoria: string,
-    newMarca: string,
-    newModelo: string,
-    newStock: number,
-    newID: any
+    Categoria: any,
+    Marca: HTMLInputElement,
+    Modelo: HTMLInputElement,
+    Stock: HTMLInputElement,
+    ID: HTMLInputElement
   ) {
 
     try {
       console.log("Estoy en actualizar");
       const material: Material = {
-        id: newID,
-        familia: newCategoria,
-        stock: Number(newStock),
-        marca: newMarca,
-        modelo: newModelo,
+        id: ID.value,
+        familia: Categoria.value,
+        stock: Number(Stock.value),
+        marca: Marca.value,
+        modelo: Modelo.value,
         codCentro: this.CodCentro,
       };
 
@@ -124,16 +119,16 @@ export class MaterialesPage implements OnInit {
 
       // Muestra un Toast después de la actualización
       const toast = await this.toastController.create({
-        message: '¡Técnico actualizado con éxito!',
+        message: '¡Material actualizado con éxito!',
         duration: 2000,
         position: 'top',
         color: 'success',
       });
 
       toast.present();
+      this.ngOnInit()
+      this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial;
 
-      this.listarMateriales(this.CodCentro)
-      this.FormNuevoMat()
       
     } catch (error) {
       console.log("ERROR: "+ error)
@@ -153,54 +148,26 @@ export class MaterialesPage implements OnInit {
     });
   }
 
-
-
   FormNuevoMat() {
-    this.TitleForm = 'Nuevo material'
     this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial;
     this.ModoDetalles = false
-    this.material = this.materialVacio
-    console.log("Nuevo " + this.ModoDetalles)
+    console.log("Vacio " + this.material)
   }
 
   SelectMaterial(material: Material) {
-    this.TitleForm = 'Editar material'
-
     this.material = material;
     this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial;
     this.ModoDetalles = true;
-    console.log("Selct" + this.ModoDetalles)
+    console.log("Material" + this.material)
   
 
   }
 
-  async ComprobarVentana(
-    newCategoria: any,
-    newMarca: HTMLInputElement,
-    newModelo: HTMLInputElement,
-    newStock: HTMLInputElement,
-    newID: HTMLInputElement
-  ) {
-    console.log(this.CodCentro)
-    if (this.ModoDetalles === true) {
-      console.log("Update" + this.ModoDetalles)
-      this.ActualizarMaterial(newCategoria.value, newMarca.value, newModelo.value, Number(newStock.value), newID.value)
-      this.ToastMSG = '¡Actualizado correctamente!'
-    } else {
-      console.log("Guardar" + this.ModoDetalles)
-      this.NuevoMaterial(newCategoria.value, newMarca.value, newModelo.value, Number(newStock.value))
-      this.ToastMSG = 'Guardado correctamente'
-
-      newCategoria.value = "";
-      newMarca.value = "";
-      newModelo.value = "";
-      newStock.value = "";
-    }
-  }
-
   CancelarForm() {
-    this.listarMateriales(this.CodCentro)
-    this.FormNuevoMat()
+    this.ngOnInit
+    this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial
+    this.EditionMode = false
+    this.TextModeEdit = "Activar Modo Edición"
   }
 
   EliminarMaterial(material : Material){
@@ -228,7 +195,7 @@ export class MaterialesPage implements OnInit {
             if (idMat) {
               await this.authService.DeleteDatos(idMat,this.NomColeccion);
               const toast = await this.toastController.create({
-                message: '¡El técnico ha sido eliminado!',
+                message: '¡El material ha sido eliminado!',
                 duration: 2000,
                 position: 'top',
                 color: 'danger',
@@ -236,14 +203,25 @@ export class MaterialesPage implements OnInit {
               toast.present();
             }
             await alert.dismiss(); // Espera a que la alerta se cierre antes de continuar
-            this.listarMateriales(this.CodCentro)
-            this.FormNuevoMat()
+            this.ngOnInit
+            this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial
           }
         }
       ]
     });
   
     await alert.present();
+  }
+
+  ModoEditar(){
+    
+    if(this.EditionMode === true){
+      this.EditionMode = false
+      this.TextModeEdit = "Activar Modo Edición"
+    }else{
+      this.EditionMode = true
+      this.TextModeEdit = "Desactivar Modo Edición"
+    }
   }
 
 
