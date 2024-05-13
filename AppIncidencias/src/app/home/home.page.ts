@@ -131,14 +131,18 @@ export class HomePage {
 
       id: this.usuario?.email,
       nombre: this.usuario?.nombre,
+      apellidos: '',
       email: this.usuario?.email,
       telefono: this.usuario?.telefono,
       foto: this.usuario?.foto,
       rol: this.usuario?.rol,
+      departamento: '',
       centro: codCentro,
+      estado: this.usuario?.estado
+
     };
 
-    this.authService.AsignarCentro(usuario);
+    this.authService.UpdateUsuario(usuario);
     return false;
   }
 
@@ -152,7 +156,7 @@ export class HomePage {
     await loading.present();
     this.bModoCentroV = true;
   }
-
+  
 
 
 

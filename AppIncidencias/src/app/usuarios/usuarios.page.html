@@ -1,7 +1,7 @@
 <ion-card style="margin:auto;" class="m-3" [hidden]=>
   <ion-card-header>
     <ion-card-title class="ion-text-center">
-      Listado de Tecnicos
+      Listado de Usuarios
     </ion-card-title>
   </ion-card-header>
 
@@ -12,7 +12,7 @@
       <ion-label slot="end">Estado</ion-label>
       
     </ion-item>
-    <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaTecnicos" >
+    <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaUsuarios" >
       <ion-avatar aria-hidden="true" slot="start" class="m-2">
         <img alt="" src="{{item.foto}}" />
       </ion-avatar>
@@ -29,4 +29,3 @@
   <ion-button class="m-2"><ion-icon
       name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
 </ion-card>
-

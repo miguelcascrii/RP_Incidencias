@@ -9,8 +9,8 @@ import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tecnicos',
-  templateUrl: './tecnicos.page.html',
-  styleUrls: ['./tecnicos.page.scss'],
+  templateUrl: './usuarios.page.html',
+  styleUrls: ['./usuarios.page.scss'],
 })
 export class TecnicosPage implements OnInit {
   NomColeccion = 'Usuarios'
@@ -18,7 +18,6 @@ export class TecnicosPage implements OnInit {
   CodCentro: any
   usuarioReg: Usuario | undefined;
   ListaUsuarios: Usuario[] = []
-  ListaTecnicos: Usuario[] = []
   UserState !: string;
 
   constructor(
@@ -28,7 +27,7 @@ export class TecnicosPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
   ) { }
-
+  
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
       if (user) {
@@ -42,11 +41,10 @@ export class TecnicosPage implements OnInit {
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
-     
       this.TamañoPantalla()
     });
+   
   }
-
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
       this.btnTamPantalla = false
@@ -64,14 +62,11 @@ export class TecnicosPage implements OnInit {
           ...element.payload.doc.data(),
         });
       });
-      this.BuscarTecnicos()
+      
     });
+
+    
   }
 
-  BuscarTecnicos(){
-    for(let item of this.ListaUsuarios)
-      if(item.rol === 1){
-        this.ListaTecnicos.push(item)
-      }
-  }
+
 }
