@@ -82,8 +82,8 @@
           <ion-col size="auto">
             <button type="submit" class="btn btn-primary">Guardar</button>
           </ion-col>
-          <ion-col class="ion-text-end">
-            <button type="button" class="btn btn-warning" (click)="CancelarForm()" [hidden]="!btnTamPantalla"
+          <ion-col class="ion-text-end"  [hidden]="!btnTamPantalla">
+            <button type="button" class="btn btn-warning" (click)="CancelarForm()"
               [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
           </ion-col>
         </ion-row>
@@ -153,8 +153,8 @@
               {{TextModeEdit}}
             </button>
           </ion-col>
-          <ion-col class="ion-text-end">
-            <button type="button" class="btn btn-warning" (click)="CancelarForm()" [hidden]="!btnTamPantalla"
+          <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
+            <button type="button" class="btn btn-warning" (click)="CancelarForm()" 
               [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
               
           </ion-col>

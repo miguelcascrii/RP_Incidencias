@@ -6,6 +6,9 @@ import { ToastController } from '@ionic/angular';
 import { Usuario } from '../usuarios';
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { DataServiceService } from '../data-service.service';
 
 @Component({
   selector: 'app-tecnicos',
@@ -26,6 +29,7 @@ export class TecnicosPage implements OnInit {
     private afAuth: AngularFireAuth,
     private toastController: ToastController,
     private alertController: AlertController,
+    private router : Router
   ) { }
   
   ngOnInit(): void {
@@ -64,8 +68,11 @@ export class TecnicosPage implements OnInit {
       });
       
     });
+  }
 
-    
+  DetallesUser(usuario: Usuario) {
+    const datos = { usuario: usuario, NameVentana: 'Usuarios' };
+    this.router.navigate(['detalles-usuario'], { state: datos });
   }
 
 

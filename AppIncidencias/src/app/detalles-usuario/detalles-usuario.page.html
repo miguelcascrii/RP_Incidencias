@@ -1,0 +1,117 @@
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Detalles de {{VentanaTitulo}}
+        
+      </ion-card-title>
+      <ion-label class="mt-1" color="success" [hidden]="ModoEdicion"><b>Modo Edición Activado</b></ion-label>
+    </ion-card-header>
+    
+    <ion-card-content>
+      <form class="ion-justify-content-center">
+        <div class="row">
+          <!-- Columna para la imagen y los campos de texto izquierdos -->
+          <div class="row">
+            <div class="col-md-3 col-sm-12">
+              <div class="ion-justify-content-center" style="margin: auto; display: flex;">
+                <!-- Contenedor para centrar la imagen -->
+                <div style="width: 170px; height: 170px; border-radius: 50%; overflow: hidden; border:solid 1px black">
+                  <ion-img [src]="usuario?.foto" style="width: 100%; height: 100%;"></ion-img>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <!-- Campo de texto para el email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" [value]="usuario?.email"
+                  aria-describedby="emailHelp" readonly>
+                <div id="emailHelp" class="form-text">Este campo no se puede modificar</div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="Nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="Nombre" [value]="usuario?.nombre" [disabled]="ModoEdicion">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos" [disabled]="ModoEdicion">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna para los campos de texto derechos -->
+
+          <!-- Otro campo de texto -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Telefono</label>
+                <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
+                  placeholder="123456789" aria-describedby="emailHelp" [disabled]="ModoEdicion">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Rol</label>
+                <input type="text" class="form-control" id="rol" [value]="usuario?.rol === 0 ? 'Usuario' : 'Técnico'"
+                  aria-describedby="rolHelp" [disabled]="ModoEdicion" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Departamento</label>
+                <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
+                  placeholder="123456789" aria-describedby="emailHelp" [disabled]="ModoEdicion">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Centro</label>
+                <input type="text" class="form-control" id="rol" [value]="CentroUsuario?.nombre"
+                  aria-describedby="rolHelp" readonly><div id="emailHelp" class="form-text">Pulsa para ver más detalles del centro</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón de submit -->
+       
+        <ion-grid>
+          <ion-row>
+            <ion-col size="auto" [hidden]="ModoEdicion">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+            </ion-col>
+            <ion-col size="auto">
+              <button type="button" (click)="ModoEditar()" class="btn btn-success">
+                {{TextModeEdit}}
+              </button>
+            </ion-col>
+            <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
+              <button type="button" class="btn btn-warning" (click)="CancelarForm()"> Cancelar</button>
+                
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+
+
+
+  </ion-card>
+  <div [hidden]="btnTamPantalla">
+    <ion-fab class="mb-5" horizontal="end" vertical="top" slot="flex">
+      <ion-fab-button color="warning" (click)="CancelarForm()">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-content>

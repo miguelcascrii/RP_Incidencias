@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from './servicios/auth/auth.service';
 import { Usuario } from './usuarios';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,9 @@ export class AppComponent implements OnInit {
   SesionState: boolean = false;
   usuario?: Usuario;
 
-  constructor(private afAuth: AngularFireAuth, private authService: AuthService) {}
+  constructor(private afAuth: AngularFireAuth, private authService: AuthService,private platform: Platform) {
+   // this.initializeApp();
+  }
 
   public appPages = [
     { title: 'Inicio', url: 'home', icon: 'home' },
@@ -36,6 +39,15 @@ export class AppComponent implements OnInit {
       }
     });
   }
+
+  // initializeApp() {
+  //   this.platform.ready().then(() => {
+  //     // Desactivar el modo oscuro
+  //     if (this.platform.is('android') || this.platform.is('ios')) {
+  //       this.platform.disable();
+  //     }
+  //   });
+  // }
 
   CerrarSesion() {
     try {
@@ -111,17 +123,17 @@ export class AppComponent implements OnInit {
   ComprobarEstado() {
     if (this.SesionState == true) {
       if(this.usuario?.estado == "Conectado"){
-        
+
       } else{
         this.EstadoConectado();
       }
     } else if (this.SesionState == false) {
       if(this.usuario?.estado == "Desconectado"){
-        
+
       } else{
         this.EstadoDesconectado();
       }
-     
+
     }
   }
 }

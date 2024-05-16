@@ -6,6 +6,9 @@ import { ToastController } from '@ionic/angular';
 import { Usuario } from '../usuarios';
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { DataServiceService } from '../data-service.service';
 
 @Component({
   selector: 'app-tecnicos',
@@ -19,7 +22,10 @@ export class TecnicosPage implements OnInit {
   usuarioReg: Usuario | undefined;
   ListaUsuarios: Usuario[] = []
   ListaTecnicos: Usuario[] = []
+  ListaNOTecnicos : Usuario[] = []
   UserState !: string;
+  VisualTecNuevo : Boolean = true
+  NameVentana !: string;
 
   constructor(
     private authService: AuthService,
@@ -27,6 +33,9 @@ export class TecnicosPage implements OnInit {
     private afAuth: AngularFireAuth,
     private toastController: ToastController,
     private alertController: AlertController,
+    private navCtrl: NavController, 
+    private router: Router,
+    private dataService: DataServiceService
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +46,6 @@ export class TecnicosPage implements OnInit {
           this.usuarioReg = usuario;
           this.CodCentro = usuario?.centro;
           this.ListarUsuarios(this.CodCentro);
-          console.log(this.CodCentro)
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
@@ -69,9 +77,87 @@ export class TecnicosPage implements OnInit {
   }
 
   BuscarTecnicos(){
+    this.ListaNOTecnicos = []
+    this.ListaTecnicos = []
     for(let item of this.ListaUsuarios)
       if(item.rol === 1){
         this.ListaTecnicos.push(item)
+      } else if(item.rol === 0){
+        this.ListaNOTecnicos.push(item)
       }
   }
+
+  btnNuevoTecnico(){
+    this.VisualTecNuevo = !this.VisualTecNuevo
+  }
+
+  SelectUsuario(userSelect : Usuario){
+    this.ConfirmNuevoTecnico(userSelect)
+  }
+
+
+  async ConfirmNuevoTecnico(usuario: Usuario) {
+    const alert = await this.alertController.create({
+      header: 'Convertir a técnico',
+      message: `¿Estás seguro de que deseas hacer tecnico a ${usuario.email}?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cancelado');
+          }
+        },
+        {
+          text: 'Estoy seguro',
+          //role:"cancel",
+          handler: async () => {
+            const user = usuario.email;
+            if (user) {
+              await this.AsignarRole(usuario);
+              const toast = await this.toastController.create({
+                message: '¡Enhorabuena,'+ usuario.nombre +' es un nuevo técnico!',
+                duration: 2000,
+                position: 'top',
+                color: 'success',
+              });
+              toast.present();
+            }
+            await alert.dismiss(); // Espera a que la alerta se cierre antes de continuar
+            this.ngOnInit
+            this.VisualTecNuevo = !this.VisualTecNuevo
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  AsignarRole(UserUpdate : Usuario){
+    const usuario : Usuario = {
+      nombre : UserUpdate.nombre,
+      apellidos : UserUpdate.apellidos,
+      email : UserUpdate.email,
+      departamento :  UserUpdate.departamento,
+      rol : 1,
+      telefono : UserUpdate.telefono,
+      foto : UserUpdate.foto,
+      centro : UserUpdate.centro,
+      estado : UserUpdate.estado
+    }
+
+    this.authService.UpdateUsuario(usuario)
+
+  }
+  DetallesUser(usuario: Usuario) {
+    const datos = { usuario: usuario, NameVentana: 'Tecnicos' };
+    this.router.navigate(['detalles-usuario'], { state: datos });
+  }
+
+  
+
+  
+
+
 }

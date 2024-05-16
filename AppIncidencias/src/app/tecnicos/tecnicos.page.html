@@ -1,32 +1,59 @@
-<ion-card style="margin:auto;" class="m-3" [hidden]=>
-  <ion-card-header>
-    <ion-card-title class="ion-text-center">
-      Listado de Tecnicos
-    </ion-card-title>
-  </ion-card-header>
+<ion-content>
+  
+  <ion-card style="margin:auto;" class="m-3" [hidden]="!VisualTecNuevo">
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        Listado de Tecnicos
+      </ion-card-title>
+    </ion-card-header>
 
-  <ion-list class="ion-text-center">
-    <ion-label>Selecciona para más información</ion-label>
-    <ion-item class="ion-text-start mt-2">
-      <ion-label class="m-2"><b>Email</b></ion-label>
-      <ion-label slot="end">Estado</ion-label>
-      
-    </ion-item>
-    <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaTecnicos" >
-      <ion-avatar aria-hidden="true" slot="start" class="m-2">
-        <img alt="" src="{{item.foto}}" />
-      </ion-avatar>
-      <ion-label>{{item.email}} </ion-label>
-      <ion-label slot="end">
-        <ion-icon *ngIf="item.estado === 'Conectado'" color="success" size="large" name="checkmark-circle-sharp"></ion-icon>
-        <ion-icon *ngIf="item.estado === 'Desconectado'" color="danger" size="large" name="close-circle-sharp"></ion-icon>
-      </ion-label>
-      
-    </ion-item>
+    <ion-list class="ion-text-center">
+      <ion-label>Selecciona para más información</ion-label>
+      <ion-item class="ion-text-start mt-2">
+        <ion-label class="m-2"><b>Email</b></ion-label>
+        <ion-label slot="end"><b>Departamento</b></ion-label>
 
-  </ion-list>
+      </ion-item>
+      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaTecnicos" (click)="DetallesUser(item)">
+        <ion-avatar aria-hidden="true" slot="start" class="m-2" *ngIf="item.foto">
+          <img alt="" src="{{item.foto}}" />
+        </ion-avatar>
+        <ion-label>{{item.email}} </ion-label>
+        <ion-label slot="end">
+          <ng-container *ngIf="item.departamento">{{ item.departamento }}</ng-container>
+          <ng-container *ngIf="!item.departamento">Sin Asignar</ng-container>
+        </ion-label>
+      </ion-item>
 
-  <ion-button class="m-2"><ion-icon
-      name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
-</ion-card>
+    </ion-list>
 
+    <ion-button class="m-2" (click)="btnNuevoTecnico()"><ion-icon name="add-circle-outline"></ion-icon>Añadir tecnico</ion-button>
+
+  </ion-card>
+  <ion-card [hidden]="VisualTecNuevo">
+    <ion-card-header class="ion-text-center">
+      <ion-card-title class="ion-text-center">
+        Nuevo técnico
+      </ion-card-title>
+      <ion-label>Selecciona un usuario para convertir a técnico</ion-label>
+    </ion-card-header>
+    <ion-list class="ion-text-center">
+      <ion-item class="ion-text-start mt-2">
+        <ion-label class="m-2"><b>Usuario</b></ion-label>
+        <ion-label slot="end"><b>Departamento</b></ion-label>
+      </ion-item>
+      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaNOTecnicos" (click)="SelectUsuario(item)">
+        <ion-avatar aria-hidden="true" slot="start" class="m-3">
+          <img alt="" [src]="item.foto" /> <!-- Usamos [src] para la binding de datos -->
+        </ion-avatar>
+        <ion-label>{{ item.email }}</ion-label>
+        <ion-label slot="end">
+          <ng-container *ngIf="item.departamento">{{ item.departamento }}</ng-container>
+          <ng-container *ngIf="!item.departamento">Sin Asignar</ng-container>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    
+    <ion-button (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
+  </ion-card>
+</ion-content>

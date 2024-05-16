@@ -1,31 +1,34 @@
-<ion-card style="margin:auto;" class="m-3" [hidden]=>
-  <ion-card-header>
-    <ion-card-title class="ion-text-center">
-      Listado de Usuarios
-    </ion-card-title>
-  </ion-card-header>
+<ion-content>
+  <ion-card style="margin:auto;" class="m-3" [hidden]=>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">
+        Listado de Usuarios
+      </ion-card-title>
+    </ion-card-header>
 
-  <ion-list class="ion-text-center">
-    <ion-label>Selecciona para más información</ion-label>
-    <ion-item class="ion-text-start mt-2">
-      <ion-label class="m-2"><b>Email</b></ion-label>
-      <ion-label slot="end">Estado</ion-label>
-      
-    </ion-item>
-    <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaUsuarios" >
-      <ion-avatar aria-hidden="true" slot="start" class="m-2">
-        <img alt="" src="{{item.foto}}" />
-      </ion-avatar>
-      <ion-label>{{item.email}} </ion-label>
-      <ion-label slot="end">
-        <ion-icon *ngIf="item.estado === 'Conectado'" color="success" size="large" name="checkmark-circle-sharp"></ion-icon>
-        <ion-icon *ngIf="item.estado === 'Desconectado'" color="danger" size="large" name="close-circle-sharp"></ion-icon>
-      </ion-label>
-      
-    </ion-item>
+    <ion-list class="ion-text-center">
+      <ion-label>Selecciona para más información</ion-label>
+      <ion-item class="ion-text-start mt-2">
+        <ion-label class="m-2"><b>Email</b></ion-label>
+        <ion-label slot="end">Estado</ion-label>
 
-  </ion-list>
+      </ion-item>
+      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaUsuarios" (click)="DetallesUser(item)">
+        <ion-avatar aria-hidden="true" slot="start" class="m-2">
+          <img alt="" src="{{item.foto}}" />
+        </ion-avatar>
+        <ion-label>{{item.email}} </ion-label>
+        <ion-label slot="end">
+          <ion-icon *ngIf="item.estado === 'Conectado'" color="success" size="large"
+            name="checkmark-circle-sharp"></ion-icon>
+          <ion-icon *ngIf="item.estado === 'Desconectado'" color="danger" size="large"
+            name="close-circle-sharp"></ion-icon>
+        </ion-label>
 
-  <ion-button class="m-2"><ion-icon
-      name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
-</ion-card>
+      </ion-item>
+
+    </ion-list>
+
+    <ion-button class="m-2"><ion-icon name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
+  </ion-card>
+</ion-content>

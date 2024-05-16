@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
 import { Material } from 'src/app/materiales';
-
+import { Centro } from 'src/app/centros';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +42,7 @@ export class AuthService {
   }
   //Metodo de busqueda
   DatoWhere(valor: string | null = null, NomColeccion: string, CampoBuscar: string): Observable<any> {
-    return this.firestore.collection<Usuario>(NomColeccion, ref => ref.where(CampoBuscar, '==', valor)).snapshotChanges();
+    return this.firestore.collection<any>(NomColeccion, ref => ref.where(CampoBuscar, '==', valor)).snapshotChanges();
   }
   //Metodo para listar
   ListarDatos(NomColeccion: string): Observable<any> {
@@ -65,6 +65,25 @@ export class AuthService {
   //  FIN METODOS GENERALES
   // -----------------------
 
+
+  // -----------------------
+  //   METODOS ESPECÍFICOS
+  // -----------------------
+  
+  ObtenerCentroPorCod(codCentro: string | null = null): Observable<Usuario | undefined> {
+    return this.firestore.collection<Centro>('Centros', ref => ref.where('codCentro', '==', codCentro))
+      .valueChanges({ idField: 'id' })
+      .pipe(
+        // Utiliza el operador map para transformar la lista de centros
+        map(Centro => Centro.length > 0 ? Centro[0] : undefined)
+      );
+  }
+
+
+  //
+  //
+  //
+  //
 
   async loginGoogle() {
     try {
