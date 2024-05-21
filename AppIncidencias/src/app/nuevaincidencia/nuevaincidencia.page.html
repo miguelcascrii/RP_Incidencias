@@ -1,0 +1,41 @@
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        Nueva Incidencia
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form>
+        <ion-item>
+          <ion-input label="Nombre" aria-placeholder="Indique su nombre" value="{{UsuarioYO?.nombre}}"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input label="Email" aria-placeholder="Indique su email" value="{{UsuarioYO?.email}}"></ion-input>
+        </ion-item>
+        <div class="row">
+
+          <ion-item class="col-md-6 col-sm-12">
+            <ion-select label="Selecciona un aula" label-placement="floating" required>
+              <ion-select-option *ngFor="let item of ListaAulas" value="{{item.numero}}">Planta {{item.planta}}, Aula
+                {{item.numero}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item class="col-md-6 col-sm-12">
+            <ion-label>Fecha</ion-label>
+            <ion-datetime-button label="Fecha" datetime="datetime"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime id="datetime" [showDefaultButtons]="true"></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+
+        </div>
+
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+
+</ion-content>

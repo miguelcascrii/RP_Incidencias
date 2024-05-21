@@ -155,6 +155,10 @@ export class AuthService {
     return this.firestore.collection("Usuarios").doc(usuario.email).update(usuario);
   }
 
+  DeleteUsuario(email ?: string): Promise<any> {
+    return this.firestore.collection('Usuarios').doc(email).delete();
+  }
+
   // Otros métodos omitidos por brevedad...
 }
 

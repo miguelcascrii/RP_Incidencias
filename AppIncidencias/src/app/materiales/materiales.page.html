@@ -1,7 +1,5 @@
-<ion-content [fullscreen]="true">
-
-
-  <ion-card style="margin:auto; width: 97%;" class="m-3" [hidden]="VisualFormNuevoMaterial">
+<ion-content>
+  <ion-card [hidden]="VisualFormNuevoMaterial">
     <ion-card-header>
       <ion-card-title class="ion-text-center">
         Listado de Materiales
@@ -14,7 +12,7 @@
         <ion-label><b> Categoría </b> </ion-label>
         <ion-label><b> Marca</b> </ion-label>
         <ion-label><b> Modelo </b></ion-label>
-        <ion-label> <b>Stock</b> </ion-label>
+        <ion-label> <b>Stock</b> </ion-label>   
       </ion-item>
       <ion-item class="ion-text-center" *ngFor="let item of ListaMateriales" (click)="SelectMaterial(item)">
         <ion-label> {{item.familia}} </ion-label>

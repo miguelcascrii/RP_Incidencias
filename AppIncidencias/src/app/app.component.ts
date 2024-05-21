@@ -19,10 +19,11 @@ export class AppComponent implements OnInit {
 
   public appPages = [
     { title: 'Inicio', url: 'home', icon: 'home' },
+    { title: 'Incidencias', url: 'incidencias', icon: 'alert-circle' },
+    { title: 'Tecnicos', url: 'tecnicos', icon: 'people-circle' },
     { title: 'Materiales', url: 'materiales', icon: 'construct' },
     { title: 'Usuarios', url: 'usuarios', icon: 'people' },
     { title: 'Usuario', url: 'info-usuario', icon: 'person' },
-    { title: 'Tecnicos', url: 'tecnicos', icon: 'people-circle' },
   ];
 
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
@@ -39,15 +40,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
-  // initializeApp() {
-  //   this.platform.ready().then(() => {
-  //     // Desactivar el modo oscuro
-  //     if (this.platform.is('android') || this.platform.is('ios')) {
-  //       this.platform.disable();
-  //     }
-  //   });
-  // }
 
   CerrarSesion() {
     try {

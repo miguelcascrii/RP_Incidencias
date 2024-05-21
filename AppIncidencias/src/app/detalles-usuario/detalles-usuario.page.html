@@ -9,7 +9,8 @@
     </ion-card-header>
     
     <ion-card-content>
-      <form class="ion-justify-content-center">
+      <form (submit)="ActualizarUsuario(id,email,nombre,apellidos,telefono,rol,departamento)" class="ion-justify-content-center">
+        <input name="id" id="id" [value]="usuario?.id" hidden #id>
         <div class="row">
           <!-- Columna para la imagen y los campos de texto izquierdos -->
           <div class="row">
@@ -25,21 +26,20 @@
               <!-- Campo de texto para el email -->
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" [value]="usuario?.email"
-                  aria-describedby="emailHelp" readonly>
+                <input type="email" class="form-control" id="email" [value]="usuario?.email"  readonly #email>
                 <div id="emailHelp" class="form-text">Este campo no se puede modificar</div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label for="Nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="Nombre" [value]="usuario?.nombre" [disabled]="ModoEdicion">
+                    <input type="text" class="form-control" id="nombre" [value]="usuario?.nombre" [disabled]="ModoEdicion" #nombre>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label for="apellidos" class="form-label">Apellidos</label>
-                    <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos" [disabled]="ModoEdicion">
+                    <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos" [disabled]="ModoEdicion" #apellidos>
                   </div>
                 </div>
               </div>
@@ -54,14 +54,14 @@
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Telefono</label>
                 <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
-                  placeholder="123456789" aria-describedby="emailHelp" [disabled]="ModoEdicion">
+                  placeholder="123456789" aria-describedby="telefono" [disabled]="ModoEdicion" #telefono>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Rol</label>
                 <input type="text" class="form-control" id="rol" [value]="usuario?.rol === 0 ? 'Usuario' : 'Técnico'"
-                  aria-describedby="rolHelp" [disabled]="ModoEdicion" readonly>
+                  aria-describedby="rolHelp" [disabled]="ModoEdicion" readonly #rol>
               </div>
             </div>
           </div>
@@ -69,8 +69,8 @@
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Departamento</label>
-                <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
-                  placeholder="123456789" aria-describedby="emailHelp" [disabled]="ModoEdicion">
+                <input type="text" class="form-control" id="departamento" [value]="usuario?.departamento"
+                   aria-describedby="DepartamentoHelp" [disabled]="ModoEdicion" #departamento>
               </div>
             </div>
             <div class="col-md-6">
@@ -88,6 +88,9 @@
         <ion-grid>
           <ion-row>
             <ion-col size="auto" [hidden]="ModoEdicion">
+              <button type="button" class="btn btn-danger" (click)="btnEliminar()">{{btnTitleEliminar}}</button>
+            </ion-col>
+            <ion-col size="auto" [hidden]="ModoEdicion">
               <button type="submit" class="btn btn-primary">Guardar</button>
             </ion-col>
             <ion-col size="auto">
@@ -104,11 +107,9 @@
       </form>
     </ion-card-content>
 
-
-
   </ion-card>
   <div [hidden]="btnTamPantalla">
-    <ion-fab class="mb-5" horizontal="end" vertical="top" slot="flex">
+    <ion-fab class="mb-5" horizontal="end" vertical="end" slot="flex">
       <ion-fab-button color="warning" (click)="CancelarForm()">
         <ion-icon name="close"></ion-icon>
       </ion-fab-button>

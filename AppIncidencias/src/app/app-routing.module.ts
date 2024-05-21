@@ -30,15 +30,28 @@ const routes: Routes = [
   },
   {
     path: 'usuarios',
-    loadChildren: () => import('./usuarios/usuarios.module').then( m => m.TecnicosPageModule)
+    loadChildren: () => import('./usuarios/usuarios.module').then( m => m.TecnicosPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'tecnicos',
-    loadChildren: () => import('./tecnicos/tecnicos.module').then( m => m.TecnicosPageModule)
+    loadChildren: () => import('./tecnicos/tecnicos.module').then( m => m.TecnicosPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'detalles-usuario',
-    loadChildren: () => import('./detalles-usuario/detalles-usuario.module').then( m => m.DetallesUsuarioPageModule)
+    loadChildren: () => import('./detalles-usuario/detalles-usuario.module').then( m => m.DetallesUsuarioPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'incidencias',
+    loadChildren: () => import('./incidencias/incidencias.module').then( m => m.IncidenciasPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'nuevaincidencia',
+    loadChildren: () => import('./nuevaincidencia/nuevaincidencia.module').then( m => m.NuevaincidenciaPageModule),
+    canActivate: [AuthGuard]
   },
 ];
 
