@@ -1,41 +1,65 @@
 <ion-content [fullscreen]="true">
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>
-        Nueva Incidencia
-      </ion-card-title>
-    </ion-card-header>
     <ion-card-content>
-      <form>
-        <ion-item>
-          <ion-input label="Nombre" aria-placeholder="Indique su nombre" value="{{UsuarioYO?.nombre}}"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-input label="Email" aria-placeholder="Indique su email" value="{{UsuarioYO?.email}}"></ion-input>
-        </ion-item>
-        <div class="row">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-card-title>
+              Nueva Incidencia
+            </ion-card-title>
+          </ion-col>
+          <ion-col class="ion-text-end">
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-          <ion-item class="col-md-6 col-sm-12">
-            <ion-select label="Selecciona un aula" label-placement="floating" required>
-              <ion-select-option *ngFor="let item of ListaAulas" value="{{item.numero}}">Planta {{item.planta}}, Aula
-                {{item.numero}}</ion-select-option>
+      <form (ngSubmit)="NuevaIncidencia(email.value, nombre.value, aula.value, datetime.value, descripcion.value)">
+
+        <div class="row">
+          <ion-item class="col-md-6">
+            <ion-select [(ngModel)]="selectedEmail" (ionChange)="onEmailChange($event.detail.value)" name="email" #email label="Selecciona un email" label-placement="floating" required>
+              <ion-select-option *ngFor="let item of ListaUsuarios" [value]="item.email">
+                {{item.email}}
+              </ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item class="col-md-6 col-sm-12">
-            <ion-label>Fecha</ion-label>
-            <ion-datetime-button label="Fecha" datetime="datetime"></ion-datetime-button>
-            <ion-modal [keepContentsMounted]="true">
-              <ng-template>
-                <ion-datetime id="datetime" [showDefaultButtons]="true"></ion-datetime>
-              </ng-template>
-            </ion-modal>
+          <ion-item class="col-md-6">
+            <ion-input [(ngModel)]="selectedNombre" name="nombre" #nombre label="Nombre" aria-placeholder="Indique su nombre" label-placement="floating" readonly></ion-input>
           </ion-item>
-
         </div>
+        <div class="row">
+          <ion-item class="col-md-6 col-sm-12">
+            <ion-select name="aula" label="Selecciona un aula" label-placement="floating" required #aula >
+              <ion-select-option *ngFor="let item of ListaAulas" [value]="item.numero">Planta {{item.planta}}, Aula {{item.numero}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <ion-item class="col-md-6 col-sm-12 mt-2">
+            <ion-label>Fecha</ion-label>
+            <ion-datetime-button datetime="datetime"></ion-datetime-button>
 
+
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-textarea name="descripcion" #descripcion label="Descripción" style="height: 80px;" labelPlacement="floating" maxlength="500"></ion-textarea>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="auto">
+              <ion-button type="submit">Notificar Incidencia</ion-button>
+            </ion-col>
+            <ion-col class="ion-text-end">
+              <ion-button type="button" color="warning" (click)="cancel()">Cancelar</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </form>
     </ion-card-content>
   </ion-card>
 
-
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime" [showDefaultButtons]="true"  #datetime></ion-datetime>
+    </ng-template>
+  </ion-modal>
 </ion-content>
