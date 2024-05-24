@@ -1,9 +1,46 @@
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">incidencias</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-grid class="m-3">
+    <ion-row>
+      <ion-col size="auto">
+        <ion-card-title>
+          Listado de Incidencias
+        </ion-card-title>
+        <ion-card-subtitle>Selecciona una para más información</ion-card-subtitle>
+      </ion-col>
+      <ion-col class="ion-text-end">
+        <ion-button (click)="NuevaIncidencia()">
+          {{btnNuevoText}} 
+          <ion-icon class="m-1" name="duplicate-outline"></ion-icon> 
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-  <ion-button (click)="NuevaIncidencia()">Notificar de Incidencia</ion-button>
+  <ion-card>
+    <ion-list>
+      <ion-item>
+        <ion-label><b>Aula</b></ion-label>
+        <ion-label><b>Fecha</b></ion-label>
+        <ion-label><b>Estado</b></ion-label>
+      </ion-item>
+      <div *ngFor="let item of MetodosComunes.paginatedItems" class="item-container" [ngClass]="{'false-status': !item.atentida, 'true-status': item.atentida}" (click)="AbrirDetallesIncidencia(item)">
+        <ion-item>
+          <ion-label hidden>{{item.id}}</ion-label>
+          <ion-label>{{ item.aula }}</ion-label>
+          <ion-label>{{ item.fecha }}</ion-label>
+          <ion-label>{{ item.atentida ? 'Atentida' : 'Pendiente' }}</ion-label>
+        </ion-item>
+      </div>
+    </ion-list>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button [disabled]="MetodosComunes.currentPage === 1" (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaIncidencias.length" (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-card>
 </ion-content>

@@ -1,0 +1,20 @@
+.item-container {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .item-container ion-item {
+    --background: transparent;
+    --color: initial;
+  }
+  
+  .false-status ion-item {
+    --background: #FDEDEC;
+    --color: black;
+  }
+  
+  .true-status ion-item {
+    --background: #D4EFDF;
+    --color: black;
+  }
+  

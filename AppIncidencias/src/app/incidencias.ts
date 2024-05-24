@@ -5,6 +5,7 @@ export interface Incidencia{
     descripcion : string;
     aula : string;
     fecha : Date;
-    atentidad : boolean;
-    comentario?: string;    
+    atentida : boolean;
+    comentario?: string;
+    centro : string;    
 }

@@ -5,6 +5,11 @@ import { Usuario } from '../usuarios';
 import { Material } from '../materiales';
 import { Aula } from '../aulas';
 import { IonInput, IonDatetime } from '@ionic/angular';
+import { Incidencia } from '../incidencias';
+import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { MetGenerales } from '../general';
+
 
 @Component({
   selector: 'app-nuevaincidencia',
@@ -13,16 +18,25 @@ import { IonInput, IonDatetime } from '@ionic/angular';
 })
 export class NuevaincidenciaPage implements OnInit {
   CodCentro: any;
+  TitleVnt : String =""
   UsuarioYO?: Usuario;
   VentanaTitulo: string = "";
   btnTamPantalla: any;
   ListaMateriales: Material[] = [];
   ListaAulas: Aula[] = [];
   ListaUsuarios: Usuario[] = [];
-  selectedEmail !: string;
+  selectedEmail ?: string;
   selectedNombre ?: string;
   selectedDate ?: string;
+  selectedAula ?: string;
+  selecteDescripcion ?: string;
+  IncidenciaRecib ?: Incidencia;
+  ModoDetalles : boolean = false
+  Permisos : boolean = false
+  Perm : string = ""
+
   @ViewChild('datetime') datetime !: IonDatetime;
+  MetodosComunes: MetGenerales = new MetGenerales(this.router);
 
 
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
@@ -31,12 +45,18 @@ export class NuevaincidenciaPage implements OnInit {
   constructor(
     private authService: AuthService,
     private afAuth: AngularFireAuth,
+    private toastController: ToastController,
+    private router : Router
+
   ) { }
 
   ngOnInit() {
     const navigation = window.history.state;
-    this.VentanaTitulo = navigation.NameVentana;
-    console.log(this.VentanaTitulo);
+    this.VentanaTitulo = navigation.NombreDatos;
+    this.IncidenciaRecib = navigation.itemDet
+
+    console.log(this.IncidenciaRecib)
+    
 
     this.afAuth.authState.subscribe(user => {
       if (user) {
@@ -50,12 +70,26 @@ export class NuevaincidenciaPage implements OnInit {
           this.listarMateriales(this.CodCentro);
           this.listarAulas(this.CodCentro);
           this.ListarUsuarios(this.CodCentro);
+          this.ComprobarModo()
+          this.VerPermisos()
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
       this.TamañoPantalla();
+     
     });
+  }
+
+  VerPermisos(){
+    this.Perm = this.MetodosComunes.ComprobarPermisos(this.UsuarioYO)
+
+    
+    if(this.Perm === "N"){
+      this.Permisos = false
+    }else{
+      this.Permisos = true
+    }
   }
 
   TamañoPantalla() {
@@ -65,6 +99,26 @@ export class NuevaincidenciaPage implements OnInit {
       this.btnTamPantalla = true;
     }
   }
+
+  ComprobarModo(){
+    if(this.VentanaTitulo === "DETALLESINCIDENCIA"){
+      this.ModoDetalles = true
+      this.TitleVnt = "Detalles de Incidencia"
+      this.selectedEmail = this.IncidenciaRecib?.email
+      this.selectedNombre = this.IncidenciaRecib?.nombre
+      this.selectedAula = this.IncidenciaRecib?.aula
+      this.selectedDate = this.IncidenciaRecib?.fecha + " "
+      this.selecteDescripcion = this.IncidenciaRecib?.descripcion
+
+      console.log(this.selectedEmail)
+    
+  } else if(this.VentanaTitulo === "NUEVAINCIDENCIA"){
+    this.ModoDetalles = false
+    this.TitleVnt = "Nueva Incidencia"
+  }
+}
+
+
 
   listarMateriales(centro: string) {
     this.authService.DatoWhere(centro, 'Materiales', 'codCentro').subscribe((res) => {
@@ -113,13 +167,55 @@ export class NuevaincidenciaPage implements OnInit {
     this.selectedDate = event.detail.value;
   }
 
-  NuevaIncidencia(email: any, nombre: any, aula: any, fecha: any, descripcion: any) {
-    const datetimeValue = this.datetime ? this.datetime.value : null;
-    console.log(email, nombre, aula, fecha, descripcion);
+  async NuevaIncidencia(email: any, nombre: any, aula: any, fecha: any, descripcion: any) {
+    
+    // Si la fecha se pasa como undefined obtendremos la fecha actual
+    //ademas la formatea a YYY/MM/DD
+
+    if (fecha === undefined || isNaN(Date.parse(fecha))) {
+      const now = new Date();
+      fecha = now.getFullYear() + '-' + 
+              String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+              String(now.getDate()).padStart(2, '0');
+    } else {
+      const dateObj = new Date(fecha);
+      fecha = dateObj.getFullYear() + '-' + 
+              String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
+              String(dateObj.getDate()).padStart(2, '0');
+    }
+  
+    const incidencia : Incidencia = {
+      email : email,
+      nombre : nombre,
+      aula : aula,
+      fecha : fecha,
+      descripcion : descripcion,
+      atentida : false,
+      comentario : "",
+      centro : this.UsuarioYO?.centro || ""
+    }
+    try {
+      this.authService.GuardarCualDato(incidencia,'Incidencias')
+    const toast = await this.toastController.create({
+      message: '¡La incidencia está en manos de los técnicoss!',
+      duration: 2000,
+      position: 'top',
+      color: 'success',
+    });
+    toast.present();
+    this.cancel()
+    
+
+    } catch (error) {
+      console.log("ERROR: " + error)
+    }
+    
+  
   }
 
 
   cancel() {
-    // Implementa la lógica para cancelar la operación
+    const datos = {NameVentana: 'NuevaInci' };
+    this.router.navigate(['incidencias'], { state: datos });
   }
 }
