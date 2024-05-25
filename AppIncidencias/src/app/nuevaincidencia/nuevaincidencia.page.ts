@@ -9,6 +9,7 @@ import { Incidencia } from '../incidencias';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MetGenerales } from '../general';
+import { MatAtendido } from '../matAtendidos';
 
 
 @Component({
@@ -34,6 +35,9 @@ export class NuevaincidenciaPage implements OnInit {
   ModoDetalles : boolean = false
   Permisos : boolean = false
   Perm : string = ""
+
+  
+  FormAtender : boolean = true
 
   @ViewChild('datetime') datetime !: IonDatetime;
   MetodosComunes: MetGenerales = new MetGenerales(this.router);
@@ -72,13 +76,17 @@ export class NuevaincidenciaPage implements OnInit {
           this.ListarUsuarios(this.CodCentro);
           this.ComprobarModo()
           this.VerPermisos()
+
+          
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
+      
       this.TamañoPantalla();
      
     });
+    
   }
 
   VerPermisos(){
@@ -213,9 +221,34 @@ export class NuevaincidenciaPage implements OnInit {
   
   }
 
-
   cancel() {
     const datos = {NameVentana: 'NuevaInci' };
     this.router.navigate(['incidencias'], { state: datos });
+    this.FormAtender = true
+
+  }
+
+/**
+ *  METODOS Y VARIABLES DE FORMULARIO DE ATENDER INCIDENCIA 
+ */
+  selectComentario : string =""
+  selects: { id: number, selectedValue: string }[] = [];
+  nextId = 1;
+
+  VerFormAtender(){
+    if(this.FormAtender == true){
+      this.FormAtender = false
+    } else {
+      this.FormAtender = true
+    }
+  }
+
+  addSelect() {
+    this.selects.push({ id: this.nextId, selectedValue: '' });
+    this.nextId++;
+  }
+
+  trackByFn(index: number, item: any) {
+    return item.id;
   }
 }
