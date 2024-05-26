@@ -22,8 +22,13 @@ export class AppComponent implements OnInit {
     { title: 'Incidencias', url: 'incidencias', icon: 'alert-circle' },
     { title: 'Tecnicos', url: 'tecnicos', icon: 'people-circle' },
     { title: 'Materiales', url: 'materiales', icon: 'construct' },
-    { title: 'Usuarios', url: 'usuarios', icon: 'people' },
-    { title: 'Usuario', url: 'info-usuario', icon: 'person' },
+    { title: 'Usuarios', url: 'usuarios', icon: 'people' }
+  ];
+    
+
+  public OpsUsuario = [
+    { title: 'Usuario', url: 'info-usuario', icon: 'person' }
+  
   ];
 
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];

@@ -20,8 +20,8 @@ export class DetallesUsuarioPage implements OnInit {
   usuario?: Usuario;
   CentroUsuario: any //Tipo Centro
   CodCentro: string | undefined
-  ModoEdicion: Boolean = true
-  TextModeEdit: String = "Activar Modo Edición"
+  ModoEdicion: boolean = true
+  TextModeEdit : string = "Activar Modo Edición"
   btnTamPantalla: any
   DeleteTecnico?: Usuario
   btnTitleEliminar : string = "Eliminar"
@@ -52,6 +52,7 @@ export class DetallesUsuarioPage implements OnInit {
       console.log(this.CentroUsuario);
 
     });
+    
     this.TamañoPantalla()
   }
   TamañoPantalla() {
@@ -70,18 +71,21 @@ export class DetallesUsuarioPage implements OnInit {
       this.router.navigate(['usuarios']);
     }
     this.ModoEdicion = true
+    this.TextModeEdit = "Activar Modo Edición"
   }
 
   ModoEditar() {
 
     if (this.ModoEdicion === true) {
-      this.ModoEdicion = false
-      this.TextModeEdit = "Activar Modo Edición"
-      
-    } else {
-      this.ModoEdicion = true
       this.TextModeEdit = "Desactivar Modo Edición"
+      this.ModoEdicion = false
+    
+    } else {
+      this.TextModeEdit = "Activar Modo Edición"
+      this.ModoEdicion = true
     }
+
+    console.log(this.ModoEdicion)
   }
 
   async ActualizarUsuario(

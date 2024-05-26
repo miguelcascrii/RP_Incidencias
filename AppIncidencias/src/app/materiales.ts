@@ -6,3 +6,9 @@ export interface Material{
     modelo : String;
     codCentro : string;
 }
+
+export interface MatCantidad{
+    incidencia?: string
+    material: Material;
+    cantidad: number;
+}

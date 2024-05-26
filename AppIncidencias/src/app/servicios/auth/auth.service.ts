@@ -48,7 +48,11 @@ export class AuthService {
   ListarDatos(NomColeccion: string): Observable<any> {
     return this.firestore.collection(NomColeccion).snapshotChanges();
   }
-  //Metodo para actualizar
+  /**
+   * 
+   * @param dato 
+   * @param NomColeccion 
+   */
   UpdateDatos(dato: any, NomColeccion: string) {
     try {
       this.firestore.collection(NomColeccion).doc(dato.id).update(dato);
@@ -57,9 +61,19 @@ export class AuthService {
       console.log("ERROR" + error)
     }
   }
-  //Metodo para eliminar registros
-  DeleteDatos(id: string, NomColeccion: string): Promise<any> {
+  
+  /**
+   * Metodo para eliminar registros
+   * @param id 
+   * @param NomColeccion 
+   * @returns 
+   */
+  DeleteDatos(id : string, NomColeccion: string): Promise<any> {
     return this.firestore.collection(NomColeccion).doc(id).delete();
+  }
+
+  DeleteInci(id: any): Promise<any> {
+    return this.firestore.collection('Incidencias').doc(id).delete();
   }
   // -----------------------
   //  FIN METODOS GENERALES

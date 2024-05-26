@@ -88,7 +88,8 @@
         <ion-grid>
           <ion-row>
             <ion-col size="auto" [hidden]="ModoEdicion">
-              <button type="button" class="btn btn-danger" (click)="btnEliminar()">{{btnTitleEliminar}}</button>
+              <button type="button" class="btn btn-danger" (click)="btnEliminar()">
+                <ion-icon slot="icon-only" name="trash-bin-outline"></ion-icon></button>
             </ion-col>
             <ion-col size="auto" [hidden]="ModoEdicion">
               <button type="submit" class="btn btn-primary">Guardar</button>
@@ -108,11 +109,17 @@
     </ion-card-content>
 
   </ion-card>
-  <div [hidden]="btnTamPantalla">
+  <!-- <div [hidden]="btnTamPantalla">
     <ion-fab class="mb-5" horizontal="end" vertical="end" slot="flex">
       <ion-fab-button color="warning" (click)="CancelarForm()">
         <ion-icon name="close"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-  </div>
+  </div> -->
+
+  <ion-fab class="mb-5" [hidden]="btnTamPantalla" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="warning" (click)="CancelarForm()">
+      <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

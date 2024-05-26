@@ -7,5 +7,6 @@ export interface Incidencia{
     fecha : Date;
     atentida : boolean;
     comentario?: string;
+    tecnico ?: string;
     centro : string;    
 }

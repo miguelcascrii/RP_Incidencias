@@ -1,31 +1,4 @@
 <ion-content [fullscreen]="true">
-
-  <ion-card [hidden]="FormAtender">
-    <ion-card-header>
-      <ion-card-title>
-        Atender Incidencia
-      </ion-card-title>
-
-    </ion-card-header>
-    <ion-card-content>
-      <form>
-        <ion-input name="comentario" [(ngModel)]="selectComentario" label="Comentario"
-          label-placement="floating"></ion-input>
-
-        <ion-button class="mt-3 mb-3" (click)="addSelect()">Añadir Material</ion-button>
-
-        <div *ngFor="let select of selects; trackBy: trackByFn">
-          <ion-item>
-            <ion-select label="Material {{select.id}}" [(ngModel)]="select.selectedValue" label-placement="floating">
-              <ion-select-option *ngFor="let mat of ListaMateriales">{{mat.familia}} + {{mat.modelo}}</ion-select-option>
-
-            </ion-select>
-          </ion-item>
-        </div>
-      </form>
-    </ion-card-content>
-  </ion-card>
-
   <ion-card>
     <ion-card-content>
       <ion-grid>
@@ -34,12 +7,15 @@
             <ion-card-title>
               {{TitleVnt}}
             </ion-card-title>
-            <ion-card-subtitle class="mt-2 h5 text-success">
-              <b>Atendida</b>
-            </ion-card-subtitle>
+            <div [hidden]="!ModoDetalles">
+              <ion-card-subtitle [hidden]="!estAtentida" class="mt-2 h5 text-success">
+                <b>Atendida</b>
+              </ion-card-subtitle>
+            </div>
           </ion-col>
           <ion-col class="ion-text-end">
-
+            <ion-button color="danger" [hidden]="!ModoDetalles" (click)="eliminarInci()"><ion-icon
+                name="trash-bin-outline"></ion-icon></ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -91,10 +67,13 @@
           <ion-row>
             <ion-col size="auto">
               <ion-button type="submit" [hidden]="ModoDetalles">Notificar Incidencia</ion-button>
-              <div [hidden]="!Permisos">
-                <ion-button type="button" [hidden]="!ModoDetalles" (click)="VerFormAtender()">Atender
-                  Incidencia</ion-button>
+              <div [hidden]="estAtentida">
+                <div [hidden]="!Permisos">
+                  <ion-button type="button" [hidden]="!ModoDetalles" (click)="VerFormAtender()">Atender
+                    Incidencia</ion-button>
+                </div>
               </div>
+
             </ion-col>
             <ion-col class="ion-text-end">
               <ion-button type="button" color="warning" [hidden]="!btnTamPantalla"
@@ -105,6 +84,42 @@
       </form>
     </ion-card-content>
   </ion-card>
+
+  <div [hidden]="!ModoDetalles">
+    <ion-card [hidden]="!estAtentida">
+      <ion-card-content>
+        <ion-card-title class="text-success">
+          Detalles de solución
+        </ion-card-title>
+          <ion-list>
+            <ion-item>
+              <ion-input [(ngModel)]="selectedComent" name="comentario" #nombre label="Comentario"
+                label-placement="floating" readonly></ion-input>
+            </ion-item>
+            <ion-item lines="none">
+              <b> Materiales Utilizados </b>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <b>Categoria</b>
+              </ion-label>
+              <ion-label>
+                <b>Material</b>
+              </ion-label>
+              <ion-label>
+                <b>Cantidad</b>
+              </ion-label>
+            </ion-item>
+            <ion-item *ngFor="let item of ListaMatAtentida">
+              <ion-label>{{item.material.familia}}</ion-label>
+              <ion-label>{{item.material.marca}} {{item.material.modelo}}</ion-label>
+              <ion-label class="ion-text-center">{{item.cantidad}}</ion-label>
+            </ion-item>
+          </ion-list>
+        
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 
 
@@ -119,5 +134,7 @@
       <ion-icon name="close"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  
 
 </ion-content>

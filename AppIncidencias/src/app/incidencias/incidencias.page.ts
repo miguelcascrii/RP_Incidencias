@@ -16,7 +16,7 @@ export class IncidenciasPage implements OnInit {
   CodCentro: any;
   ListaIncidencias: Incidencia[] = [];
 
-  MetodosComunes: MetGenerales = new MetGenerales(this.router);
+  MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService);
 
 
   constructor(

@@ -2,14 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Usuario } from '../usuarios';
-import { Material } from '../materiales';
+import { MatCantidad, Material } from '../materiales';
 import { Aula } from '../aulas';
 import { IonInput, IonDatetime } from '@ionic/angular';
 import { Incidencia } from '../incidencias';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { MetGenerales } from '../general';
-import { MatAtendido } from '../matAtendidos';
+import { AlertController } from '@ionic/angular';
+
 
 
 @Component({
@@ -26,21 +27,22 @@ export class NuevaincidenciaPage implements OnInit {
   ListaMateriales: Material[] = [];
   ListaAulas: Aula[] = [];
   ListaUsuarios: Usuario[] = [];
+  ListaMatAtentida : MatCantidad[] = []
   selectedEmail ?: string;
   selectedNombre ?: string;
   selectedDate ?: string;
   selectedAula ?: string;
   selecteDescripcion ?: string;
+  selectedID ?: string
+  selectedComent ?: string
   IncidenciaRecib ?: Incidencia;
   ModoDetalles : boolean = false
   Permisos : boolean = false
   Perm : string = ""
-
-  
-  FormAtender : boolean = true
+  estAtentida : boolean = false
 
   @ViewChild('datetime') datetime !: IonDatetime;
-  MetodosComunes: MetGenerales = new MetGenerales(this.router);
+  MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService,);
 
 
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
@@ -50,7 +52,9 @@ export class NuevaincidenciaPage implements OnInit {
     private authService: AuthService,
     private afAuth: AngularFireAuth,
     private toastController: ToastController,
-    private router : Router
+    private router : Router,
+    private alertController: AlertController
+
 
   ) { }
 
@@ -58,6 +62,13 @@ export class NuevaincidenciaPage implements OnInit {
     const navigation = window.history.state;
     this.VentanaTitulo = navigation.NombreDatos;
     this.IncidenciaRecib = navigation.itemDet
+    if(this.IncidenciaRecib?.atentida === false){
+      this.estAtentida = false
+    }else{
+      this.estAtentida = true
+    }
+    
+      
 
     console.log(this.IncidenciaRecib)
     
@@ -70,35 +81,43 @@ export class NuevaincidenciaPage implements OnInit {
           this.CodCentro = usuario?.centro;
           this.selectedEmail = usuario?.email || ''; // Inicializar selectedEmail
           this.selectedNombre = usuario?.nombre || ''; // Inicializar selectedNombre
-
-          this.listarMateriales(this.CodCentro);
+          
           this.listarAulas(this.CodCentro);
           this.ListarUsuarios(this.CodCentro);
           this.ComprobarModo()
           this.VerPermisos()
-
+          this.ListarMatUtilizados(this.IncidenciaRecib?.id)
+         
+          
           
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
-      
       this.TamañoPantalla();
-     
+      
     });
     
+  }
+  ComprobarEstadoInci(){
+    if(this.IncidenciaRecib?.atentida === false){
+      this.estAtentida = false
+     
+    }else{
+      this.estAtentida = true
+    }
   }
 
   VerPermisos(){
     this.Perm = this.MetodosComunes.ComprobarPermisos(this.UsuarioYO)
-
-    
     if(this.Perm === "N"){
       this.Permisos = false
     }else{
       this.Permisos = true
     }
   }
+
+  
 
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
@@ -112,11 +131,13 @@ export class NuevaincidenciaPage implements OnInit {
     if(this.VentanaTitulo === "DETALLESINCIDENCIA"){
       this.ModoDetalles = true
       this.TitleVnt = "Detalles de Incidencia"
+      this.selectedID = this.IncidenciaRecib?.id
       this.selectedEmail = this.IncidenciaRecib?.email
       this.selectedNombre = this.IncidenciaRecib?.nombre
       this.selectedAula = this.IncidenciaRecib?.aula
       this.selectedDate = this.IncidenciaRecib?.fecha + " "
       this.selecteDescripcion = this.IncidenciaRecib?.descripcion
+      this.selectedComent = this.IncidenciaRecib?.comentario
 
       console.log(this.selectedEmail)
     
@@ -125,21 +146,6 @@ export class NuevaincidenciaPage implements OnInit {
     this.TitleVnt = "Nueva Incidencia"
   }
 }
-
-
-
-  listarMateriales(centro: string) {
-    this.authService.DatoWhere(centro, 'Materiales', 'codCentro').subscribe((res) => {
-      this.ListaMateriales = [];
-      res.forEach((element: any) => {
-        this.ListaMateriales.push({
-          id: element.payload.doc.id,
-          ...element.payload.doc.data(),
-        });
-      });
-    });
-  }
-
   listarAulas(centro: string) {
     this.authService.DatoWhere(centro, 'Aulas', 'codCentro').subscribe((res) => {
       this.ListaAulas = [];
@@ -200,6 +206,7 @@ export class NuevaincidenciaPage implements OnInit {
       descripcion : descripcion,
       atentida : false,
       comentario : "",
+      tecnico : "",
       centro : this.UsuarioYO?.centro || ""
     }
     try {
@@ -224,31 +231,59 @@ export class NuevaincidenciaPage implements OnInit {
   cancel() {
     const datos = {NameVentana: 'NuevaInci' };
     this.router.navigate(['incidencias'], { state: datos });
-    this.FormAtender = true
-
   }
-
-/**
- *  METODOS Y VARIABLES DE FORMULARIO DE ATENDER INCIDENCIA 
- */
-  selectComentario : string =""
-  selects: { id: number, selectedValue: string }[] = [];
-  nextId = 1;
 
   VerFormAtender(){
-    if(this.FormAtender == true){
-      this.FormAtender = false
-    } else {
-      this.FormAtender = true
-    }
+    this.MetodosComunes.AbrePantallasGen("ATENDERINCIDENCIA",this.IncidenciaRecib)
+  }
+  async eliminarInci(){
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: `¿Estás seguro de que deseas eliminar esta incidencia?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cancelado');
+          }
+        },
+        {
+          text: 'Eliminar',
+          handler: async () => {
+            if (this.selectedID) {
+              await this.authService.DeleteInci(this.selectedID)
+              const toast = await this.toastController.create({
+                message: '¡La incidencia ha sido eliminada!',
+                duration: 2000,
+                position: 'top',
+                color: 'danger',
+              });
+              await toast.present();
+              this.cancel();  
+            }
+            await alert.dismiss();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
-  addSelect() {
-    this.selects.push({ id: this.nextId, selectedValue: '' });
-    this.nextId++;
+  ListarMatUtilizados(incidencia ?: string) {
+    this.authService.DatoWhere(incidencia, 'MatCanAtendida', 'incidencia').subscribe((res) => {
+      this.ListaMatAtentida = [];
+      res.forEach((element: any) => {
+        this.ListaMatAtentida.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        });
+      });
+    });
+
+  
   }
 
-  trackByFn(index: number, item: any) {
-    return item.id;
-  }
+
 }
