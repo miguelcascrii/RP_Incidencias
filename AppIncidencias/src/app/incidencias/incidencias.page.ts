@@ -66,11 +66,11 @@ export class IncidenciasPage implements OnInit {
   }
 
   NuevaIncidencia() {
-    this.MetodosComunes.AbrePantallasGen("NUEVAINCIDENCIA")
+    this.MetodosComunes.AbrePantallasGen("NUEVAINCIDENCIA",false)
   }
 
   AbrirDetallesIncidencia(item : any){
-    this.MetodosComunes.AbrePantallasGen("DETALLESINCIDENCIA",item)
+    this.MetodosComunes.AbrePantallasGen("DETALLESINCIDENCIA",item,true)
   }
 
   goToPage(page: number) {

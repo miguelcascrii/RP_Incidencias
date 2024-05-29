@@ -32,7 +32,6 @@ export class HomePage {
  ngOnInit(): void {
   this.afAuth.authState.subscribe(user => {
     if (user) {
-      console.log(user.email);
       this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
         this.usuario = usuario;
         if (this.usuario?.centro == '000') {
@@ -40,7 +39,6 @@ export class HomePage {
           this.cargarCentros();
         } else {
           this.CodigoCentro = usuario?.centro;
-          console.log(usuario?.centro);
           this.bModoCentroV = true;
         }
       });
@@ -73,10 +71,10 @@ export class HomePage {
     console.log("> " + this.ListaCentrosMostrar);
     if (searchTerm === '') {
       this.ResultBusqueda = true;
-      console.log("vacio")
+     
     } else {
       this.ResultBusqueda = false;
-      console.log("letras")
+     
     }
   }
 
@@ -125,7 +123,6 @@ export class HomePage {
   async AsignarCentroNewUser(
     codCentro : any
   ) {
-    console.log("Estoy en actualizar");
 
     const usuario: Usuario = {
 

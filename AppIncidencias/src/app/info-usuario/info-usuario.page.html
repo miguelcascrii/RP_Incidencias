@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>InfoUsuario</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">InfoUsuario</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  
+  <ion-card-header>
+  <ion-card-title>
+    Mi Cuenta
+  </ion-card-title>
+ </ion-card-header>
+ <div class="row">
+  <form >
+  <div class="col-md-6">
+    <ion-card>
+      <div class="row">
+        <div class="col-md-6">
+          <img class="m-2" style="border-radius: 50%;" src="{{usuario?.foto}}">
+          <ion-label><b>{{usuario?.email}}</b></ion-label>
+        </div>
+      </div>
+    </ion-card>
+  </div>
+</form>
+ </div>
+
+
+
 </ion-content>

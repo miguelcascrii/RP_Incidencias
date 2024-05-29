@@ -13,9 +13,9 @@
               </ion-card-subtitle>
             </div>
           </ion-col>
-          <ion-col class="ion-text-end">
-            <ion-button color="danger" [hidden]="!ModoDetalles" (click)="eliminarInci()"><ion-icon
-                name="trash-bin-outline"></ion-icon></ion-button>
+          <ion-col class="ion-text-end" [hidden]="!ModoDetalles">
+            <ion-button color="danger" [hidden]="!Permisos" (click)="eliminarInci()">
+              <ion-icon name="trash-bin-outline"></ion-icon></ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>

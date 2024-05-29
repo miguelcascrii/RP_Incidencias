@@ -27,7 +27,7 @@
 
     </ion-list>
 
-    <ion-button class="m-2" (click)="btnNuevoTecnico()"><ion-icon name="add-circle-outline"></ion-icon>Añadir tecnico</ion-button>
+    <ion-button class="m-2" [hidden]="!Permisos" (click)="btnNuevoTecnico()"><ion-icon name="add-circle-outline"></ion-icon>Añadir tecnico</ion-button>
 
   </ion-card>
   <ion-card [hidden]="VisualTecNuevo">
@@ -54,6 +54,6 @@
       </ion-item>
     </ion-list>
     
-    <ion-button (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
+    <ion-button  class="m-2" (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
   </ion-card>
 </ion-content>

@@ -7,6 +7,8 @@ import { ToastController } from '@ionic/angular';
 import { Usuario } from '../usuarios';
 import { ItemReorderEventDetail } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
+import { MetGenerales } from '../general';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-materiales',
@@ -25,6 +27,8 @@ export class MaterialesPage implements OnInit {
   TitleForm: string = '';
   TextModeEdit : String = 'Activar Modo Edición';
   EditionMode : boolean  = false
+  Perm : string = "";
+  Permisos : boolean = false;
 
   material: Material = {
 
@@ -35,12 +39,15 @@ export class MaterialesPage implements OnInit {
     codCentro: '',
   };
 
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
+
   constructor(
     private authService: AuthService,
     private firestore: AngularFirestore,
     private afAuth: AngularFireAuth,
     private toastController: ToastController,
     private alertController: AlertController,
+    private router : Router
   ) { }
 
   ngOnInit(): void {
@@ -52,10 +59,13 @@ export class MaterialesPage implements OnInit {
           this.CodCentro = usuario?.centro;
           this.listarMateriales(this.CodCentro);
           console.log(this.CodCentro)
+          this.VerPermisos(usuario)
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
+      this.EditionMode = false
+      this.TextModeEdit = 'Activar Modo Edición';
       this.TamañoPantalla()
     });
 
@@ -66,6 +76,15 @@ export class MaterialesPage implements OnInit {
       this.btnTamPantalla = false
     } else {
       this.btnTamPantalla = true
+    }
+  }
+  
+  VerPermisos(usuario ?: Usuario) {
+    this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
     }
   }
 
@@ -155,10 +174,15 @@ export class MaterialesPage implements OnInit {
   }
 
   SelectMaterial(material: Material) {
-    this.material = material;
-    this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial;
-    this.ModoDetalles = true;
-    console.log("Material" + this.material)
+      console.log(this.Permisos)
+
+      if(this.Permisos === true){
+      this.material = material;
+      this.VisualFormNuevoMaterial = !this.VisualFormNuevoMaterial;
+      this.ModoDetalles = true;
+      console.log("Material" + this.material)
+    }
+    
   
 
   }

@@ -21,9 +21,11 @@ export class AtenderIncidenciaPage implements OnInit {
   buscador: boolean = true;
   MostrarListaMatAtend: boolean = false;
   CantidadMat: number = 0;
-  VentanaTitulo : string =""
+  VentanaTitulo: string = ""
   IncidenciaRecib !: Incidencia
   btnTamPantalla: any;
+  Perm : string = "";
+  Permisos : boolean = false;
 
 
   MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
@@ -32,7 +34,7 @@ export class AtenderIncidenciaPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private afAuth: AngularFireAuth,
-    private toastController : ToastController
+    private toastController: ToastController
   ) { }
 
   ngOnInit() {
@@ -46,7 +48,7 @@ export class AtenderIncidenciaPage implements OnInit {
       this.ComprobarListaMatAtent();
       this.TamañoPantalla()
     });
-    
+
   }
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
@@ -55,7 +57,16 @@ export class AtenderIncidenciaPage implements OnInit {
       this.btnTamPantalla = true;
     }
   }
-  
+
+  VerPermisos() {
+    this.Perm = this.MetodosComunes.ComprobarPermisos();
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
+    }
+  }
+
 
   handleInput(event: any) {
     const query = event.target.value.toLowerCase();
@@ -81,16 +92,22 @@ export class AtenderIncidenciaPage implements OnInit {
         const material: Material = {
           id: element.payload.doc.id,
           ...element.payload.doc.data(),
-          cantidad: 0 // Agregar la propiedad cantidad a cada Material
+
         };
-        this.ListaMateriales.push(material);
+        if (material.stock > 0) {
+          this.ListaMateriales.push(material);
+        }
       });
       this.results = [...this.ListaMateriales]; // Inicializar results con todos los materiales
     });
   }
 
   cancel() {
-    this.MetodosComunes.AbrePantallasGen("DETALLESINCIDENCIA",this.IncidenciaRecib)
+    
+     
+    this.router.navigate(['nuevaincidencia'], {
+      state: { NombreDatos: 'DETALLESINCIDENCIA', itemDet: this.IncidenciaRecib, modoDetalles: true }
+    });
   }
 
   SelectMaterial(material: Material) {
@@ -117,65 +134,83 @@ export class AtenderIncidenciaPage implements OnInit {
   addMaterial(material: MatCantidad) {
     material.cantidad++;
   }
-  
+
   removeMaterial(material: MatCantidad) {
     if (material.cantidad > 0) {
       material.cantidad--;
     }
   }
 
-  async GuardarAtendida(comentario : any){
+  async GuardarAtendida(comentario: any) {
+    let stockmenor = true;
 
-    for(let item of this.ListaMatAtend){
-      const matcanti : MatCantidad = {
-        incidencia : this.IncidenciaRecib?.id,
-        material : item.material,
-        cantidad : item.cantidad
-      }
-
-     
-        const material: Material = {
-        id: matcanti.material.id,
-        familia: matcanti.material.familia,
-        stock: Number(matcanti.material.stock) - matcanti.cantidad,
-        marca: matcanti.material.marca,
-        modelo: matcanti.material.modelo,
-        codCentro: matcanti.material.codCentro
-
-        
+    for (let item of this.ListaMatAtend) {
+      const matcanti: MatCantidad = {
+        incidencia: this.IncidenciaRecib?.id,
+        material: item.material,
+        cantidad: item.cantidad
       };
-      try{
-      this.authService.UpdateDatos(material,'Materiales');
-      this.authService.GuardarCualDato(matcanti,'MatCanAtendida')
-    } catch (error){
-      console.log(error)
-    }
+
+      if (matcanti.material.stock < matcanti.cantidad) {
+        stockmenor = false;
+        const toast = await this.toastController.create({
+          message: 'El stock [ ' + matcanti.material.stock + ' ] es inferior a la cantidad deseada [' + matcanti.cantidad + ']',
+          duration: 2400,
+          position: 'bottom',
+          color: 'warning',
+        });
+        toast.present();
+      } else {
+        stockmenor = true;
+        const material: Material = {
+          id: matcanti.material.id,
+          familia: matcanti.material.familia,
+          stock: Number(matcanti.material.stock) - matcanti.cantidad,
+          marca: matcanti.material.marca,
+          modelo: matcanti.material.modelo,
+          codCentro: matcanti.material.codCentro
+        };
+
+        try {
+          await this.authService.UpdateDatos(material, 'Materiales');
+          await this.authService.GuardarCualDato(matcanti, 'MatCanAtendida');
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
 
-    const incidencia : Incidencia = {
-      id : this.IncidenciaRecib.id,
-      email : this.IncidenciaRecib.email,
-      nombre : this.IncidenciaRecib.nombre,
-      aula : this.IncidenciaRecib.aula,
-      fecha : this.IncidenciaRecib.fecha,
-      descripcion : this.IncidenciaRecib.descripcion,
-      atentida : true,
-      comentario : comentario.value,
-      tecnico : "",
-      centro : this.IncidenciaRecib.centro || ""
+    if (stockmenor == true) {
+      const incidencia: Incidencia = {
+        id: this.IncidenciaRecib.id,
+        email: this.IncidenciaRecib.email,
+        nombre: this.IncidenciaRecib.nombre,
+        aula: this.IncidenciaRecib.aula,
+        fecha: this.IncidenciaRecib.fecha,
+        descripcion: this.IncidenciaRecib.descripcion,
+        atentida: true,
+        comentario: comentario.value,
+        tecnico: "",
+        centro: this.IncidenciaRecib.centro || ""
+      };
+      try {
+        await this.authService.UpdateDatos(incidencia, 'Incidencias');
+        const toast = await this.toastController.create({
+          message: '¡La incidencia ha sido solucionada!',
+          duration: 2000,
+          position: 'top',
+          color: 'success',
+        });
+        toast.present();
+
+        // Navegar de vuelta a la página de detalles con los datos actualizados
+        this.router.navigate(['nuevaincidencia'], {
+          state: { NombreDatos: 'DETALLESINCIDENCIA', itemDet: incidencia, modoDetalles: true }
+        });
+      } catch (error) {
+        console.log("ERROR: " + error);
+      }
     }
-    try {
-      this.authService.UpdateDatos(incidencia,'Incidencias')
-    const toast = await this.toastController.create({
-      message: '¡La incidencia ha sido solucionada!',
-      duration: 2000,
-      position: 'top',
-      color: 'success',
-    });
-    toast.present();
-    this.cancel()
-    } catch (error) {
-      console.log("ERROR: " + error)
-    }
-  } 
+  }
+  
 }

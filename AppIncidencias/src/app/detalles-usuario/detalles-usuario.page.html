@@ -1,15 +1,26 @@
 <ion-content [fullscreen]="true">
   <ion-card>
-    <ion-card-header>
-      <ion-card-title>
-        Detalles de {{VentanaTitulo}}
-        
-      </ion-card-title>
-      <ion-label class="mt-1" color="success" [hidden]="ModoEdicion"><b>Modo Edición Activado</b></ion-label>
-    </ion-card-header>
-    
     <ion-card-content>
-      <form (submit)="ActualizarUsuario(id,email,nombre,apellidos,telefono,rol,departamento)" class="ion-justify-content-center">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-card-title>
+              Detalles de {{VentanaTitulo}}
+            </ion-card-title>
+            <ion-card-subtitle class="mt-1" color="success" [hidden]="ModoEdicion">
+              <b>Modo Edición Activado</b>
+            </ion-card-subtitle>
+          </ion-col>
+          <ion-col class="ion-text-end" [hidden]="ModoEdicion">
+              <ion-button color="danger" (click)="btnEliminar()">
+                <ion-icon name="trash-bin"></ion-icon>
+              </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    <ion-card-content>
+      <form (submit)="ActualizarUsuario(id,email,nombre,apellidos,telefono,rol,departamento)"
+        class="ion-justify-content-center">
         <input name="id" id="id" [value]="usuario?.id" hidden #id>
         <div class="row">
           <!-- Columna para la imagen y los campos de texto izquierdos -->
@@ -26,20 +37,22 @@
               <!-- Campo de texto para el email -->
               <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" [value]="usuario?.email"  readonly #email>
+                <input type="email" class="form-control" id="email" [value]="usuario?.email" readonly #email>
                 <div id="emailHelp" class="form-text">Este campo no se puede modificar</div>
               </div>
               <div class="row">
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label for="Nombre" class="form-label">Nombre</label>
-                    <input type="text" class="form-control" id="nombre" [value]="usuario?.nombre" [disabled]="ModoEdicion" #nombre>
+                    <input type="text" class="form-control" id="nombre" [value]="usuario?.nombre"
+                      [disabled]="ModoEdicion" #nombre>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="mb-3">
                     <label for="apellidos" class="form-label">Apellidos</label>
-                    <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos" [disabled]="ModoEdicion" #apellidos>
+                    <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos"
+                      [disabled]="ModoEdicion" #apellidos>
                   </div>
                 </div>
               </div>
@@ -70,44 +83,40 @@
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Departamento</label>
                 <input type="text" class="form-control" id="departamento" [value]="usuario?.departamento"
-                   aria-describedby="DepartamentoHelp" [disabled]="ModoEdicion" #departamento>
+                  aria-describedby="DepartamentoHelp" [disabled]="ModoEdicion" #departamento>
               </div>
             </div>
             <div class="col-md-6">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Centro</label>
                 <input type="text" class="form-control" id="rol" [value]="CentroUsuario?.nombre"
-                  aria-describedby="rolHelp" readonly><div id="emailHelp" class="form-text">Pulsa para ver más detalles del centro</div>
+                  aria-describedby="rolHelp" readonly>
+                <div id="emailHelp" class="form-text">Pulsa para ver más detalles del centro</div>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Botón de submit -->
-       
         <ion-grid>
           <ion-row>
             <ion-col size="auto" [hidden]="ModoEdicion">
-              <button type="button" class="btn btn-danger" (click)="btnEliminar()">
-                <ion-icon slot="icon-only" name="trash-bin-outline"></ion-icon></button>
-            </ion-col>
-            <ion-col size="auto" [hidden]="ModoEdicion">
               <button type="submit" class="btn btn-primary">Guardar</button>
             </ion-col>
-            <ion-col size="auto">
+            <ion-col size="auto" [hidden]="!Permisos">
               <button type="button" (click)="ModoEditar()" class="btn btn-success">
                 {{TextModeEdit}}
               </button>
             </ion-col>
             <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
               <button type="button" class="btn btn-warning" (click)="CancelarForm()"> Cancelar</button>
-                
+
             </ion-col>
           </ion-row>
         </ion-grid>
       </form>
     </ion-card-content>
-
+  </ion-card-content>
   </ion-card>
   <!-- <div [hidden]="btnTamPantalla">
     <ion-fab class="mb-5" horizontal="end" vertical="end" slot="flex">

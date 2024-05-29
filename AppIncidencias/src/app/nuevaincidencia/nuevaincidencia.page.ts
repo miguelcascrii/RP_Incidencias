@@ -7,11 +7,9 @@ import { Aula } from '../aulas';
 import { IonInput, IonDatetime } from '@ionic/angular';
 import { Incidencia } from '../incidencias';
 import { ToastController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MetGenerales } from '../general';
 import { AlertController } from '@ionic/angular';
-
-
 
 @Component({
   selector: 'app-nuevaincidencia',
@@ -20,30 +18,29 @@ import { AlertController } from '@ionic/angular';
 })
 export class NuevaincidenciaPage implements OnInit {
   CodCentro: any;
-  TitleVnt : String =""
+  TitleVnt : String = ""
   UsuarioYO?: Usuario;
   VentanaTitulo: string = "";
   btnTamPantalla: any;
   ListaMateriales: Material[] = [];
   ListaAulas: Aula[] = [];
   ListaUsuarios: Usuario[] = [];
-  ListaMatAtentida : MatCantidad[] = []
+  ListaMatAtentida : MatCantidad[] = [];
   selectedEmail ?: string;
   selectedNombre ?: string;
   selectedDate ?: string;
   selectedAula ?: string;
   selecteDescripcion ?: string;
-  selectedID ?: string
-  selectedComent ?: string
+  selectedID ?: string;
+  selectedComent ?: string;
   IncidenciaRecib ?: Incidencia;
-  ModoDetalles : boolean = false
-  Permisos : boolean = false
-  Perm : string = ""
-  estAtentida : boolean = false
+  ModoDetalles : boolean = false;
+  Permisos : boolean = false;
+  Perm : string = "";
+  estAtentida : boolean = false;
 
   @ViewChild('datetime') datetime !: IonDatetime;
-  MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService,);
-
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
 
   message = 'This modal example uses triggers to automatically open a modal when the button is clicked.';
   name: any;
@@ -52,72 +49,57 @@ export class NuevaincidenciaPage implements OnInit {
     private authService: AuthService,
     private afAuth: AngularFireAuth,
     private toastController: ToastController,
-    private router : Router,
-    private alertController: AlertController
-
-
-  ) { }
+    private router: Router,
+    private alertController: AlertController,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
-    const navigation = window.history.state;
-    this.VentanaTitulo = navigation.NombreDatos;
-    this.IncidenciaRecib = navigation.itemDet
-    if(this.IncidenciaRecib?.atentida === false){
-      this.estAtentida = false
-    }else{
-      this.estAtentida = true
-    }
+    this.route.queryParams.subscribe(params => {
+      const navigation = this.router.getCurrentNavigation()?.extras.state;
+      if (navigation) {
+        this.VentanaTitulo = navigation['NombreDatos'];
+        this.IncidenciaRecib = navigation['itemDet'];
+        this.ModoDetalles = navigation['modoDetalles']; // Obtener el valor de modoDetalles
     
-      
-
-    console.log(this.IncidenciaRecib)
+        if (this.IncidenciaRecib?.atentida === false) {
+          this.estAtentida = false;
+        } else {
+          this.estAtentida = true;
+        }
     
-
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        console.log(user.email);
-        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
-          this.UsuarioYO = usuario;
-          this.CodCentro = usuario?.centro;
-          this.selectedEmail = usuario?.email || ''; // Inicializar selectedEmail
-          this.selectedNombre = usuario?.nombre || ''; // Inicializar selectedNombre
-          
-          this.listarAulas(this.CodCentro);
-          this.ListarUsuarios(this.CodCentro);
-          this.ComprobarModo()
-          this.VerPermisos()
-          this.ListarMatUtilizados(this.IncidenciaRecib?.id)
-         
-          
-          
+        this.afAuth.authState.subscribe(user => {
+          if (user) {
+            this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
+              this.UsuarioYO = usuario;
+              this.CodCentro = usuario?.centro;
+              this.selectedEmail = usuario?.email || ''; // Inicializar selectedEmail
+              this.selectedNombre = usuario?.nombre || ''; // Inicializar selectedNombre
+    
+              this.listarAulas(this.CodCentro);
+              this.ListarUsuarios(this.CodCentro);
+              this.ComprobarModo();
+              this.VerPermisos(usuario);
+              this.ListarMatUtilizados(this.IncidenciaRecib?.id);
+            });
+          } else {
+            // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
+          }
+          this.TamañoPantalla();
         });
-      } else {
-        // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
-      this.TamañoPantalla();
-      
     });
-    
   }
-  ComprobarEstadoInci(){
-    if(this.IncidenciaRecib?.atentida === false){
-      this.estAtentida = false
-     
-    }else{
-      this.estAtentida = true
-    }
-  }
-
-  VerPermisos(){
-    this.Perm = this.MetodosComunes.ComprobarPermisos(this.UsuarioYO)
-    if(this.Perm === "N"){
-      this.Permisos = false
-    }else{
-      this.Permisos = true
-    }
-  }
-
   
+
+  VerPermisos(usuario ?: Usuario) {
+    this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
+    }
+  }
 
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
@@ -127,25 +109,23 @@ export class NuevaincidenciaPage implements OnInit {
     }
   }
 
-  ComprobarModo(){
-    if(this.VentanaTitulo === "DETALLESINCIDENCIA"){
-      this.ModoDetalles = true
-      this.TitleVnt = "Detalles de Incidencia"
-      this.selectedID = this.IncidenciaRecib?.id
-      this.selectedEmail = this.IncidenciaRecib?.email
-      this.selectedNombre = this.IncidenciaRecib?.nombre
-      this.selectedAula = this.IncidenciaRecib?.aula
-      this.selectedDate = this.IncidenciaRecib?.fecha + " "
-      this.selecteDescripcion = this.IncidenciaRecib?.descripcion
-      this.selectedComent = this.IncidenciaRecib?.comentario
-
-      console.log(this.selectedEmail)
-    
-  } else if(this.VentanaTitulo === "NUEVAINCIDENCIA"){
-    this.ModoDetalles = false
-    this.TitleVnt = "Nueva Incidencia"
+  ComprobarModo() {
+    if (this.VentanaTitulo === "DETALLESINCIDENCIA" && this.ModoDetalles) {
+      this.ModoDetalles = true;
+      this.TitleVnt = "Detalles de Incidencia";
+      this.selectedID = this.IncidenciaRecib?.id;
+      this.selectedEmail = this.IncidenciaRecib?.email;
+      this.selectedNombre = this.IncidenciaRecib?.nombre;
+      this.selectedAula = this.IncidenciaRecib?.aula;
+      this.selectedDate = this.IncidenciaRecib?.fecha + " ";
+      this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
+      this.selectedComent = this.IncidenciaRecib?.comentario;
+    } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && this.ModoDetalles) {
+      this.ModoDetalles = false;
+      this.TitleVnt = "Nueva Incidencia";
+    }
   }
-}
+  
   listarAulas(centro: string) {
     this.authService.DatoWhere(centro, 'Aulas', 'codCentro').subscribe((res) => {
       this.ListaAulas = [];
@@ -182,10 +162,8 @@ export class NuevaincidenciaPage implements OnInit {
   }
 
   async NuevaIncidencia(email: any, nombre: any, aula: any, fecha: any, descripcion: any) {
-    
     // Si la fecha se pasa como undefined obtendremos la fecha actual
-    //ademas la formatea a YYY/MM/DD
-
+    // además la formatea a YYYY/MM/DD
     if (fecha === undefined || isNaN(Date.parse(fecha))) {
       const now = new Date();
       fecha = now.getFullYear() + '-' + 
@@ -198,45 +176,43 @@ export class NuevaincidenciaPage implements OnInit {
               String(dateObj.getDate()).padStart(2, '0');
     }
   
-    const incidencia : Incidencia = {
-      email : email,
-      nombre : nombre,
-      aula : aula,
-      fecha : fecha,
-      descripcion : descripcion,
-      atentida : false,
-      comentario : "",
-      tecnico : "",
-      centro : this.UsuarioYO?.centro || ""
-    }
+    const incidencia: Incidencia = {
+      email: email,
+      nombre: nombre,
+      aula: aula,
+      fecha: fecha,
+      descripcion: descripcion,
+      atentida: false,
+      comentario: "",
+      tecnico: "",
+      centro: this.UsuarioYO?.centro || ""
+    };
+    
     try {
-      this.authService.GuardarCualDato(incidencia,'Incidencias')
-    const toast = await this.toastController.create({
-      message: '¡La incidencia está en manos de los técnicoss!',
-      duration: 2000,
-      position: 'top',
-      color: 'success',
-    });
-    toast.present();
-    this.cancel()
-    
-
+      await this.authService.GuardarCualDato(incidencia, 'Incidencias');
+      const toast = await this.toastController.create({
+        message: '¡La incidencia está en manos de los técnicos!',
+        duration: 2000,
+        position: 'top',
+        color: 'success',
+      });
+      toast.present();
+      this.cancel();
     } catch (error) {
-      console.log("ERROR: " + error)
+      console.log("ERROR: " + error);
     }
-    
-  
   }
 
   cancel() {
-    const datos = {NameVentana: 'NuevaInci' };
+    const datos = { NameVentana: 'NuevaInci' };
     this.router.navigate(['incidencias'], { state: datos });
   }
 
-  VerFormAtender(){
-    this.MetodosComunes.AbrePantallasGen("ATENDERINCIDENCIA",this.IncidenciaRecib)
+  VerFormAtender() {
+    this.MetodosComunes.AbrePantallasGen("ATENDERINCIDENCIA", this.IncidenciaRecib);
   }
-  async eliminarInci(){
+
+  async eliminarInci() {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
       message: `¿Estás seguro de que deseas eliminar esta incidencia?`,
@@ -253,7 +229,7 @@ export class NuevaincidenciaPage implements OnInit {
           text: 'Eliminar',
           handler: async () => {
             if (this.selectedID) {
-              await this.authService.DeleteInci(this.selectedID)
+              await this.authService.DeleteInci(this.selectedID);
               const toast = await this.toastController.create({
                 message: '¡La incidencia ha sido eliminada!',
                 duration: 2000,
@@ -281,9 +257,5 @@ export class NuevaincidenciaPage implements OnInit {
         });
       });
     });
-
-  
   }
-
-
 }

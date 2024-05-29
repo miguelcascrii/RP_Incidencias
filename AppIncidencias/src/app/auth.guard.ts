@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
       map(user => {
         if (!user) {
           // Si el usuario no está autenticado, redirigirlo a la página de autenticación
-          return this.router.createUrlTree(['/autenticacion']); // Ajusta la ruta según la configuración de tu proyecto
+          return this.router.createUrlTree(['autenticacion']); // Ajusta la ruta según la configuración de tu proyecto
         } else {
           // Si el usuario está autenticado, permitir el acceso a la ruta solicitada
           return true;

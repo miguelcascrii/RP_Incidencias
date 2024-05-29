@@ -8,7 +8,8 @@ import { Centro } from '../centros';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-
+import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { MetGenerales } from '../general';
 @Component({
   selector: 'app-detalles-usuario',
   templateUrl: './detalles-usuario.page.html',
@@ -25,12 +26,17 @@ export class DetallesUsuarioPage implements OnInit {
   btnTamPantalla: any
   DeleteTecnico?: Usuario
   btnTitleEliminar : string = "Eliminar"
+  Perm : string = "";
+  Permisos : boolean = false;
+
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private afAuth : AngularFireAuth
   ) { }
 
   ngOnInit(): void {
@@ -60,6 +66,15 @@ export class DetallesUsuarioPage implements OnInit {
       this.btnTamPantalla = false
     } else {
       this.btnTamPantalla = true
+    }
+  }
+
+  VerPermisos(usuario ?: Usuario) {
+    this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
     }
   }
 

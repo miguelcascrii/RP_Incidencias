@@ -29,6 +29,6 @@
 
     </ion-list>
 
-    <ion-button class="m-2"><ion-icon name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
+    <ion-button class="m-2" [hidden]="!Permisos"><ion-icon name="add-circle-outline" ></ion-icon>Invitar Usuario</ion-button>
   </ion-card>
 </ion-content>

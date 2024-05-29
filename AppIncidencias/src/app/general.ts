@@ -8,6 +8,7 @@ import { switchMap
  } from "rxjs";
 export class MetGenerales {
   CodCentro : any
+  UsuarioActivo ?: Usuario
 
   constructor(
     private router: Router,
@@ -38,8 +39,6 @@ export class MetGenerales {
     );
   }
 
-
-
   /**
    * Metodo para crear paginación para cualquier pantalla
    */
@@ -63,35 +62,29 @@ export class MetGenerales {
    * 
    */
 
-  AbrePantallasGen(vntAbrir: string, itemDetalles?: any) {
+  AbrePantallasGen(vntAbrir: string, itemDetalles?: any, modoDetalles?: boolean) {
     switch (vntAbrir) {
       case "DETALLESINCIDENCIA":
-        this.AbrirVentana('nuevaincidencia', 'DETALLESINCIDENCIA', itemDetalles)
+        this.AbrirVentana('nuevaincidencia', 'DETALLESINCIDENCIA', itemDetalles, modoDetalles);
         break;
       case "NUEVAINCIDENCIA":
-        this.AbrirVentana('nuevaincidencia', 'NUEVAINCIDENCIA')
+        this.AbrirVentana('nuevaincidencia', 'NUEVAINCIDENCIA');
         break;
       case "ATENDERINCIDENCIA":
-        this.AbrirVentana('atender-incidencia', 'ATENDERINCIDENCIA',itemDetalles)
+        this.AbrirVentana('atender-incidencia', 'ATENDERINCIDENCIA', itemDetalles);
         break;
       default:
         console.log("Selecciona una opción");
         break;
     }
-
   }
-
-  /**
-   * 
-   * @param NameVentana Ventana a la que redirige
-   * 
-   */
-  AbrirVentana(NameVentana: string, NombreDatos: string, itemDet?: any) {
-    let datos
+  
+  AbrirVentana(NameVentana: string, NombreDatos: string, itemDet?: any, modoDetalles?: boolean) {
+    let datos;
     if (itemDet !== undefined) {
-      datos = { NombreDatos, itemDet };
+      datos = { NombreDatos, itemDet, modoDetalles };
     } else {
-      datos = { NombreDatos }
+      datos = { NombreDatos, modoDetalles };
     }
     this.router.navigate([NameVentana], { state: datos });
   }

@@ -22,14 +22,17 @@ export class AppComponent implements OnInit {
     { title: 'Incidencias', url: 'incidencias', icon: 'alert-circle' },
     { title: 'Tecnicos', url: 'tecnicos', icon: 'people-circle' },
     { title: 'Materiales', url: 'materiales', icon: 'construct' },
-    { title: 'Usuarios', url: 'usuarios', icon: 'people' }
+    
   ];
     
 
   public OpsUsuario = [
-    { title: 'Usuario', url: 'info-usuario', icon: 'person' }
+    { title: 'Cuenta', url: 'info-usuario', icon: 'person-circle' },
+    { title: 'Centro', url: 'centro', icon: 'business' },
+    { title: 'Usuarios', url: 'usuarios', icon: 'people' }
   
   ];
+  
 
   public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
 
@@ -40,7 +43,6 @@ export class AppComponent implements OnInit {
         this.ObtenerUser();
       } else {
         this.SesionState = false;
-        // Agregamos la llamada a EstadoDesconectado() cuando el usuario no ha iniciado sesión
         this.EstadoDesconectado();
       }
     });
@@ -107,30 +109,15 @@ export class AppComponent implements OnInit {
   }
 
   ObtenerUser() {
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
-          this.usuario = usuario;
-          this.ComprobarEstado();
-        });
-      }
+    this.authService.obtenerUsuarioPorEmail().subscribe(usuario => {
+      this.usuario = usuario;
+      this.ComprobarEstado();
     });
   }
 
   ComprobarEstado() {
-    if (this.SesionState == true) {
-      if(this.usuario?.estado == "Conectado"){
-
-      } else{
-        this.EstadoConectado();
-      }
-    } else if (this.SesionState == false) {
-      if(this.usuario?.estado == "Desconectado"){
-
-      } else{
-        this.EstadoDesconectado();
-      }
-
+    if (this.usuario) {
+      this.EstadoConectado();
     }
   }
 }

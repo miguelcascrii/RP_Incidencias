@@ -9,6 +9,7 @@ import { AlertController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { DataServiceService } from '../data-service.service';
+import { MetGenerales } from '../general';
 
 @Component({
   selector: 'app-tecnicos',
@@ -26,6 +27,11 @@ export class TecnicosPage implements OnInit {
   UserState !: string;
   VisualTecNuevo : Boolean = true
   NameVentana !: string;
+
+  Perm : string = "";
+  Permisos : boolean = false;
+
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
 
   constructor(
     private authService: AuthService,
@@ -46,6 +52,7 @@ export class TecnicosPage implements OnInit {
           this.usuarioReg = usuario;
           this.CodCentro = usuario?.centro;
           this.ListarUsuarios(this.CodCentro);
+          this.VerPermisos(usuario)
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
@@ -60,6 +67,15 @@ export class TecnicosPage implements OnInit {
       this.btnTamPantalla = false
     } else {
       this.btnTamPantalla = true
+    }
+  }
+
+  VerPermisos(usuario ?: Usuario) {
+    this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
     }
   }
 

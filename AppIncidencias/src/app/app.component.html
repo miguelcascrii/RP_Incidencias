@@ -16,7 +16,7 @@
         </ion-menu-toggle>
         <hr>
         <ion-item lines="none">
-          <ion-label><b>Mi Cuenta</b></ion-label>
+          <ion-label><b>Sobre mi</b></ion-label>
         </ion-item>
         <ion-menu-toggle auto-hide="false" *ngFor="let p of OpsUsuario; let i = index">
           <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false"
@@ -26,7 +26,7 @@
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle auto-hide="false">
-          <ion-button class="mt-2" size="medium" color="danger" expand="block" fill="outline" (click)="CerrarSesion()"> <ion-icon class="m-1" name="log-out-outline"></ion-icon> Cerrar Sesión</ion-button>
+          <ion-button class="mt-5" size="small" color="danger" expand="block" fill="outline" (click)="CerrarSesion()"> <ion-icon class="m-1" name="log-out-outline"></ion-icon> Cerrar Sesión</ion-button>
           <!-- <ion-item class="mt-3" (click)="CerrarSesion()"><ion-button>Cerrar Sesión</ion-button></ion-item> -->
         </ion-menu-toggle>
       </ion-list>

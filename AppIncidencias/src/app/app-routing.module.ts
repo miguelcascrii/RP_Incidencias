@@ -58,6 +58,11 @@ const routes: Routes = [
     loadChildren: () => import('./atender-incidencia/atender-incidencia.module').then( m => m.AtenderIncidenciaPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'centro',
+    loadChildren: () => import('./centro/centro.module').then( m => m.CentroPageModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({
