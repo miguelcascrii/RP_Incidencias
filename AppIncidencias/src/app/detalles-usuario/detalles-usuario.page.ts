@@ -19,6 +19,7 @@ export class DetallesUsuarioPage implements OnInit {
 
   VentanaTitulo: string = ""
   usuario?: Usuario;
+  usuarioYo ?: Usuario;
   CentroUsuario: any //Tipo Centro
   CodCentro: string | undefined
   ModoEdicion: boolean = true
@@ -44,7 +45,6 @@ export class DetallesUsuarioPage implements OnInit {
     this.usuario = navigation.usuario;
     this.VentanaTitulo = navigation.NameVentana;
     this.CodCentro = this.usuario?.centro
-
     this.btnTitleEliminar =""
 
     if(this.usuario?.rol == 0){
@@ -53,10 +53,23 @@ export class DetallesUsuarioPage implements OnInit {
       this.btnTitleEliminar = "Eliminar de Técnicos"
     }
 
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        console.log(user.email);
+        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
+          this.usuarioYo = usuario;
+          
+          this.VerPermisos(this.usuarioYo)
+        });
+      } else {
+        // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
+      }
+    });
+    
     this.authService.ObtenerCentroPorCod(this.CodCentro).subscribe(centro => {
       this.CentroUsuario = centro;
       console.log(this.CentroUsuario);
-
+      
     });
     
     this.TamañoPantalla()
@@ -76,6 +89,7 @@ export class DetallesUsuarioPage implements OnInit {
     } else {
       this.Permisos = true;
     }
+   console.log(this.Permisos)
   }
 
   CancelarForm() {

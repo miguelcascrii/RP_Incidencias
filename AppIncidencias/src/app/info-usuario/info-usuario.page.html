@@ -1,25 +1,132 @@
 <ion-content [fullscreen]="true">
-  
-  <ion-card-header>
-  <ion-card-title>
-    Mi Cuenta
-  </ion-card-title>
- </ion-card-header>
- <div class="row">
-  <form >
-  <div class="col-md-6">
-    <ion-card>
-      <div class="row">
-        <div class="col-md-6">
-          <img class="m-2" style="border-radius: 50%;" src="{{usuario?.foto}}">
-          <ion-label><b>{{usuario?.email}}</b></ion-label>
-        </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div [hidden]="btnTamPantalla">
+        <ion-button [hidden]="!VerIncidencias" class="m-2" fill="outline"
+          (click)="btnVerIncidencias('MiListaIncidencias')">
+          <ion-icon name="add-circle-outline" class="m-1"></ion-icon> Ver Mis Incidencias
+        </ion-button>
+        <ion-button [hidden]="VerIncidencias" class="m-2" fill="outline"
+          (click)="btnVerIncidencias('MiListaIncidencias')">
+          <ion-icon name="remove-circle-outline" class="m-1"></ion-icon> Ocultar Mis Incidencias
+        </ion-button>
       </div>
-    </ion-card>
+      <form>
+        <ion-card>
+          <ion-card-content>
+            <div class="row">
+              <!-- Formulario de usuario -->
+              <form class="ion-justify-content-center">
+                <input name="id" id="id" [value]="usuario?.id" hidden #id>
+                <div class="row">
+                  <ion-card-title>Mi Cuenta</ion-card-title>
+                  <div class="col-md-3 mt-4 col-sm-12">
+                    <div class="ion-justify-content-center" style="margin: auto; display: flex;">
+                      <div
+                        style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; border:solid 1px black">
+                        <ion-img [src]="usuario?.foto" style="width: 100%; height: 100%;"></ion-img>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-9">
+                    <!-- Campo de texto para el email -->
+                    <div class="mb-3">
+                      <label for="email" class="form-label">Email</label>
+                      <input type="email" class="form-control" id="email" [value]="usuario?.email" readonly #email>
+                      <div id="emailHelp" class="form-text">Este campo no se puede modificar</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label for="Nombre" class="form-label">Nombre</label>
+                          <input type="text" class="form-control" id="nombre" [value]="usuario?.nombre"
+                            [disabled]="ModoEdicion" #nombre>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label for="apellidos" class="form-label">Apellidos</label>
+                          <input type="text" class="form-control" id="apellidos" [value]="usuario?.apellidos"
+                            [disabled]="ModoEdicion" #apellidos>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="telefono" class="form-label">Telefono</label>
+                      <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
+                        placeholder="123456789" aria-describedby="telefono" [disabled]="ModoEdicion" #telefono>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="rol" class="form-label">Rol</label>
+                      <input type="text" class="form-control" id="rol"
+                        [value]="usuario?.rol === 0 ? 'Usuario' : 'Técnico'" aria-describedby="rolHelp"
+                        [disabled]="ModoEdicion" readonly #rol>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="departamento" class="form-label">Departamento</label>
+                      <input type="text" class="form-control" id="departamento" [value]="usuario?.departamento"
+                        aria-describedby="DepartamentoHelp" [disabled]="ModoEdicion" #departamento>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="centro" class="form-label">Centro</label>
+                      <input type="text" class="form-control" id="centro" [value]="CentroUsuario?.nombre"
+                        aria-describedby="CentroHelp" readonly>
+                      <div id="emailHelp" class="form-text">Pulsa para ver más detalles del centro</div>
+                    </div>
+                  </div>
+                </div>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col size="auto" [hidden]="ModoEdicion">
+                      <button type="submit" class="btn btn-primary">Guardar</button>
+                    </ion-col>
+                    <ion-col size="auto">
+                      <button type="button" (click)="ModoEditar()" class="btn btn-success">
+                        {{TextModeEdit}}
+                      </button>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+              </form>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </form>
+    </div>
+    <div class="col-md-6" [hidden]="VerIncidencias" id="MiListaIncidencias">
+      <ion-card>
+        <ion-card-content>
+          <ion-card-title>Mis Incidencias</ion-card-title>
+          <ion-list>
+            <ion-item>
+              <ion-label><b>Aula</b></ion-label>
+              <ion-label><b>Fecha</b></ion-label>
+              <ion-label><b>Estado</b></ion-label>
+            </ion-item>
+            <div *ngFor="let item of MisIncidencias"
+              [ngClass]="{'false-status': !item.atentida, 'true-status': item.atentida}" (click)="VerIncidencia(item)">
+              <ion-item>
+                <ion-label hidden>{{item.id}}</ion-label>
+                <ion-label>{{ item.aula }}</ion-label>
+                <ion-label>{{ item.fecha }}</ion-label>
+                <ion-label>{{ item.atentida ? 'Atentida' : 'Pendiente' }}</ion-label>
+              </ion-item>
+            </div>
+          </ion-list>
+        </ion-card-content>
+      </ion-card>
+    </div>
   </div>
-</form>
- </div>
-
-
-
 </ion-content>

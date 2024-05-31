@@ -18,26 +18,26 @@ import { AlertController } from '@ionic/angular';
 })
 export class NuevaincidenciaPage implements OnInit {
   CodCentro: any;
-  TitleVnt : String = ""
+  TitleVnt: String = ""
   UsuarioYO?: Usuario;
   VentanaTitulo: string = "";
   btnTamPantalla: any;
   ListaMateriales: Material[] = [];
   ListaAulas: Aula[] = [];
   ListaUsuarios: Usuario[] = [];
-  ListaMatAtentida : MatCantidad[] = [];
-  selectedEmail ?: string;
-  selectedNombre ?: string;
-  selectedDate ?: string;
-  selectedAula ?: string;
-  selecteDescripcion ?: string;
-  selectedID ?: string;
-  selectedComent ?: string;
-  IncidenciaRecib ?: Incidencia;
-  ModoDetalles : boolean = false;
-  Permisos : boolean = false;
-  Perm : string = "";
-  estAtentida : boolean = false;
+  ListaMatAtentida: MatCantidad[] = [];
+  selectedEmail?: string;
+  selectedNombre?: string;
+  selectedDate?: string;
+  selectedAula?: string;
+  selecteDescripcion?: string;
+  selectedID?: string;
+  selectedComent?: string;
+  IncidenciaRecib?: Incidencia;
+  ModoDetalles: boolean = false;
+  Permisos: boolean = false;
+  Perm: string = "";
+  estAtentida: boolean = false;
 
   @ViewChild('datetime') datetime !: IonDatetime;
   MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
@@ -52,7 +52,7 @@ export class NuevaincidenciaPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -61,13 +61,13 @@ export class NuevaincidenciaPage implements OnInit {
         this.VentanaTitulo = navigation['NombreDatos'];
         this.IncidenciaRecib = navigation['itemDet'];
         this.ModoDetalles = navigation['modoDetalles']; // Obtener el valor de modoDetalles
-    
+
         if (this.IncidenciaRecib?.atentida === false) {
           this.estAtentida = false;
         } else {
           this.estAtentida = true;
         }
-    
+
         this.afAuth.authState.subscribe(user => {
           if (user) {
             this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
@@ -75,7 +75,7 @@ export class NuevaincidenciaPage implements OnInit {
               this.CodCentro = usuario?.centro;
               this.selectedEmail = usuario?.email || ''; // Inicializar selectedEmail
               this.selectedNombre = usuario?.nombre || ''; // Inicializar selectedNombre
-    
+
               this.listarAulas(this.CodCentro);
               this.ListarUsuarios(this.CodCentro);
               this.ComprobarModo();
@@ -90,9 +90,9 @@ export class NuevaincidenciaPage implements OnInit {
       }
     });
   }
-  
 
-  VerPermisos(usuario ?: Usuario) {
+
+  VerPermisos(usuario?: Usuario) {
     this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
     if (this.Perm === "N") {
       this.Permisos = false;
@@ -125,7 +125,7 @@ export class NuevaincidenciaPage implements OnInit {
       this.TitleVnt = "Nueva Incidencia";
     }
   }
-  
+
   listarAulas(centro: string) {
     this.authService.DatoWhere(centro, 'Aulas', 'codCentro').subscribe((res) => {
       this.ListaAulas = [];
@@ -166,16 +166,16 @@ export class NuevaincidenciaPage implements OnInit {
     // además la formatea a YYYY/MM/DD
     if (fecha === undefined || isNaN(Date.parse(fecha))) {
       const now = new Date();
-      fecha = now.getFullYear() + '-' + 
-              String(now.getMonth() + 1).padStart(2, '0') + '-' + 
-              String(now.getDate()).padStart(2, '0');
+      fecha = now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0');
     } else {
       const dateObj = new Date(fecha);
-      fecha = dateObj.getFullYear() + '-' + 
-              String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
-              String(dateObj.getDate()).padStart(2, '0');
+      fecha = dateObj.getFullYear() + '-' +
+        String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
+        String(dateObj.getDate()).padStart(2, '0');
     }
-  
+
     const incidencia: Incidencia = {
       email: email,
       nombre: nombre,
@@ -187,7 +187,7 @@ export class NuevaincidenciaPage implements OnInit {
       tecnico: "",
       centro: this.UsuarioYO?.centro || ""
     };
-    
+
     try {
       await this.authService.GuardarCualDato(incidencia, 'Incidencias');
       const toast = await this.toastController.create({
@@ -204,8 +204,13 @@ export class NuevaincidenciaPage implements OnInit {
   }
 
   cancel() {
-    const datos = { NameVentana: 'NuevaInci' };
-    this.router.navigate(['incidencias'], { state: datos });
+    if (this.VentanaTitulo === "MISINCIDENCIAS") {
+      this.MetodosComunes.AbrePantallasGen("MISDATOS");
+
+    } else {
+      const datos = { NameVentana: 'NuevaInci' };
+      this.router.navigate(['incidencias'], { state: datos });
+    }
   }
 
   VerFormAtender() {
@@ -237,7 +242,7 @@ export class NuevaincidenciaPage implements OnInit {
                 color: 'danger',
               });
               await toast.present();
-              this.cancel();  
+              this.cancel();
             }
             await alert.dismiss();
           }
@@ -247,7 +252,7 @@ export class NuevaincidenciaPage implements OnInit {
     await alert.present();
   }
 
-  ListarMatUtilizados(incidencia ?: string) {
+  ListarMatUtilizados(incidencia?: string) {
     this.authService.DatoWhere(incidencia, 'MatCanAtendida', 'incidencia').subscribe((res) => {
       this.ListaMatAtentida = [];
       res.forEach((element: any) => {

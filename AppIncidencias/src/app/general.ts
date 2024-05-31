@@ -67,11 +67,17 @@ export class MetGenerales {
       case "DETALLESINCIDENCIA":
         this.AbrirVentana('nuevaincidencia', 'DETALLESINCIDENCIA', itemDetalles, modoDetalles);
         break;
+      case "MISINCIDENCIAS":
+        this.AbrirVentana('nuevaincidencia', 'MISINCIDENCIAS', itemDetalles, modoDetalles);
+        break
       case "NUEVAINCIDENCIA":
         this.AbrirVentana('nuevaincidencia', 'NUEVAINCIDENCIA');
         break;
       case "ATENDERINCIDENCIA":
         this.AbrirVentana('atender-incidencia', 'ATENDERINCIDENCIA', itemDetalles);
+        break;
+      case "MISDATOS":
+        this.AbrirVentana('info-usuario', 'MISDATOS');
         break;
       default:
         console.log("Selecciona una opción");
@@ -100,7 +106,7 @@ export class MetGenerales {
   ComprobarPermisos(usuario?: Usuario): string {
     console.log(usuario?.rol)
     if (usuario) {
-
+      
       if (usuario?.rol === 0) {
         return "N";
       } else if (usuario?.rol === 1) {

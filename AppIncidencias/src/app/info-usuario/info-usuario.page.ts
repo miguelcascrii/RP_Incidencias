@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Usuario } from '../usuarios';
 import { AuthService } from '../servicios/auth/auth.service';
@@ -9,7 +9,10 @@ import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-
+import { Material } from '../materiales';
+import { Incidencia } from '../incidencias';
+import { MetGenerales } from '../general';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-info-usuario',
@@ -17,11 +20,19 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
   styleUrls: ['./info-usuario.page.scss'],
 })
 export class InfoUsuarioPage implements OnInit {
-  usuario ?: Usuario
-  CodCentro ?: string = ""
+  usuario?: Usuario
+  CodCentro?: string = ""
   btnTamPantalla: any
+  ModoEdicion: boolean = true
+  TextModeEdit: String = "Editar"
+  CentroUsuario : any
+  ListaIncidencias : Incidencia [] = []
+  MisIncidencias : Incidencia [] = []
+  VerIncidencias : boolean = false
 
 
+  MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService);
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
 
   constructor(
     private authService: AuthService,
@@ -38,6 +49,13 @@ export class InfoUsuarioPage implements OnInit {
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.usuario = usuario;
           this.CodCentro = usuario?.centro;
+         
+          this.authService.ObtenerCentroPorCod(this.CodCentro).subscribe(centro => {
+            this.CentroUsuario = centro;
+          });
+
+          this.listarIncidencias(this.CodCentro)
+          
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
@@ -45,14 +63,75 @@ export class InfoUsuarioPage implements OnInit {
       this.TamañoPantalla()
     });
 
+    
+
   }
 
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
       this.btnTamPantalla = false
+      this.VerIncidencias = true
+      
     } else {
       this.btnTamPantalla = true
+      this.VerIncidencias = false
     }
   }
 
+
+
+  CancelarForm() {
+    this.ModoEdicion = true
+    this.TextModeEdit = "Activar Modo Edición"
+  }
+
+  ModoEditar() {
+
+    if (this.ModoEdicion === true) {
+      this.TextModeEdit = "Desactivar Modo Edición"
+      this.ModoEdicion = false
+    
+    } else {
+      this.TextModeEdit = "Activar Modo Edición"
+      this.ModoEdicion = true
+    }
+
+    console.log(this.ModoEdicion)
+  }
+
+  listarIncidencias(centro ?: string) {
+    this.authService.DatoWhere(centro, 'Incidencias', 'centro').subscribe((res) => {
+      this.ListaIncidencias = [];
+      res.forEach((element: any) => {
+        const incidencia: Incidencia = {
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        };
+          this.ListaIncidencias.push(incidencia);
+          this.MisIncidencias= []
+          for(let item of this.ListaIncidencias){
+            if(item.email == this.usuario?.email){
+              this.MisIncidencias.push(item);
+              console.log(item)
+            }
+          }
+      });
+    });
+  }
+  VerIncidencia(item : Incidencia){
+    this.MetodosComunes.AbrePantallasGen("MISINCIDENCIAS",item,true)
+  }
+
+  btnVerIncidencias(sectionId: string) {
+    this.VerIncidencias = !this.VerIncidencias;
+    if (!this.VerIncidencias) {
+      setTimeout(() => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 200); // Añade un pequeño retraso para asegurarte de que el DOM se ha actualizado
+    }
+  }
 }
+
