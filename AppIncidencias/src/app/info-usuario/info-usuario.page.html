@@ -16,7 +16,9 @@
           <ion-card-content>
             <div class="row">
               <!-- Formulario de usuario -->
-              <form class="ion-justify-content-center">
+
+              <form (submit)="ActualizarUsuario(id,email,nombre,apellidos,telefono,rol,departamento)"
+                class="ion-justify-content-center">
                 <input name="id" id="id" [value]="usuario?.id" hidden #id>
                 <div class="row">
                   <ion-card-title>Mi Cuenta</ion-card-title>
@@ -57,8 +59,9 @@
                   <div class="col-md-6">
                     <div class="mb-3">
                       <label for="telefono" class="form-label">Telefono</label>
-                      <input type="text" class="form-control" id="telefono" [value]="usuario?.telefono"
-                        placeholder="123456789" aria-describedby="telefono" [disabled]="ModoEdicion" #telefono>
+                      <input type="number" aria-rowcount="disabled" class="form-control" id="telefono"
+                        [value]="usuario?.telefono" placeholder="123456789" aria-describedby="telefono" minlength="9"
+                        maxlength="9" [disabled]="ModoEdicion" #telefono>
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -73,9 +76,11 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="mb-3">
-                      <label for="departamento" class="form-label">Departamento</label>
-                      <input type="text" class="form-control" id="departamento" [value]="usuario?.departamento"
-                        aria-describedby="DepartamentoHelp" [disabled]="ModoEdicion" #departamento>
+                      <ion-select class="form-control" [(ngModel)]="selectedDpt" name="departamento" label="Selecciona un Departamento" [disabled]="ModoEdicion"
+                        label-placement="floating" #departamento>
+                        <ion-select-option  *ngFor="let item of ListaDpt" [value]="item.nombre">
+                        <ion-label> {{item.nombre}}</ion-label></ion-select-option>
+                      </ion-select> 
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -110,14 +115,14 @@
         <ion-card-content>
           <ion-card-title>Mis Incidencias</ion-card-title>
           <ion-list>
-            <ion-item>
+            <ion-item lines="full">
               <ion-label><b>Aula</b></ion-label>
               <ion-label><b>Fecha</b></ion-label>
               <ion-label><b>Estado</b></ion-label>
             </ion-item>
             <div *ngFor="let item of MisIncidencias"
               [ngClass]="{'false-status': !item.atentida, 'true-status': item.atentida}" (click)="VerIncidencia(item)">
-              <ion-item>
+              <ion-item lines="full">
                 <ion-label hidden>{{item.id}}</ion-label>
                 <ion-label>{{ item.aula }}</ion-label>
                 <ion-label>{{ item.fecha }}</ion-label>

@@ -10,6 +10,7 @@ import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MetGenerales } from '../general';
+import { Departamento } from '../departamentos';
 @Component({
   selector: 'app-detalles-usuario',
   templateUrl: './detalles-usuario.page.html',
@@ -29,6 +30,8 @@ export class DetallesUsuarioPage implements OnInit {
   btnTitleEliminar : string = "Eliminar"
   Perm : string = "";
   Permisos : boolean = false;
+  ListaDpt : Departamento [] = []
+  selectedDpt ?: string = ""
 
   MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
 
@@ -60,6 +63,9 @@ export class DetallesUsuarioPage implements OnInit {
           this.usuarioYo = usuario;
           
           this.VerPermisos(this.usuarioYo)
+
+          this.listarDept(this.CodCentro)
+          this.selectedDpt = this.usuario?.departamento
         });
       } else {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
@@ -80,6 +86,19 @@ export class DetallesUsuarioPage implements OnInit {
     } else {
       this.btnTamPantalla = true
     }
+  }
+
+  listarDept(centro ?: string) {
+    this.authService.DatoWhere(centro, 'Departamentos', 'centro').subscribe((res) => {
+      this.ListaDpt = [];
+      res.forEach((element: any) => {
+        const dept: Departamento = {
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        };
+          this.ListaDpt.push(dept);
+      });
+    });
   }
 
   VerPermisos(usuario ?: Usuario) {
@@ -124,7 +143,7 @@ export class DetallesUsuarioPage implements OnInit {
     apellidos: HTMLInputElement,
     telefono: HTMLInputElement,
     rol: HTMLInputElement,
-    departamento: HTMLInputElement
+    departamento: any,
   ) {
     const usuarioUp: Usuario = {
       id: id.value,

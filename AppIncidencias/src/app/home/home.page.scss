@@ -25,3 +25,41 @@
 #container a {
   text-decoration: none;
 }
+
+.incidencias-cuadrado {
+  width: 60px; /* Ajusta el tamaño según tus necesidades */
+  height: 60px; /* Ajusta el tamaño según tus necesidades */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff8888; /* Cambia el color de fondo según tu diseño */
+  border-radius: 50%;
+  //border: 2px solid #000; /* Cambia el color del borde según tu diseño */
+  //border-radius: 4px; /* Ajusta el radio de borde según tus necesidades */
+  margin: 0 auto; /* Centra el cuadrado dentro del ion-card */
+  color: rgba(0, 0, 0, 0.752);
+  font-size: 24px; /* Ajusta el tamaño del texto según tus necesidades */
+}
+
+.card-activas{
+  background-color: #ffdada;
+}
+
+.incidencias-cuadrado-atendida {
+  width: 60px; /* Ajusta el tamaño según tus necesidades */
+  height: 60px; /* Ajusta el tamaño según tus necesidades */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #96ff88; /* Cambia el color de fondo según tu diseño */
+  border-radius: 50%;
+  //border: 2px solid #000; /* Cambia el color del borde según tu diseño */
+  //border-radius: 4px; /* Ajusta el radio de borde según tus necesidades */
+  margin: 0 auto; /* Centra el cuadrado dentro del ion-card */
+  color: rgba(0, 0, 0, 0.752);
+  font-size: 24px; /* Ajusta el tamaño del texto según tus necesidades */
+}
+
+.card-atendidas{
+  background-color: #deffda;
+}

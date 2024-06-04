@@ -1,0 +1,19 @@
+/* styles.css */
+
+.custom-modal {
+    --width: 90%;
+    --height: 80%;
+    --max-width: 500px;
+    --max-height: 400px;
+    margin: auto;
+  }
+  
+  .custom-modal-fullscreen {
+    display: none; /* Oculta el modal en pantallas completas */
+  }
+
+ @media (max-width: 768px) {
+  .custom-modal-fullscreen {
+    display: block; /* Muestra el modal en pantallas móviles */
+  }
+}

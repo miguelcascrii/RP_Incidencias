@@ -13,6 +13,7 @@ import { Material } from '../materiales';
 import { Incidencia } from '../incidencias';
 import { MetGenerales } from '../general';
 import { IonContent } from '@ionic/angular';
+import { Departamento } from '../departamentos';
 
 @Component({
   selector: 'app-info-usuario',
@@ -27,9 +28,10 @@ export class InfoUsuarioPage implements OnInit {
   TextModeEdit: String = "Editar"
   CentroUsuario : any
   ListaIncidencias : Incidencia [] = []
+  ListaDpt : Departamento [] = []
   MisIncidencias : Incidencia [] = []
   VerIncidencias : boolean = false
-
+  selectedDpt ?: string =""
 
   MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService);
   @ViewChild(IonContent, { static: false }) content!: IonContent;
@@ -55,6 +57,9 @@ export class InfoUsuarioPage implements OnInit {
           });
 
           this.listarIncidencias(this.CodCentro)
+          this.listarDept(this.CodCentro)
+
+          this.selectedDpt = usuario?.departamento
           
         });
       } else {
@@ -98,6 +103,18 @@ export class InfoUsuarioPage implements OnInit {
 
     console.log(this.ModoEdicion)
   }
+  listarDept(centro ?: string) {
+    this.authService.DatoWhere(centro, 'Departamentos', 'centro').subscribe((res) => {
+      this.ListaDpt = [];
+      res.forEach((element: any) => {
+        const dept: Departamento = {
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        };
+          this.ListaDpt.push(dept);
+      });
+    });
+  }
 
   listarIncidencias(centro ?: string) {
     this.authService.DatoWhere(centro, 'Incidencias', 'centro').subscribe((res) => {
@@ -132,6 +149,38 @@ export class InfoUsuarioPage implements OnInit {
         }
       }, 200); // Añade un pequeño retraso para asegurarte de que el DOM se ha actualizado
     }
+  }
+
+  async ActualizarUsuario(
+    id: HTMLInputElement,
+    email: HTMLInputElement,
+    nombre: HTMLInputElement,
+    apellidos: HTMLInputElement,
+    telefono: HTMLInputElement,
+    rol: HTMLInputElement,
+    departamento: any,
+  ) {
+    const usuarioUp: Usuario = {
+      id: id.value,
+      email: email.value,
+      nombre: nombre.value,
+      apellidos: apellidos.value,
+      telefono: telefono.value,
+      rol: this.usuario?.rol,
+      departamento: departamento.value
+    }
+
+    this.authService.UpdateUsuario(usuarioUp)
+    const toast = await this.toastController.create({
+      message: '¡' + this.usuario?.nombre + ' ha sido actualizado!',
+      duration: 2000,
+      position: 'top',
+      color: 'success',
+    });
+
+    this.ngOnInit();
+    toast.present();
+    this.CancelarForm()
   }
 }
 

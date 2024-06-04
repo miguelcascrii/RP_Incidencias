@@ -5,16 +5,42 @@
       <ion-card-title class="ion-text-center">
         Listado de Tecnicos
       </ion-card-title>
+      <ion-card-subtitle class="ion-text-center">
+        Selecciona para más información
+      </ion-card-subtitle>
     </ion-card-header>
+    <ion-item (click)="VerFiltro()" lines="none">
+   <ion-icon [hidden]="!Filtro" class="m-1" name="chevron-forward-outline"></ion-icon>
+   <ion-icon [hidden]="Filtro" class="m-1" name="chevron-down-outline"></ion-icon>
+   <ion-label><b>Filtro por Departamentos</b></ion-label>
+  </ion-item>
+  <ion-item [hidden]="ChipVisual">
+    <ion-icon (click)="CancelFilter()" name="close-circle"></ion-icon>
+    <ion-chip>
+      <div *ngFor="let item of ListaDeptselect; let last = last">
+        <ion-label>{{item}}{{ !last ? ',' : '' }}</ion-label>
+      </div>
+    </ion-chip>
+  </ion-item>
 
+<ion-card [hidden]="Filtro" color="light">
+   <ion-card-content>
+      <div *ngFor="let item of ListaDept">
+         <ion-item lines="full" color="light" class="ion-text-start">
+            <ion-checkbox  (ionChange)="DepSelect($event,item)">{{item.nombre}}</ion-checkbox>
+         </ion-item>
+      </div>
+   </ion-card-content>
+</ion-card>
+      
+    
     <ion-list class="ion-text-center">
-      <ion-label>Selecciona para más información</ion-label>
+      
       <ion-item class="ion-text-start mt-2">
         <ion-label class="m-2"><b>Email</b></ion-label>
         <ion-label slot="end"><b>Departamento</b></ion-label>
-
       </ion-item>
-      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaTecnicos" (click)="DetallesUser(item)">
+      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaFiltrado" (click)="DetallesUser(item)">
         <ion-avatar aria-hidden="true" slot="start" class="m-2" *ngIf="item.foto">
           <img alt="" src="{{item.foto}}" />
         </ion-avatar>
@@ -56,4 +82,6 @@
     
     <ion-button  class="m-2" (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
   </ion-card>
+
+
 </ion-content>

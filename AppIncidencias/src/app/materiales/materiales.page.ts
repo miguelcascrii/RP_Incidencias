@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { Material } from '../materiales';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
@@ -77,6 +77,11 @@ export class MaterialesPage implements OnInit {
     } else {
       this.btnTamPantalla = true
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
   }
   
   VerPermisos(usuario ?: Usuario) {

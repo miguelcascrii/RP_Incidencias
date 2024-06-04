@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild,HostListener } from '@angular/core';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Usuario } from '../usuarios';
@@ -109,22 +109,34 @@ export class NuevaincidenciaPage implements OnInit {
     }
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
+  }
+
   ComprobarModo() {
     if (this.VentanaTitulo === "DETALLESINCIDENCIA" && this.ModoDetalles) {
-      this.ModoDetalles = true;
-      this.TitleVnt = "Detalles de Incidencia";
-      this.selectedID = this.IncidenciaRecib?.id;
-      this.selectedEmail = this.IncidenciaRecib?.email;
-      this.selectedNombre = this.IncidenciaRecib?.nombre;
-      this.selectedAula = this.IncidenciaRecib?.aula;
-      this.selectedDate = this.IncidenciaRecib?.fecha + " ";
-      this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
-      this.selectedComent = this.IncidenciaRecib?.comentario;
+        this.ModoDetalles = true;
+        this.TitleVnt = "Detalles de Incidencia";
+        this.selectedID = this.IncidenciaRecib?.id;
+        this.selectedEmail = this.IncidenciaRecib?.email;
+        this.selectedNombre = this.IncidenciaRecib?.nombre;
+        this.selectedAula = this.IncidenciaRecib?.aula;
+        
+        if (this.IncidenciaRecib?.fecha) {
+            const dateObj = new Date(this.IncidenciaRecib.fecha);
+            this.selectedDate = String(dateObj.getDate()).padStart(2, '0') + '/' +
+                                String(dateObj.getMonth() + 1).padStart(2, '0') + '/' +
+                                dateObj.getFullYear();
+        }
+
+        this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
+        this.selectedComent = this.IncidenciaRecib?.comentario;
     } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && this.ModoDetalles) {
-      this.ModoDetalles = false;
-      this.TitleVnt = "Nueva Incidencia";
+        this.ModoDetalles = false;
+        this.TitleVnt = "Nueva Incidencia";
     }
-  }
+}
 
   listarAulas(centro: string) {
     this.authService.DatoWhere(centro, 'Aulas', 'codCentro').subscribe((res) => {
@@ -163,45 +175,45 @@ export class NuevaincidenciaPage implements OnInit {
 
   async NuevaIncidencia(email: any, nombre: any, aula: any, fecha: any, descripcion: any) {
     // Si la fecha se pasa como undefined obtendremos la fecha actual
-    // además la formatea a YYYY/MM/DD
+    // además la formatea a DD/MM/YYYY
     if (fecha === undefined || isNaN(Date.parse(fecha))) {
-      const now = new Date();
-      fecha = now.getFullYear() + '-' +
-        String(now.getMonth() + 1).padStart(2, '0') + '-' +
-        String(now.getDate()).padStart(2, '0');
+        const now = new Date();
+        fecha = String(now.getDate()).padStart(2, '0') + '/' +
+            String(now.getMonth() + 1).padStart(2, '0') + '/' +
+            now.getFullYear();
     } else {
-      const dateObj = new Date(fecha);
-      fecha = dateObj.getFullYear() + '-' +
-        String(dateObj.getMonth() + 1).padStart(2, '0') + '-' +
-        String(dateObj.getDate()).padStart(2, '0');
+        const dateObj = new Date(fecha);
+        fecha = String(dateObj.getDate()).padStart(2, '0') + '/' +
+            String(dateObj.getMonth() + 1).padStart(2, '0') + '/' +
+            dateObj.getFullYear();
     }
 
     const incidencia: Incidencia = {
-      email: email,
-      nombre: nombre,
-      aula: aula,
-      fecha: fecha,
-      descripcion: descripcion,
-      atentida: false,
-      comentario: "",
-      tecnico: "",
-      centro: this.UsuarioYO?.centro || ""
+        email: email,
+        nombre: nombre,
+        aula: aula,
+        fecha: fecha,
+        descripcion: descripcion,
+        atentida: false,
+        comentario: "",
+        tecnico: "",
+        centro: this.UsuarioYO?.centro || ""
     };
 
     try {
-      await this.authService.GuardarCualDato(incidencia, 'Incidencias');
-      const toast = await this.toastController.create({
-        message: '¡La incidencia está en manos de los técnicos!',
-        duration: 2000,
-        position: 'top',
-        color: 'success',
-      });
-      toast.present();
-      this.cancel();
+        await this.authService.GuardarCualDato(incidencia, 'Incidencias');
+        const toast = await this.toastController.create({
+            message: '¡La incidencia está en manos de los técnicos!',
+            duration: 2000,
+            position: 'top',
+            color: 'success',
+        });
+        toast.present();
+        this.cancel();
     } catch (error) {
-      console.log("ERROR: " + error);
+        console.log("ERROR: " + error);
     }
-  }
+}
 
   cancel() {
     if (this.VentanaTitulo === "MISINCIDENCIAS") {
