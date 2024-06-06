@@ -243,8 +243,9 @@ export class TecnicosPage implements OnInit {
 
   CancelFilter() {
     this.ngOnInit()
-    this.ChipVisual = true;
     this.ListaDeptselect = [];
+    this.ChipVisual = true;
+    this.Filtro = true
 
   }
 

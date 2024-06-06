@@ -1,27 +1,25 @@
 <ion-content>
   <ion-card [hidden]="VisualFormNuevoMaterial">
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">
-        Listado de Materiales
-      </ion-card-title>
-    </ion-card-header>
 
-    <ion-list class="ion-text-center">
-      <ion-label>Selecciona para más información</ion-label>
+    <ion-card-title class="ion-text-center">
+      Listado de Materiales
+    </ion-card-title>
+    <ion-card-subtitle class="mt-2 ion-text-center">
+      Selecciona para más información
+    </ion-card-subtitle>
+
+    <ion-list>
       <ion-item class="ion-text-center mt-2">
         <ion-label><b> Categoría </b> </ion-label>
         <ion-label><b> Marca</b> </ion-label>
         <ion-label><b> Modelo </b></ion-label>
-        <ion-label> <b>Stock</b> </ion-label>   
+        <ion-label> <b>Stock</b> </ion-label>
       </ion-item>
-      <ion-item *ngFor="let item of ListaMateriales" 
-                (click)="SelectMaterial(item)"
-                [ngClass]="{
+      <ion-item *ngFor="let item of ListaMateriales" (click)="SelectMaterial(item)" [ngClass]="{
                   'no-stock': item.stock === 0,
                   'low-stock': item.stock > 0 && item.stock < 5,
                   'high-stock': item.stock >= 5
-                }"
-                class="ion-text-center">
+                }" class="ion-text-center">
         <ion-label> {{item.familia}} </ion-label>
         <ion-label> {{item.marca}} </ion-label>
         <ion-label> {{item.modelo}} </ion-label>
@@ -30,135 +28,149 @@
     </ion-list>
 
     <ion-button [hidden]="!Permisos" class="m-2" (click)="FormNuevoMat()">
-      <ion-icon name="add-circle-outline" ></ion-icon>Nuevo Material
+      <ion-icon name="add-circle-outline"></ion-icon>Nuevo Material
     </ion-button>
   </ion-card>
 
   <!-- MODO DE NUEVO MATERIAL Y DE EDICION DE MATERIAL -->
   <div [hidden]="!VisualFormNuevoMaterial">
-  <ion-card [hidden]="ModoDetalles">
-    <ion-card-content>
-      <form (submit)="NuevoMaterial(newCategoria, newMarca, newModelo, newStock)">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="auto">
-              <ion-card-title>
-                Nuevo Material
-              </ion-card-title>
-            </ion-col>
-            <ion-col class="ion-text-end">
-              <ion-button color="danger" [hidden]="!ModoDetalles" (click)="EliminarMaterial(material)">
-                <ion-icon name="trash-bin"></ion-icon>
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      <div class="mt-2 form-group">
-        <label>Categoría</label>
-        <ion-select class="form-control" id="newCategoria" placeholder="Seleccione una categoría" #newCategoria name="newCategoria">
-          <ion-select-option value="Raton">Ratón</ion-select-option>
-          <ion-select-option value="Disco">Disco</ion-select-option>
-          <ion-select-option value="Teclado">Teclado</ion-select-option>
-          <ion-select-option value="Monitor">Monitor</ion-select-option>
-          <ion-select-option value="Placa base">Placa Base</ion-select-option>
-          <ion-select-option value="Microprocesador">Microprocesador</ion-select-option>
-          <ion-select-option value="Altavoz">Altavoz</ion-select-option>
-          <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
-          <ion-select-option value="Otro">Otro</ion-select-option>
-        </ion-select>
-      </div>
-      <div class="mt-2 form-group">
-        <label>Marca</label>
-        <input type="text" class="form-control" id="newMarca" aria-describedby="marca" placeholder="Introduzca la marca" #newMarca name="newMarca">
-      </div>
-      <div class="mt-2 form-group">
-        <label>Modelo</label>
-        <input type="text" class="form-control" id="newModelo" aria-describedby="modelo" placeholder="Introduzca el modelo" #newModelo name="newModelo">
-      </div>
-      <div class="mt-2 form-group">
-        <label>Stock</label>
-        <input type="number" class="form-control" id="newStock" aria-describedby="stock" placeholder="Introduzca el stock" #newStock name="newStock">
-      </div>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="auto">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </ion-col>
-          <ion-col class="ion-text-end"  [hidden]="!btnTamPantalla">
-            <button type="button" class="btn btn-warning" (click)="CancelarForm()" [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      </form>
-    </ion-card-content>
-  </ion-card>
+    <ion-card [hidden]="ModoDetalles">
+      <ion-card-content>
+        <form (submit)="NuevoMaterial(newCategoria, newMarca, newModelo, newStock)">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <ion-card-title>
+                  Nuevo Material
+                </ion-card-title>
+              </ion-col>
+              <ion-col class="ion-text-end">
+                <ion-button color="danger" [hidden]="!ModoDetalles" (click)="EliminarMaterial(material)">
+                  <ion-icon name="trash-bin"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div class="mt-2 form-group">
+            <label>Categoría</label>
+            <ion-select class="form-control" id="newCategoria" placeholder="Seleccione una categoría" #newCategoria
+              name="newCategoria">
+              <ion-select-option value="Raton">Ratón</ion-select-option>
+              <ion-select-option value="Disco">Disco</ion-select-option>
+              <ion-select-option value="Teclado">Teclado</ion-select-option>
+              <ion-select-option value="Monitor">Monitor</ion-select-option>
+              <ion-select-option value="Placa base">Placa Base</ion-select-option>
+              <ion-select-option value="Microprocesador">Microprocesador</ion-select-option>
+              <ion-select-option value="Altavoz">Altavoz</ion-select-option>
+              <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
+              <ion-select-option value="Otro">Otro</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="mt-2 form-group">
+            <label>Marca</label>
+            <input type="text" class="form-control" id="newMarca" aria-describedby="marca"
+              placeholder="Introduzca la marca" #newMarca name="newMarca">
+          </div>
+          <div class="mt-2 form-group">
+            <label>Modelo</label>
+            <input type="text" class="form-control" id="newModelo" aria-describedby="modelo"
+              placeholder="Introduzca el modelo" #newModelo name="newModelo">
+          </div>
+          <div class="mt-2 form-group">
+            <label>Stock</label>
+            <input type="number" class="form-control" id="newStock" aria-describedby="stock"
+              placeholder="Introduzca el stock" #newStock name="newStock">
+          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </ion-col>
+              <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
+                <button type="button" class="btn btn-warning" (click)="CancelarForm()"
+                  [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+      </ion-card-content>
+    </ion-card>
 
-  <ion-card [hidden]="!ModoDetalles">
-    <ion-card-content>
-      <form (submit)="ActualizarMaterial(Categoria, Marca, Modelo, Stock,ID)">
-        <ion-grid>
-          <ion-row>
-            <ion-col size="auto">
-              <ion-card-title>
-               Editar Material 
-              </ion-card-title>
-              <ion-label [hidden]="!EditionMode" color="success">
-                <b>Modo edición activado</b>
-              </ion-label>
-            </ion-col>
-            <ion-col class="ion-text-end">
-              <ion-button color="danger" [hidden]="!Permisos" (click)="EliminarMaterial(material)">
-                <ion-icon name="trash-bin"></ion-icon>
-              </ion-button>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      <div class="mt-2 form-group">
-        <input type="text" class="form-control" id="ID" aria-describedby="id" [(ngModel)]="material.id" #ID name="ID" hidden>
-        <label>Categoría</label>
-        <ion-select class="form-control" id="Categoria" placeholder="Seleccione una categoría" [(ngModel)]="material.familia" #Categoria name="Categoria" [disabled]="!EditionMode">
-          <ion-select-option value="Raton">Ratón</ion-select-option>
-          <ion-select-option value="Disco">Disco</ion-select-option>
-          <ion-select-option value="Teclado">Teclado</ion-select-option>
-          <ion-select-option value="Monitor">Monitor</ion-select-option>
-          <ion-select-option value="Placa base">Placa Base</ion-select-option>
-          <ion-select-option value="Microprocesador">Microprocesador</ion-select-option>
-          <ion-select-option value="Altavoz">Altavoz</ion-select-option>
-          <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
-          <ion-select-option value="Otro">Otro</ion-select-option>
-        </ion-select>
-      </div>
-      <div class="mt-2 form-group">
-        <label>Marca</label>
-        <input type="text" class="form-control" id="Marca" aria-describedby="marca" placeholder="Introduzca la marca" [(ngModel)]="material.marca" #Marca name="Marca" [disabled]="!EditionMode">
-      </div>
-      <div class="mt-2 form-group">
-        <label>Modelo</label>
-        <input type="text" class="form-control" id="Modelo" aria-describedby="modelo" placeholder="Introduzca el modelo" [(ngModel)]="material.modelo" #Modelo name="Modelo" [disabled]="!EditionMode">
-      </div>
-      <div class="mt-2 form-group">
-        <label>Stock</label>
-        <input type="number" class="form-control" id="Stock" aria-describedby="stock" placeholder="Introduzca el stock" [(ngModel)]="material.stock" #Stock name="Stock" [disabled]="!EditionMode">
-      </div>
-      <ion-grid>
-        <ion-row>
-          <ion-col size="auto" [hidden]="!EditionMode">
-            <button type="submit" class="btn btn-primary">Guardar</button>
-          </ion-col>
-          <ion-col size="auto">
-            <button type="button" (click)="ModoEditar()" class="btn btn-success">
-              {{TextModeEdit}}
-            </button>
-          </ion-col>
-          <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
-            <button type="button" class="btn btn-warning" (click)="CancelarForm()" [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      </form>
-    </ion-card-content>
-  </ion-card>
-</div>
+    <ion-card [hidden]="!ModoDetalles">
+      <ion-card-content>
+        <form (submit)="ActualizarMaterial(Categoria, Marca, Modelo, Stock,ID)">
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <ion-card-title>
+                  Editar Material
+                </ion-card-title>
+                <ion-label [hidden]="!EditionMode" color="success">
+                  <b>Modo edición activado</b>
+                </ion-label>
+              </ion-col>
+              <ion-col class="ion-text-end">
+                <ion-button color="danger" [hidden]="!Permisos" (click)="EliminarMaterial(material)">
+                  <ion-icon name="trash-bin"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <div class="mt-2 form-group">
+            <input type="text" class="form-control" id="ID" aria-describedby="id" [(ngModel)]="material.id" #ID
+              name="ID" hidden>
+            <label>Categoría</label>
+            <ion-select class="form-control" id="Categoria" placeholder="Seleccione una categoría"
+              [(ngModel)]="material.familia" #Categoria name="Categoria" [disabled]="!EditionMode">
+              <ion-select-option value="Raton">Ratón</ion-select-option>
+              <ion-select-option value="Disco">Disco</ion-select-option>
+              <ion-select-option value="Teclado">Teclado</ion-select-option>
+              <ion-select-option value="Monitor">Monitor</ion-select-option>
+              <ion-select-option value="Placa base">Placa Base</ion-select-option>
+              <ion-select-option value="Microprocesador">Microprocesador</ion-select-option>
+              <ion-select-option value="Altavoz">Altavoz</ion-select-option>
+              <ion-select-option value="Tarjeta">Tarjeta</ion-select-option>
+              <ion-select-option value="Otro">Otro</ion-select-option>
+            </ion-select>
+          </div>
+          <div class="mt-2 form-group">
+            <label>Marca</label>
+            <input type="text" class="form-control" id="Marca" aria-describedby="marca"
+              placeholder="Introduzca la marca" [(ngModel)]="material.marca" #Marca name="Marca"
+              [disabled]="!EditionMode">
+          </div>
+          <div class="mt-2 form-group">
+            <label>Modelo</label>
+            <input type="text" class="form-control" id="Modelo" aria-describedby="modelo"
+              placeholder="Introduzca el modelo" [(ngModel)]="material.modelo" #Modelo name="Modelo"
+              [disabled]="!EditionMode">
+          </div>
+          <div class="mt-2 form-group">
+            <label>Stock</label>
+            <input type="number" class="form-control" id="Stock" aria-describedby="stock"
+              placeholder="Introduzca el stock" [(ngModel)]="material.stock" #Stock name="Stock"
+              [disabled]="!EditionMode">
+          </div>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto" [hidden]="!EditionMode">
+                <button type="submit" class="btn btn-primary">Guardar</button>
+              </ion-col>
+              <ion-col size="auto">
+                <button type="button" (click)="ModoEditar()" class="btn btn-success">
+                  {{TextModeEdit}}
+                </button>
+              </ion-col>
+              <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
+                <button type="button" class="btn btn-warning" (click)="CancelarForm()"
+                  [hidden]="!VisualFormNuevoMaterial">Cancelar</button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
   <div [hidden]="btnTamPantalla">
     <ion-fab class="mb-5" horizontal="end" vertical="bottom" slot="fixed" [hidden]="!VisualFormNuevoMaterial">

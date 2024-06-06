@@ -122,9 +122,27 @@ export class AuthService {
           // Asignar el usuario conectado
           this.UsuarioConect = usuario;
         } else {
+          if(usuarioExistente.estado =="invitado"){
+            
+            const usuario: Usuario = {
+              nombre: result.user.displayName || '',
+              apellidos:'',
+              email: result.user.email || '',
+              telefono: result.user.phoneNumber || '',
+              foto: result.user.photoURL || '',
+              rol: usuarioExistente.rol,
+              departamento : '',
+              centro: usuarioExistente.centro || '',
+              estado: 'Conectado'
+              
+            };
+            await this.UpdateUsuario(usuario);
+          } else {
           // Si el usuario ya existe, actualizar su estado a "Conectado"
           usuarioExistente.estado = 'Conectado';
           await this.UpdateUsuario(usuarioExistente);
+        }
+          
           // Asignar el usuario conectado
           this.UsuarioConect = usuarioExistente;
         }
@@ -171,6 +189,10 @@ export class AuthService {
 
   DeleteUsuario(email ?: string): Promise<any> {
     return this.firestore.collection('Usuarios').doc(email).delete();
+  }
+
+  InvitacionUsuario(UserInvi : Usuario){
+    this.guardarUsuario(UserInvi)
   }
 
   // Otros métodos omitidos por brevedad...

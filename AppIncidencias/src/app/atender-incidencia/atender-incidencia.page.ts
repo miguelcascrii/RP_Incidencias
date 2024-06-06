@@ -103,8 +103,6 @@ export class AtenderIncidenciaPage implements OnInit {
   }
 
   cancel() {
-    
-     
     this.router.navigate(['nuevaincidencia'], {
       state: { NombreDatos: 'DETALLESINCIDENCIA', itemDet: this.IncidenciaRecib, modoDetalles: true }
     });
@@ -154,7 +152,7 @@ export class AtenderIncidenciaPage implements OnInit {
       if (matcanti.material.stock < matcanti.cantidad) {
         stockmenor = false;
         const toast = await this.toastController.create({
-          message: 'El stock [ ' + matcanti.material.stock + ' ] es inferior a la cantidad deseada [' + matcanti.cantidad + ']',
+          message: 'El stock de ' + matcanti.material.marca  + ' ' + matcanti.material.modelo + ' es inferior a la cantidad deseada',
           duration: 2400,
           position: 'bottom',
           color: 'warning',

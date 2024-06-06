@@ -91,31 +91,36 @@
         <ion-card-title class="text-success">
           Detalles de solución
         </ion-card-title>
-          <ion-list>
-            <ion-item>
+          
+            <ion-item lines="full">
               <ion-input [(ngModel)]="selectedComent" name="comentario" #nombre label="Comentario"
                 label-placement="floating" readonly></ion-input>
             </ion-item>
-            <ion-item lines="none">
-              <b> Materiales Utilizados </b>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                <b>Categoria</b>
-              </ion-label>
-              <ion-label>
-                <b>Material</b>
-              </ion-label>
-              <ion-label>
-                <b>Cantidad</b>
-              </ion-label>
-            </ion-item>
-            <ion-item *ngFor="let item of ListaMatAtentida">
-              <ion-label>{{item.material.familia}}</ion-label>
-              <ion-label>{{item.material.marca}} {{item.material.modelo}}</ion-label>
-              <ion-label class="ion-text-center">{{item.cantidad}}</ion-label>
-            </ion-item>
-          </ion-list>
+            <ion-card>
+              <ion-card-content>
+                <ion-card-title class="h5 ion-text-center">
+                   Materiales Utilizados
+                </ion-card-title>
+                <ion-item lines="full">
+                  <ion-label class="ion-text-center">
+                    <b>Categoria</b>
+                  </ion-label>
+                  <ion-label class="ion-text-center">
+                    <b>Material</b>
+                  </ion-label>
+                  <ion-label class="ion-text-center">
+                    <b>Cantidad</b>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="full"  *ngFor="let item of ListaMatAtentida">
+                  <ion-label class="ion-text-center">{{item.material.familia}}</ion-label>
+                  <ion-label class="ion-text-center">{{item.material.marca}} {{item.material.modelo}}</ion-label>
+                  <ion-label class="ion-text-center">{{item.cantidad}}</ion-label>
+                </ion-item>
+             
+              </ion-card-content>
+            </ion-card>
+            
         
       </ion-card-content>
     </ion-card>
