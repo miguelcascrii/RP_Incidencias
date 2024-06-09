@@ -14,12 +14,16 @@ import { LoadingController } from '@ionic/angular';
 })
 export class HomePage {
 
-  public CodigoCentro : any;
+  public CodigoCentro: any;
   ListaCentros: Centro[] = [];
   ListaCentrosMostrar: Centro[] = [];
   bModoCentroV: boolean = true;
   usuario: Usuario | undefined;
   ResultBusqueda: boolean = true;
+  CentroInvitado: string = ""
+  ModoSoli: boolean = false
+  NombreCentroSelect: any
+  TextSolicitud: any
 
   constructor(
     private authService: AuthService,
@@ -29,29 +33,43 @@ export class HomePage {
     private loadingController: LoadingController
   ) { }
 
- ngOnInit(): void {
-  this.afAuth.authState.subscribe(user => {
-    if (user) {
-      this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
-        this.usuario = usuario;
-        if (this.usuario?.centro == '000') {
-          this.bModoCentroV = false;
-          this.cargarCentros();
-        } else {
-          this.CodigoCentro = usuario?.centro;
-          this.bModoCentroV = true;
-        }
-      });
-    } else {
-      console.log('Usuario no autenticado');
-      // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
-    }
-  });
-}
+  ngOnInit(): void {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
+          this.usuario = usuario;
+          if (usuario?.solicitud === 'S') {
+            this.TextSolicitud = true
+            this.authService.ObtenerCentroPorCod(usuario.centro).subscribe(centro => {
+              this.NombreCentroSelect = centro?.nombre
+              this.ModoSoli = true
+              this.bModoCentroV = false
+            });
 
+          } else {
+            if (this.usuario?.solicitud === 'R') {
+              this.TextSolicitud = false
+              this.ModoSoli = true
+              this.bModoCentroV = false
+            } else {
+              if (this.usuario?.centro == '000') {
+                this.bModoCentroV = false;
+                this.cargarCentros();
+              } else {
+                this.CodigoCentro = usuario?.centro;
+                this.bModoCentroV = true
+              }
+            }
+          }
+        });
+      } else {
+        console.log('Usuario no autenticado');
+        // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
+      }
+    });
+  }
   onInputChange(event: any) {
     const searchTerm = event.target.value as string;
-    console.log("Término de búsqueda:", searchTerm);
     this.ListaCentrosMostrar = [];
     this.miMetodoDeBusqueda(searchTerm);
   }
@@ -65,16 +83,14 @@ export class HomePage {
       if (nombreCentroLower.includes(searchTermLower)) {
         // Agregar el nombre del centro
         this.ListaCentrosMostrar.push(centro);
-
       }
     }
-    console.log("> " + this.ListaCentrosMostrar);
     if (searchTerm === '') {
       this.ResultBusqueda = true;
-     
+
     } else {
       this.ResultBusqueda = false;
-     
+
     }
   }
 
@@ -90,6 +106,7 @@ export class HomePage {
   CentroSelect(centroCod: String, centroNombre: String) {
 
     this.mostrarConfirmacion(centroNombre, centroCod)
+
   }
 
   async mostrarConfirmacion(centro: String, centroCod: String) {
@@ -103,14 +120,14 @@ export class HomePage {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirmación cancelada');
+
           }
         }, {
           text: 'Aceptar',
           handler: () => {
-            console.log('Confirmación aceptada');
-            console.log(centroCod)
+
             this.AsignarCentroNewUser(centroCod)
-            this.mostrarLoader();
+
           }
         }
       ]
@@ -120,12 +137,8 @@ export class HomePage {
   }
 
 
-  async AsignarCentroNewUser(
-    codCentro : any
-  ) {
-
+  async AsignarCentroNewUser(codCentro: any) {
     const usuario: Usuario = {
-
       id: this.usuario?.email,
       nombre: this.usuario?.nombre,
       apellidos: '',
@@ -135,25 +148,31 @@ export class HomePage {
       rol: this.usuario?.rol,
       departamento: '',
       centro: codCentro,
-      estado: this.usuario?.estado
-
+      estado: this.usuario?.estado,
+      solicitud: 'S'
     };
+    this.mostrarLoader(usuario)
 
-    this.authService.UpdateUsuario(usuario);
-    return false;
   }
 
-  async mostrarLoader() {
+  async mostrarLoader(usuario : Usuario) {
     const loading = await this.loadingController.create({
-      message: 'Redirigiendo...', // Mensaje opcional
-      duration: 2000, // Duración en milisegundos, o puedes usar el método dismiss para cerrarla manualmente
+      message: 'Mandando Solicitud...', // Mensaje opcional
+      duration: 2000, // Duración en milisegundos
       translucent: true, // Hace que la barra de carga sea translúcida
       cssClass: 'custom-loader-class' // Clase CSS opcional para personalizar el estilo
     });
     await loading.present();
-    this.bModoCentroV = true;
+    await loading.onDidDismiss();
+   
+    this.authService.UpdateUsuario(usuario);
+    this.ModoSoli = true
   }
-  
+
+  VerCentroBusqueda() {
+    this.ModoSoli = false;
+    this.cargarCentros();
+  }
 
 
 

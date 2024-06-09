@@ -1,10 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { Usuario } from '../usuarios';
 import { AuthService } from '../servicios/auth/auth.service';
-import { Auth } from 'firebase/auth';
-import { DataServiceService } from '../data-service.service';
-import { Centro } from '../centros';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
@@ -86,6 +82,11 @@ export class DetallesUsuarioPage implements OnInit {
     } else {
       this.btnTamPantalla = true
     }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
   }
 
   listarDept(centro ?: string) {

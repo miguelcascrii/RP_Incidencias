@@ -1,49 +1,131 @@
 <ion-content>
-  <ion-card style="margin:auto;" class="m-3" [hidden]="ModoInvitacion" >
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">
-        Listado de Usuarios
-      </ion-card-title>
-    </ion-card-header>
+  <div [hidden]="MostrarSolicitudes">
+    <!-- LISTADO DE USUARIOS -->
+    <ion-card style="margin:auto;" class="m-3" [hidden]="ModoInvitacion">
+      <ion-grid class="m-3">
+        <ion-row>
+          <ion-col size="auto">
+            <ion-card-title>
+              Listado de Usuarios
+            </ion-card-title>
+            <ion-card-subtitle>Selecciona para más información</ion-card-subtitle>
+          </ion-col>
+          <ion-col size="auto" class="ion-text-end" [hidden]="!Permisos">
+            <button (click)="GestSolicitudes()"  [hidden]="btnTamPantalla" class="icon-button ion-text-end">
+              <ion-icon size="small" name="mail-outline"></ion-icon>
+              <span class="icon-button__badge">{{notificationCount}}</span>
+            </button>
+            
+            <button (click)="GestSolicitudes()" [hidden]="!btnTamPantalla" class="icon-button-large">
+              <ion-icon size="small" name="mail-outline" class="m-1"></ion-icon>
+              <ion-label class="m-1">{{TextIconSoli}}</ion-label>
+              <span  class="icon-button__badge">{{notificationCount}}</span>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-    <ion-list class="ion-text-center">
-      <ion-label>Selecciona para más información</ion-label>
-      <ion-item class="ion-text-start mt-2">
-        <ion-label class="m-2"><b>Email</b></ion-label>
-        <ion-label slot="end"><b>Estado</b></ion-label>
+      <ion-list class="ion-text-center">
+        <ion-item class="ion-text-start mt-2">
+          <ion-label class="m-2"><b>Email</b></ion-label>
+          <ion-label slot="end"><b>Estado</b></ion-label>
 
-      </ion-item>
-      <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaUsuariosSinInvi" (click)="DetallesUser(item)">
-        <ion-avatar aria-hidden="true" slot="start" class="m-2">
-          <img alt="" src="{{item.foto}}" />
-        </ion-avatar>
-        <ion-label>{{item.email}} </ion-label>
-        <ion-label slot="end">
-          <ion-icon *ngIf="item.estado === 'Conectado'" color="success" size="large"
-            name="checkmark-circle-sharp"></ion-icon>
-          <ion-icon *ngIf="item.estado === 'Desconectado'" color="danger" size="large"
-            name="close-circle-sharp"></ion-icon>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-    <ion-button class="m-2" (click)="btnModoInvi()" [hidden]="!Permisos"><ion-icon name="add-circle-outline" ></ion-icon>Invitar Usuario</ion-button>
-  </ion-card>
+        </ion-item>
+        <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaUsuariosSinInvi" (click)="DetallesUser(item)">
+          <ion-avatar aria-hidden="true" slot="start" class="m-2">
+            <img alt="" src="{{item.foto}}" />
+          </ion-avatar>
+          <ion-label>{{item.email}} </ion-label>
+          <ion-label slot="end">
+            <ion-icon *ngIf="item.estado === 'Conectado'" color="success" size="large"
+              name="checkmark-circle-sharp"></ion-icon>
+            <ion-icon *ngIf="item.estado === 'Desconectado'" color="danger" size="large"
+              name="close-circle-sharp"></ion-icon>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-button class="m-2" (click)="btnModoInvi()" [hidden]="!Permisos"><ion-icon
+          name="add-circle-outline"></ion-icon>Invitar Usuario</ion-button>
+    </ion-card>
 
-  <ion-card [hidden]="!ModoInvitacion">
+    <ion-card [hidden]="!ModoInvitacion">
+      <ion-card-content>
+        <ion-card-title class="ion-text-center">
+          Invitar Usuario
+        </ion-card-title>
+        <form (submit)="MandarInvi(email)">
+          <div class="mt-2 form-group">
+            <label>Email de usuario</label>
+            <input type="email" class="form-control" id="email" aria-describedby="email"
+              placeholder="Introduzca el email del usuario deseado" #email name="email">
+          </div>
+
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <ion-button type="submit" size="small">
+                  <ion-icon class="m-1" name="mail-outline"></ion-icon> Invitar usuario
+                </ion-button>
+              </ion-col>
+              <ion-col class="ion-text-end">
+                <ion-button type="button" [hidden]="!btnTamPantalla" color="warning">Cancelar</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ion-card [hidden]="!MostrarSolicitudes">
     <ion-card-content>
-      <ion-card-title class="ion-text-center">
-        Invitar Usuario
-      </ion-card-title>
-      <form (submit)="MandarInvi(email)">
-        <div class="mt-2 form-group">
-          <label>Email de usuario</label>
-          <input type="email" class="form-control" id="email" aria-describedby="email"
-            placeholder="Introduzca el email del usuario deseado" #email name="email">
-        </div>
-        <ion-button type="submit" size="small"  class="mt-2">
-          <ion-icon class="m-1" name="mail-outline"></ion-icon> Invitar usuario
-        </ion-button>
-      </form>
+      <ion-card-header>
+        <ion-card-title>
+          Solicitudes 
+        </ion-card-title>
+        <ion-card-subtitle>
+          Estos usuarios han solicitado unirse al centro
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-list>
+        <ion-item>
+          <label><b>Usuario</b></label>
+          <label slot="end"><b>Acciones</b></label>
+        </ion-item>
+        <ion-item lines="full" *ngFor="let soli of ListaSolicitudes">
+          <ion-label>{{soli.email}}</ion-label>
+          <ion-button color="danger" (click)="ActionSolicitud(soli,'CANCEL')"><ion-icon name="close-outline"></ion-icon></ion-button>
+          <ion-button color="success" (click)="ActionSolicitud(soli,'ACEPT')"><ion-icon name="checkmark-outline"></ion-icon></ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-button>
+              Aceptar Solicitud
+            </ion-button>
+          </ion-col>
+          <ion-col class="ion-text-end">
+            <ion-button color="warning" (click)="CerrarSolicitudes()" [hidden]="!btnTamPantalla">Cancelar</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
     </ion-card-content>
   </ion-card>
+
+  <div [hidden]="!ModoInvitacion">
+    <ion-fab class="mb-5" [hidden]="btnTamPantalla" horizontal="end" vertical="bottom" slot="fixed">
+      <ion-fab-button color="warning" (click)="CancelarForm()">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+  <div [hidden]="!MostrarSolicitudes">
+    <ion-fab class="mb-5" [hidden]="btnTamPantalla" horizontal="end" vertical="bottom" slot="fixed">
+      <ion-fab-button color="warning" (click)="CerrarSolicitudes()">
+        <ion-icon name="close"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
 </ion-content>

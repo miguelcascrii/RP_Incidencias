@@ -1,0 +1,50 @@
+.icon-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #0054e9;
+    background: white;
+    border: solid 2px #0054e9 ;
+    outline: none;
+    border-radius: 50%;
+  }
+
+  .icon-button-large {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 50px;
+    font-weight: bold;
+    height: 50px;
+    color: #0054e9;
+    background: white;
+    border: solid 2px #0054e9 ;
+    outline: none;
+    border-radius: 5px;
+  }
+  
+  .icon-button:hover {
+    cursor: pointer;
+  }
+  
+  .icon-button:active {
+    background: #cccccc;
+  }
+  
+  .icon-button__badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 25px;
+    height: 25px;
+    background: red;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }

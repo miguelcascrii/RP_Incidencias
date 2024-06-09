@@ -15,4 +15,5 @@ export interface Usuario{
     departamento?: string;
     centro?: string;
     estado?: string
+    solicitud?: string
 }

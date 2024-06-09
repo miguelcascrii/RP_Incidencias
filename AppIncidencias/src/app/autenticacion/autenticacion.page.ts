@@ -10,10 +10,11 @@ import { Usuario } from '../usuarios';
 })
 export class AutenticacionPage implements OnInit {
 
+  ModoInvi : boolean = false
+
   constructor(private authService: AuthService,private firestore: AngularFirestore) { }
 
   ngOnInit() {
-    
   }
 
   async onGoogleLogin(){
@@ -23,7 +24,6 @@ export class AutenticacionPage implements OnInit {
     catch(error){
       console.log("ERROR: " + error)
     }
-    
   }
 
 

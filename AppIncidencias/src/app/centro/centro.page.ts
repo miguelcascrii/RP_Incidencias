@@ -58,7 +58,7 @@ export class CentroPage implements OnInit {
         });
       }
     });
-    this.ObtenerCentro();
+    //this.ObtenerCentro();
     this.TamañoPantalla();
   }
   /**
@@ -77,21 +77,11 @@ export class CentroPage implements OnInit {
     }
   }
 
+  // LLLAMA A TAMAÑOPANTALLA AL REDIMENSIONAR LA PANTALLA
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     this.TamañoPantalla();
   }
-
-  /**
-  * OBTIENE EL CENTRO DEL USUARIO ACTUAL
-  * @param centro 
-  */
-  ObtenerCentro() {
-    this.authService.ObtenerCentroPorCod(this.CodCentro).subscribe(centro => {
-      this.CentroUsuario = centro;
-    });
-  }
-
   /**
   * OBTIENE LOS DATOS DE AULAS Y LOS ALMACENA EN UN ARRAY
   * @param centro 

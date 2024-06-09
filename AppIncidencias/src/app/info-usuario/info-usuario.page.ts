@@ -1,15 +1,10 @@
-import { Component, OnInit,ViewChild  } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit,ViewChild,HostListener  } from '@angular/core';
 import { Usuario } from '../usuarios';
 import { AuthService } from '../servicios/auth/auth.service';
-import { Auth } from 'firebase/auth';
-import { DataServiceService } from '../data-service.service';
-import { Centro } from '../centros';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Material } from '../materiales';
 import { Incidencia } from '../incidencias';
 import { MetGenerales } from '../general';
 import { IonContent } from '@ionic/angular';
@@ -70,6 +65,10 @@ export class InfoUsuarioPage implements OnInit {
 
     
 
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
   }
 
   TamañoPantalla() {

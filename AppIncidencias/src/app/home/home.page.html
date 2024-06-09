@@ -1,33 +1,60 @@
 <ion-content [fullscreen]="true">
-  <ion-card class="ion-text-center" [hidden]="bModoCentroV">
-    <ion-card-header>
-      <ion-card-title>Bienvenido</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-label>Antes de comenzar debes de unirte a un centro</ion-label>
-      <ion-item>
-        <ion-searchbar id="buscadortext" type="text" placeholder="Buscar centro" (input)="onInputChange($event)"
-          #buscadortext></ion-searchbar>
+  <div [hidden]="bModoCentroV">
 
+
+    <ion-card class="ion-text-center" [hidden]="ModoSoli">
+      <ion-card-header>
+        <ion-card-title>Bienvenido</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-label>Antes de comenzar debes de unirte a un centro</ion-label>
+        <ion-item>
+          <ion-searchbar id="buscadortext" type="text" placeholder="Buscar centro" (input)="onInputChange($event)"
+            #buscadortext></ion-searchbar>
+
+        </ion-item>
+        <ion-card class="ion-text-start" [hidden]="ResultBusqueda">
+          <ion-label class="m-2">Resultado: </ion-label>
+          <ion-list>
+            <ion-item *ngFor="let centro of ListaCentrosMostrar">
+              <ion-label (click)="CentroSelect(centro.codCentro,centro.nombre)">{{ centro.nombre }}</ion-label>
+            </ion-item>
+          </ion-list>
+        </ion-card>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="mt-4" [hidden]="!ModoSoli" style="width: 78%;display: grid; margin: 0 auto;">
+      <ion-item color="light" lines="full">
+        <ion-card-header>
+          <ion-card-title>
+            Has realizado una solicitud
+          </ion-card-title>
+          <ion-label class="mt-2" color="success" [hidden]="!TextSolicitud">
+            <b>Solicitada</b>
+          </ion-label>
+          <ion-label class="mt-2" color="danger" [hidden]="TextSolicitud">
+            <b>Rechazada</b>
+          </ion-label>
+        </ion-card-header>
       </ion-item>
-      <ion-card class="ion-text-start" [hidden]="ResultBusqueda">
-        <ion-label class="m-2">Resultado: </ion-label>
-        <ion-list>
-
-          <ion-item *ngFor="let centro of ListaCentrosMostrar">
-            <ion-label (click)="CentroSelect(centro.codCentro,centro.nombre)">{{ centro.nombre }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-card>
-    </ion-card-content>
-  </ion-card>
-
-  <ion-card>
+      <ion-item lines="none" [hidden]="!TextSolicitud">
+        <ion-label><b>Centro:</b> {{NombreCentroSelect}}</ion-label>
+      </ion-item>
+      <ion-card-content>
+        <ion-card-subtitle [hidden]="!TextSolicitud">Debes ser aceptado por un técnico del centro</ion-card-subtitle>
+        <ion-card-subtitle class="mt-1 mb-3" [hidden]="TextSolicitud">Tu solicitud ha sido <b>Rechazada</b></ion-card-subtitle>
+        <ion-button (click)="VerCentroBusqueda()" [hidden]="TextSolicitud"><ion-icon name="search-outline" class="m-1"></ion-icon>Buscar Centros</ion-button>
+        <ion-card-subtitle class="mt-1" [hidden]="TextSolicitud">Puedes solicitar en más centros</ion-card-subtitle>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  <ion-card [hidden]="!bModoCentroV">
     <ion-card-content>
-      <ion-card-title  class="mb-2 ion-text-center">
+      <ion-card-title class="mb-2 ion-text-center">
         INCIDENCIAS
       </ion-card-title>
-      <div class="row" [hidden]="!bModoCentroV">
+      <div class="row">
         <div class="col">
           <ion-card class="card-activas">
             <ion-card-content>
@@ -61,6 +88,4 @@
       </div>
     </ion-card-content>
   </ion-card>
-
-
 </ion-content>

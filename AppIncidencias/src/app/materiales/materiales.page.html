@@ -109,7 +109,7 @@
                   <b>Modo edición activado</b>
                 </ion-label>
               </ion-col>
-              <ion-col class="ion-text-end">
+              <ion-col class="ion-text-end"  [hidden]="!EditionMode" >
                 <ion-button color="danger" [hidden]="!Permisos" (click)="EliminarMaterial(material)">
                   <ion-icon name="trash-bin"></ion-icon>
                 </ion-button>
