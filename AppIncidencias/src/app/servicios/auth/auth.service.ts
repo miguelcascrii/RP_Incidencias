@@ -8,10 +8,10 @@ import { Usuario } from '../../usuarios';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
-import { Material } from 'src/app/materiales';
 import { Centro } from 'src/app/centros';
 import { AlertController } from '@ionic/angular';
-import { deleteUser } from 'firebase/auth';
+import { Platform } from '@ionic/angular';
+
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +24,10 @@ export class AuthService {
     private afAuth: AngularFireAuth,
     private router: Router,
     private firestore: AngularFirestore,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private platform: Platform 
 
-  ) { }
+  ) {}
 
   // #####################################################################
   //
@@ -119,98 +120,100 @@ export class AuthService {
 
   async loginGoogle() {
     try {
-        const result = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-        if (result.user) {
-            // Verificar si el usuario ya existe en la base de datos
-            const usuarioExistente = await firstValueFrom(this.obtenerUsuarioPorEmail(result.user.email));
-
-            // Esperar a que el nombre del centro invitado sea obtenido
-            this.NombreCentroInvitado = await firstValueFrom(this.ObtenerCentroPorCod(usuarioExistente?.centro).pipe(
-                map(centro => centro?.nombre)
-            ));
-
-            if (!usuarioExistente) {
-                // Si el usuario no existe, guarda los datos en la base de datos
-                const usuario: Usuario = {
-                    nombre: result.user.displayName || '',
-                    apellidos: '',
-                    email: result.user.email || '',
-                    telefono: result.user.phoneNumber || '',
-                    foto: result.user.photoURL || '',
-                    rol: 0,
-                    departamento: '',
-                    centro: '000' || '',
-                    estado: 'Conectado',
-                };
-                await this.guardarUsuario(usuario);
-                // Asignar el usuario conectado
-                this.UsuarioConect = usuario;
-                this.router.navigate(['home']);
-            } else {
-                if (usuarioExistente.estado == "invitado") {
-                    const usuario: Usuario = {
-                        nombre: result.user.displayName || '',
-                        apellidos: '',
-                        email: result.user.email || '',
-                        telefono: result.user.phoneNumber || '',
-                        foto: result.user.photoURL || '',
-                        rol: usuarioExistente.rol,
-                        departamento: '',
-                        centro: usuarioExistente.centro || '',
-                        estado: 'Conectado'
-                    };
-
-                    try { 
-                        const alert = await this.alertController.create({
-                            header: 'Has sido invitado a unirte',
-                            message: '¿Deseas unirte a ' + this.NombreCentroInvitado + '?',
-                            buttons: [
-                                {
-                                    text: 'Cancelar',
-                                    role: 'cancel',
-                                    cssClass: 'secondary',
-                                    handler: () => {
-                                        this.logout();
-                                        this.DeleteUsuario(usuario.email);
-                                    }
-                                }, {
-                                    text: 'Aceptar',
-                                    handler: () => {
-                                        this.UpdateUsuario(usuario);
-                                        this.router.navigate(['home']);
-                                    }
-                                }
-                            ]
-                        });
-                        await alert.present();
-                    } catch (error) {
-                        console.error("Error al obtener el nombre del centro invitado:", error);
-                        // Manejo alternativo si no se puede obtener el nombre del centro
-                        const alert = await this.alertController.create({
-                            header: 'Error',
-                            message: 'No se pudo obtener el nombre del centro. Por favor, intenta de nuevo.',
-                            buttons: ['OK']
-                        });
-                        await alert.present();
+      let result;
+  
+      if (this.platform.is('capacitor') || this.platform.is('cordova')) {
+        // Iniciar sesión usando el método signInWithRedirect en plataformas móviles
+        await this.afAuth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+        result = await this.afAuth.getRedirectResult();
+      } else {
+        // Iniciar sesión usando el método signInWithPopup en plataformas web
+        result = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider().setCustomParameters({ 'redirect_uri': 'https://appincidencias-67ac7.web.app/autenticacion' }));
+      }
+  
+      if (result.user) {
+        const usuarioExistente = await firstValueFrom(this.obtenerUsuarioPorEmail(result.user.email));
+        
+        this.NombreCentroInvitado = await firstValueFrom(this.ObtenerCentroPorCod(usuarioExistente?.centro).pipe(
+            map(centro => centro?.nombre)
+        ));
+  
+        if (!usuarioExistente) {
+          const usuario: Usuario = {
+            nombre: result.user.displayName || '',
+            apellidos: '',
+            email: result.user.email || '',
+            telefono: result.user.phoneNumber || '',
+            foto: result.user.photoURL || '',
+            rol: 0,
+            departamento: '',
+            centro: '000' || '',
+            estado: 'Conectado',
+          };
+          await this.guardarUsuario(usuario);
+          this.UsuarioConect = usuario;
+          this.router.navigate(['home']);
+        } else {
+          if (usuarioExistente.estado == "invitado") {
+            const usuario: Usuario = {
+              nombre: result.user.displayName || '',
+              apellidos: '',
+              email: result.user.email || '',
+              telefono: result.user.phoneNumber || '',
+              foto: result.user.photoURL || '',
+              rol: usuarioExistente.rol,
+              departamento: '',
+              centro: usuarioExistente.centro || '',
+              estado: 'Conectado'
+            };
+  
+            try {
+              const alert = await this.alertController.create({
+                header: 'Has sido invitado a unirte',
+                message: '¿Deseas unirte a ' + this.NombreCentroInvitado + '?',
+                buttons: [
+                  {
+                    text: 'Cancelar',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => {
+                      this.logout();
+                      this.DeleteUsuario(usuario.email);
                     }
-                } else {
-                    // Si el usuario ya existe, actualizar su estado a "Conectado"
-                    usuarioExistente.estado = 'Conectado';
-                    await this.UpdateUsuario(usuarioExistente);
-                    this.router.navigate(['home']);
-                }
-
-                // Asignar el usuario conectado
-                this.UsuarioConect = usuarioExistente;
+                  }, {
+                    text: 'Aceptar',
+                    handler: () => {
+                      this.UpdateUsuario(usuario);
+                      this.router.navigate(['home']);
+                    }
+                  }
+                ]
+              });
+              await alert.present();
+            } catch (error) {
+              console.error("Error al obtener el nombre del centro invitado:", error);
+              const alert = await this.alertController.create({
+                header: 'Error',
+                message: 'No se pudo obtener el nombre del centro. Por favor, intenta de nuevo.',
+                buttons: ['OK']
+              });
+              await alert.present();
             }
-            // Redirigir a la pantalla correspondiente
-            
+          } else {
+            usuarioExistente.estado = 'Conectado';
+            await this.UpdateUsuario(usuarioExistente);
+            this.router.navigate(['home']);
+          }
+  
+          this.UsuarioConect = usuarioExistente;
         }
+      }
     } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        throw error;
+      console.error("Error al iniciar sesión:", error);
+      throw error;
     }
-}
+  }
+  
 
 
 

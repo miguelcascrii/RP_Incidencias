@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "735682379083",
+    "project_id": "appincidencias-67ac7",
+    "storage_bucket": "appincidencias-67ac7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:735682379083:android:5515f44fc852f070ebbcce",
+        "android_client_info": {
+          "package_name": "com.appincidencias"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "735682379083-ko22414mkh8cadi1253fgssgrbop8nc6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmYrxVZHv3Iz9pF7JlWrkO1puBXciEMZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "735682379083-ko22414mkh8cadi1253fgssgrbop8nc6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
