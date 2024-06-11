@@ -45,11 +45,11 @@ export class AppComponent implements OnInit {
       if (user) {
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.CodCentro = usuario?.centro;
-          
           if (this.CodCentro !== "000") {
             if (usuario?.solicitud === "S") {
               this.SesionState = false;
             } else {
+              console.log(this.CodCentro);
               this.SesionState = true;
               this.ObtenerUser();
               this.ListarSolicitudes(this.CodCentro)
@@ -58,10 +58,12 @@ export class AppComponent implements OnInit {
           } else {
             this.SesionState = false;
           }
+          console.log("Sesion: " + this.SesionState);
         });
       } else {
         this.SesionState = false;
         this.EstadoDesconectado();
+        console.log("Sesion: " + this.SesionState);
       }
     });
   }
@@ -72,6 +74,7 @@ export class AppComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         const authenticatedRoutes = ['/autenticacion']; // Define tus rutas autenticadas aquí
         this.OcultMenu = authenticatedRoutes.includes(event.urlAfterRedirects);
+        console.log('OcultMenu:', this.OcultMenu); // Esto te ayudará a depurar
       });
   }
 

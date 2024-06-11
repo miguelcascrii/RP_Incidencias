@@ -9,15 +9,26 @@
       </ion-col>
       <ion-col class="col ion-text-end ion-justify-content-end">
         <ion-button (click)="NuevaIncidencia()">
-          
           <ion-icon class="m-1" name="duplicate-outline"></ion-icon> 
           {{btnNuevoText}} 
         </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
-
   <ion-card>
+    
+      <ion-item color="light">
+        <ion-select label="Listado de incidencias" placeholder="Todas" [(ngModel)]="selectedOption" (ionChange)="onOptionChange($event)">
+          <ion-select-option value="todas">Todas</ion-select-option>
+          <ion-select-option value="atendidas">Atendidas</ion-select-option>
+          <ion-select-option value="pendientes">Pendientes</ion-select-option>
+        </ion-select>    
+      </ion-item>
+    
+  </ion-card>
+  
+  <ion-card>
+
     <ion-list>
       <ion-item>
         <ion-label><b>Aula</b></ion-label>
@@ -33,15 +44,17 @@
         </ion-item>
       </div>
     </ion-list>
-    <ion-footer *ngIf="ListaIncidencias.length !== 0">
+    <ion-footer>
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button [disabled]="MetodosComunes.currentPage === 1" (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaIncidencias.length" (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
+          <ion-button [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaIncidenciasFLTR.length" (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-footer>
   </ion-card>
 </ion-content>
+
+

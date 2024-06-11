@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Incidencia } from '../incidencias';
-import { MetGenerales } from '../general';  // Ajusta la ruta según tu estructura de proyecto
+import { MetGenerales } from '../general';
 
 @Component({
   selector: 'app-incidencias',
@@ -15,9 +15,10 @@ export class IncidenciasPage implements OnInit {
   btnNuevoText: string = "Nueva Incidencia";
   CodCentro: any;
   ListaIncidencias: Incidencia[] = [];
+  ListaIncidenciasFLTR: Incidencia[] = [];
+  selectedOption: string = 'todas'; // Valor por defecto
 
-  MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService);
-
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
 
   constructor(
     private router: Router,
@@ -28,14 +29,10 @@ export class IncidenciasPage implements OnInit {
   ngOnInit() {
     this.afAuth.authState.subscribe(user => {
       if (user) {
-       
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.CodCentro = usuario?.centro;
           this.ListarIncidencias(this.CodCentro);
-       
         });
-      } else {
-        // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
       this.TamañoPantalla();
     });
@@ -50,6 +47,7 @@ export class IncidenciasPage implements OnInit {
       this.btnNuevoText = " Nueva Incidencia";
     }
   }
+
   // LLLAMA A TAMAÑOPANTALLA AL REDIMENSIONAR LA PANTALLA
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
@@ -66,20 +64,21 @@ export class IncidenciasPage implements OnInit {
         });
       });
       this.OrdenarPorFecha();
-      this.MetodosComunes.updatePaginatedItems(this.ListaIncidencias); // Actualiza los elementos paginados
+      this.filtrarIncidencias(); // Filtra incidencias después de cargar
+      this.MetodosComunes.updatePaginatedItems(this.ListaIncidenciasFLTR); // Actualiza los elementos paginados
     });
   }
 
   NuevaIncidencia() {
-    this.MetodosComunes.AbrePantallasGen("NUEVAINCIDENCIA",false)
+    this.MetodosComunes.AbrePantallasGen("NUEVAINCIDENCIA", false);
   }
 
-  AbrirDetallesIncidencia(item : any){
-    this.MetodosComunes.AbrePantallasGen("DETALLESINCIDENCIA",item,true)
+  AbrirDetallesIncidencia(item: any) {
+    this.MetodosComunes.AbrePantallasGen("DETALLESINCIDENCIA", item, true);
   }
 
   goToPage(page: number) {
-    this.MetodosComunes.goToPage(page, this.ListaIncidencias); // Navega a la página y actualiza los elementos paginados
+    this.MetodosComunes.goToPage(page, this.ListaIncidenciasFLTR); // Navega a la página y actualiza los elementos paginados
   }
 
   OrdenarPorFecha() {
@@ -88,5 +87,21 @@ export class IncidenciasPage implements OnInit {
       const fechaB = new Date(a.fecha);
       return fechaA.getTime() - fechaB.getTime();
     });
+  }
+
+  onOptionChange(event: any) {
+    this.selectedOption = event.detail.value;
+    this.filtrarIncidencias(); // Filtra las incidencias al cambiar la opción
+  }
+
+  filtrarIncidencias() {
+    if (this.selectedOption === 'todas') {
+      this.ListaIncidenciasFLTR = [...this.ListaIncidencias];
+    } else if (this.selectedOption === 'atendidas') {
+      this.ListaIncidenciasFLTR = this.ListaIncidencias.filter(inc => inc.atentida === true);
+    } else if (this.selectedOption === 'pendientes') {
+      this.ListaIncidenciasFLTR = this.ListaIncidencias.filter(inc => inc.atentida === false);
+    }
+    this.MetodosComunes.updatePaginatedItems(this.ListaIncidenciasFLTR); // Actualiza la paginación después de filtrar
   }
 }

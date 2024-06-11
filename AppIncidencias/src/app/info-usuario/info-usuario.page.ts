@@ -29,6 +29,7 @@ export class InfoUsuarioPage implements OnInit {
   selectedDpt ?: string =""
   FaltaInfo : boolean = true
 
+
   MetodosComunes: MetGenerales = new MetGenerales(this.router,this.afAuth,this.authService);
   @ViewChild(IonContent, { static: false }) content!: IonContent;
 
@@ -43,6 +44,7 @@ export class InfoUsuarioPage implements OnInit {
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
       if (user) {
+        console.log(user.email);
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.usuario = usuario;
           this.CodCentro = usuario?.centro;
@@ -100,6 +102,8 @@ export class InfoUsuarioPage implements OnInit {
       this.TextModeEdit = "Activar Modo Edición"
       this.ModoEdicion = true
     }
+
+    console.log(this.ModoEdicion)
   }
   listarDept(centro ?: string) {
     this.authService.DatoWhere(centro, 'Departamentos', 'centro').subscribe((res) => {
@@ -127,6 +131,7 @@ export class InfoUsuarioPage implements OnInit {
           for(let item of this.ListaIncidencias){
             if(item.email == this.usuario?.email){
               this.MisIncidencias.push(item);
+              console.log(item)
             }
           }
       });
@@ -180,15 +185,6 @@ export class InfoUsuarioPage implements OnInit {
     this.CancelarForm()
   }
 
-  goToPage(page: number) {
-    this.MetodosComunes.goToPage(page, this.MisIncidencias); // Navega a la página y actualiza los elementos paginados
-  }
-
-  IrCentro(){
-    this.MetodosComunes.AbrePantallasGen("CENTRO",true)
-  }
-
-  
   ComprobarDatosUsuario(){
     if(!this.usuario?.nombre || !this.usuario?.apellidos || !this.usuario?.email || !this.usuario?.telefono 
       ||!this.usuario?.foto ||!this.usuario?.rol || !this.usuario?.departamento

@@ -42,7 +42,7 @@
         </div>
         <div class="row">
           <ion-item class="col-md-6 col-sm-12">
-            <ion-select name="aula" [(ngModel)]="selectedAula" label="Selecciona un aula*" label-placement="floating"
+            <ion-select name="aula" [(ngModel)]="selectedAula" label="Selecciona un aula" label-placement="floating"
               required #aula [hidden]="ModoDetalles">
               <ion-select-option *ngFor="let item of ListaAulas" [value]="item.numero">Planta {{item.planta}}, Aula
                 {{item.numero}}</ion-select-option>
@@ -61,7 +61,7 @@
         </div>
         <ion-item>
           <ion-textarea [readonly]="ModoDetalles" [(ngModel)]="selecteDescripcion" name="descripcion" #descripcion
-            label="Descripción*" style="height: 80px;" labelPlacement="floating" maxlength="500"></ion-textarea>
+            label="Descripción" style="height: 80px;" labelPlacement="floating" maxlength="500"></ion-textarea>
         </ion-item>
         <ion-grid>
           <ion-row>

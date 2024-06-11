@@ -120,6 +120,7 @@ export class AuthService {
 
   async loginGoogle() {
     try {
+      this.logout()
       let result;
   
       if (this.platform.is('capacitor') || this.platform.is('cordova')) {

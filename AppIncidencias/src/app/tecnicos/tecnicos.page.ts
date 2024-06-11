@@ -244,7 +244,6 @@ export class TecnicosPage implements OnInit {
 
     }
   }
-
   CancelFilter() {
     this.ngOnInit()
     this.ListaDeptselect = [];
@@ -252,9 +251,4 @@ export class TecnicosPage implements OnInit {
     this.Filtro = true
 
   }
-  
-
-
-
-
 }

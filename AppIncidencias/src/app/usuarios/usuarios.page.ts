@@ -100,7 +100,7 @@ export class TecnicosPage implements OnInit {
         });
       });
       for (let us of this.ListaUsuarios) {
-        if (us.estado !== "invitado") {
+        if (us.estado !== "invitado" && us.solicitud !== "S") {
           this.ListaUsuariosSinInvi.push(us)
         }
       }
