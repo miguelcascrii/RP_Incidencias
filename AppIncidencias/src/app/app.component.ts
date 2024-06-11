@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   ListaUsuarios : Usuario[]= [];
   ListaSolicitudes : Usuario[]= [];
   notificationCount : any
+  FaltaInfo : boolean = true
 
   constructor(private afAuth: AngularFireAuth, private authService: AuthService, private platform: Platform, private router: Router) {
     this.monitorRouteChanges();
@@ -44,24 +45,23 @@ export class AppComponent implements OnInit {
       if (user) {
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.CodCentro = usuario?.centro;
+          
           if (this.CodCentro !== "000") {
             if (usuario?.solicitud === "S") {
               this.SesionState = false;
             } else {
-              console.log(this.CodCentro);
               this.SesionState = true;
               this.ObtenerUser();
               this.ListarSolicitudes(this.CodCentro)
+              this.ComprobarDatosUsuario(usuario)
             }
           } else {
             this.SesionState = false;
           }
-          console.log("Sesion: " + this.SesionState);
         });
       } else {
         this.SesionState = false;
         this.EstadoDesconectado();
-        console.log("Sesion: " + this.SesionState);
       }
     });
   }
@@ -72,7 +72,6 @@ export class AppComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         const authenticatedRoutes = ['/autenticacion']; // Define tus rutas autenticadas aquí
         this.OcultMenu = authenticatedRoutes.includes(event.urlAfterRedirects);
-        console.log('OcultMenu:', this.OcultMenu); // Esto te ayudará a depurar
       });
   }
 
@@ -177,5 +176,15 @@ export class AppComponent implements OnInit {
       // Contador de elementos en ListaSolicitudes
       this.notificationCount = this.ListaSolicitudes.length;
     });
+  }
+
+  ComprobarDatosUsuario(usuario ?: Usuario){
+    if(!usuario?.nombre || !usuario?.apellidos || !usuario?.email || !usuario?.telefono 
+      ||!usuario?.foto ||!usuario?.rol || !usuario?.departamento
+     ){
+      this.FaltaInfo = false
+    } else {
+      this.FaltaInfo = true
+    }
   }
 }

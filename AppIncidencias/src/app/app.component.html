@@ -23,6 +23,9 @@
             routerLinkActive="selected">
             <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
             <ion-label>{{ p.title }}</ion-label>
+            
+            <ion-icon *ngIf="p.title === 'Cuenta'" color="danger" slot="end"  [hidden]="FaltaInfo" name="alert-circle-outline" size="large">d</ion-icon>
+            <ion-icon *ngIf="p.title === 'Cuenta'" color="success" slot="end"  [hidden]="!FaltaInfo" name="checkmark-circle-outline" size="large">d</ion-icon>
             <ion-badge *ngIf="p.title === 'Usuarios'" slot="end">{{notificationCount}}</ion-badge>
           </ion-item>
         </ion-menu-toggle>

@@ -153,7 +153,7 @@
     <ng-template>
       <form (submit)="NuevoDpt(name)" style="height: 100%;">
         <ion-header>
-          <ion-toolbar>
+          <ion-toolbar color="secondary">
             <ion-buttons slot="start">
               <ion-button type="button" (click)="cancel()">Cancelar</ion-button>
             </ion-buttons>
@@ -183,8 +183,8 @@
                 </div>
               </ion-list>
             </ion-card-content>
-            <ion-footer>
-              <ion-toolbar>
+            <ion-footer *ngIf="ListaDept.length !== 0">
+              <ion-toolbar color="secondary">
                 <ion-buttons slot="start">
                   <ion-button [disabled]="MetodosComunes.currentPageDpt === 1"
                     (click)="goToPageDept(MetodosComunes.currentPageDpt - 1)">Anterior</ion-button>
@@ -206,8 +206,8 @@
   <ion-modal trigger="modal-Aulas" (willDismiss)="onWillDismiss($event)" #AulaModal>
     <ng-template>
       <form (submit)="NuevaAula(numero,planta)" style="height: 100%;">
-        <ion-header>
-          <ion-toolbar>
+        <ion-header >
+          <ion-toolbar color="secondary">
             <ion-buttons slot="start">
               <ion-button type="button" (click)="cancelAulaModal()">Cancelar</ion-button>
             </ion-buttons>
@@ -252,15 +252,15 @@
                 </div>
               </ion-list>
             </ion-card-content>
-            <ion-footer>
-              <ion-toolbar>
+            <ion-footer *ngIf="ListaAulas.length !== 0">
+              <ion-toolbar color="secondary" >
                 <ion-buttons slot="start">
                   <ion-button [disabled]="MetodosComunes.currentPage === 1"
                     (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
                 </ion-buttons>
                 <ion-buttons slot="end">
                   <ion-button
-                    [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaDept.length"
+                    [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaAulas.length"
                     (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
                 </ion-buttons>
               </ion-toolbar>

@@ -33,7 +33,7 @@
         </ion-item>
       </div>
     </ion-list>
-    <ion-footer>
+    <ion-footer *ngIf="ListaIncidencias.length !== 0">
       <ion-toolbar>
         <ion-buttons slot="start">
           <ion-button [disabled]="MetodosComunes.currentPage === 1" (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>

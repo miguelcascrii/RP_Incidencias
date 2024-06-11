@@ -129,7 +129,6 @@ export class NuevaincidenciaPage implements OnInit {
                                 String(dateObj.getMonth() + 1).padStart(2, '0') + '/' +
                                 dateObj.getFullYear();
         }
-
         this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
         this.selectedComent = this.IncidenciaRecib?.comentario;
     } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && this.ModoDetalles) {
@@ -174,8 +173,7 @@ export class NuevaincidenciaPage implements OnInit {
   }
 
   async NuevaIncidencia(email: any, nombre: any, aula: any, fecha: any, descripcion: any) {
-    // Si la fecha se pasa como undefined obtendremos la fecha actual
-    // además la formatea a DD/MM/YYYY
+    
     if (fecha === undefined || isNaN(Date.parse(fecha))) {
         const now = new Date();
         fecha = String(now.getDate()).padStart(2, '0') + '/' +
@@ -200,7 +198,8 @@ export class NuevaincidenciaPage implements OnInit {
         centro: this.UsuarioYO?.centro || ""
     };
 
-    try {
+    if(incidencia.descripcion || incidencia.aula){
+      try {
         await this.authService.GuardarCualDato(incidencia, 'Incidencias');
         const toast = await this.toastController.create({
             message: '¡La incidencia está en manos de los técnicos!',
@@ -213,6 +212,17 @@ export class NuevaincidenciaPage implements OnInit {
     } catch (error) {
         console.log("ERROR: " + error);
     }
+    }else{
+      const toast = await this.toastController.create({
+        message: '¡Faltan campos por rellenar!',
+        duration: 2000,
+        position: 'top',
+        color: 'warning',
+    });
+    toast.present();
+    }
+
+    
 }
 
   cancel() {

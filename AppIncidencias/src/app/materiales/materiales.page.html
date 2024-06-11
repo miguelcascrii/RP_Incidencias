@@ -1,21 +1,38 @@
 <ion-content>
   <ion-card [hidden]="VisualFormNuevoMaterial">
 
-    <ion-card-title class="ion-text-center">
-      Listado de Materiales
-    </ion-card-title>
-    <ion-card-subtitle class="mt-2 ion-text-center">
-      Selecciona para más información
-    </ion-card-subtitle>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="auto">
+          <ion-card-title class="mt-2">
+            Listado de Materiales
+          </ion-card-title>
+          <ion-card-subtitle class="mt-1">
+            Selecciona para más información
+          </ion-card-subtitle>
+        </ion-col>
+        <ion-col class="ion-text-end" [hidden]="!btnTamPantalla">
+          <ion-button [hidden]="!Permisos" class="m-2" (click)="FormNuevoMat()">
+            <ion-icon name="add-circle-outline"></ion-icon>Nuevo Material
+          </ion-button>
+        </ion-col>
+        <ion-col class="ion-text-end" [hidden]="btnTamPantalla">
+          <ion-button [hidden]="!Permisos" class="m-2" (click)="FormNuevoMat()">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    
 
     <ion-list>
-      <ion-item class="ion-text-center mt-2">
+      <ion-item lines="full" class="ion-text-center mt-2">
         <ion-label><b> Categoría </b> </ion-label>
         <ion-label><b> Marca</b> </ion-label>
         <ion-label><b> Modelo </b></ion-label>
         <ion-label> <b>Stock</b> </ion-label>
       </ion-item>
-      <ion-item *ngFor="let item of ListaMateriales" (click)="SelectMaterial(item)" [ngClass]="{
+      <ion-item lines="full" *ngFor="let item of MetodosComunes.paginatedItems" (click)="SelectMaterial(item)" [ngClass]="{
                   'no-stock': item.stock === 0,
                   'low-stock': item.stock > 0 && item.stock < 5,
                   'high-stock': item.stock >= 5
@@ -26,10 +43,18 @@
         <ion-label> {{item.stock}} </ion-label>
       </ion-item>
     </ion-list>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button [disabled]="MetodosComunes.currentPage === 1" (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaMateriales.length" (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
 
-    <ion-button [hidden]="!Permisos" class="m-2" (click)="FormNuevoMat()">
-      <ion-icon name="add-circle-outline"></ion-icon>Nuevo Material
-    </ion-button>
+    
   </ion-card>
 
   <!-- MODO DE NUEVO MATERIAL Y DE EDICION DE MATERIAL -->

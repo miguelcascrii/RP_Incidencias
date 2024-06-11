@@ -3,9 +3,10 @@ import { Usuario } from "./usuarios";
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from "./servicios/auth/auth.service";
 import { Observable, of } from "rxjs";
-import { switchMap
+import { switchMap} from "rxjs";
+import { startOfWeek, subWeeks } from 'date-fns';
 
- } from "rxjs";
+
 export class MetGenerales {
   CodCentro : any
   UsuarioActivo ?: Usuario
@@ -79,7 +80,8 @@ export class MetGenerales {
 
 
   /**
-   * 
+   * RECOGE LA PANTALLA DE ORIGEN, PANTALLA DE DESTINO Y DATOS
+   * LLAMA AL METODO AbrirVentana
    */
 
   AbrePantallasGen(vntAbrir: string, itemDetalles?: any, modoDetalles?: boolean) {
@@ -99,12 +101,23 @@ export class MetGenerales {
       case "MISDATOS":
         this.AbrirVentana('info-usuario', 'MISDATOS');
         break;
+      case "CENTRO":
+        this.AbrirVentana('centro', 'centro');
+        break;
       default:
         console.log("Selecciona una opción");
         break;
     }
   }
   
+  /**
+   * REDIRECCIONA HACIA LA VENTANA Y MANDA DATOS
+   * 
+   * @param NameVentana 
+   * @param NombreDatos 
+   * @param itemDet 
+   * @param modoDetalles 
+   */
   AbrirVentana(NameVentana: string, NombreDatos: string, itemDet?: any, modoDetalles?: boolean) {
     let datos;
     if (itemDet !== undefined) {
@@ -114,7 +127,6 @@ export class MetGenerales {
     }
     this.router.navigate([NameVentana], { state: datos });
   }
-
 
   /**
    * Metodo que comprueba si hay permisos para mostrar o no ciertas
@@ -137,6 +149,38 @@ export class MetGenerales {
     } else {
       return "N"
     }
-
   }
+
+
+  ListaDatos : any
+  CargaChar1() {
+    let ultimaFechaLunes = startOfWeek(new Date()); // Obtener la fecha del último lunes
+    ultimaFechaLunes = subWeeks(ultimaFechaLunes, 1); // Restar una semana para obtener la fecha del lunes anterior
+  
+    let incidenciasDesdeUltimoLunes: any[] = [];
+  
+    this.authService.DatoWhere(this.CodCentro, 'Incidencias', 'centro').subscribe((res) => {
+      this.ListaDatos = [];
+      res.forEach((element: any) => {
+        let incidencia = {
+          id: element.payload.doc.id,
+          data: element.payload.doc.data()
+        };
+  
+        // Obtener la fecha de la incidencia y compararla con la fecha del último lunes
+        let fechaIncidencia = new Date(incidencia.data.fecha); // Suponiendo que la fecha está en el objeto de incidencia como 'fecha'
+        if (fechaIncidencia >= ultimaFechaLunes) {
+          this.ListaDatos.push(incidencia);
+          incidenciasDesdeUltimoLunes.push(incidencia);
+        }
+      });
+  
+      console.log('Incidencias desde el último lunes:', incidenciasDesdeUltimoLunes);
+    });
+  
+    return incidenciasDesdeUltimoLunes; // Devolver el array de incidencias desde el último lunes
+  }
+  
+
+
 }

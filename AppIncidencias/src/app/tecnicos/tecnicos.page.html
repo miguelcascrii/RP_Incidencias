@@ -1,50 +1,68 @@
 <ion-content>
-  
-  <ion-card style="margin:auto;" class="m-3" [hidden]="!VisualTecNuevo">
-    <ion-card-header>
-      <ion-card-title class="ion-text-center">
-        Listado de Tecnicos
-      </ion-card-title>
-      <ion-card-subtitle class="ion-text-center">
-        Selecciona para más información
-      </ion-card-subtitle>
-    </ion-card-header>
-    <ion-item (click)="VerFiltro()" lines="none">
-   <ion-icon [hidden]="!Filtro" class="m-1" name="chevron-forward-outline"></ion-icon>
-   <ion-icon [hidden]="Filtro" class="m-1" name="chevron-down-outline"></ion-icon>
-   <ion-label><b>Filtro por Departamentos</b></ion-label>
-  </ion-item>
-  <ion-item lines="none" [hidden]="ChipVisual">
-    <ion-icon (click)="CancelFilter()" name="close-circle"></ion-icon>
-    <ion-chip>
-      <div *ngFor="let item of ListaDeptselect; let last = last">
-        <ion-label>{{item}}{{ !last ? ',' : '' }}</ion-label>
-      </div>
-    </ion-chip>
-  </ion-item>
+  <ion-card [hidden]="!VisualTecNuevo">
+    <ion-card-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="auto">
+          
+            <ion-card-title>
+              Listado de Tecnicos
+            </ion-card-title>
+            <ion-card-subtitle>
+              Selecciona para más información
+            </ion-card-subtitle>
+         
+        </ion-col>
+        <ion-col class="ion-text-end">
+          <ion-button [hidden]="!Permisos" (click)="btnNuevoTecnico()">
+            <ion-icon name="person-add-outline"></ion-icon>
+            <ion-label [hidden]="!btnTamPantalla" class="m-1">Añadir tecnico</ion-label>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
-<ion-card [hidden]="Filtro" color="light">
-   <ion-card-content>
-      <div *ngFor="let item of ListaDept">
-         <ion-item lines="full" color="light" class="ion-text-start">
-            <ion-checkbox  (ionChange)="DepSelect($event,item)">{{item.nombre}}</ion-checkbox>
-         </ion-item>
-      </div>
-   </ion-card-content>
-</ion-card>
-      
-    
+
+    <ion-item (click)="VerFiltro()" lines="none">
+      <ion-icon [hidden]="!Filtro" class="m-1" name="chevron-forward-outline"></ion-icon>
+      <ion-icon [hidden]="Filtro" class="m-1" name="chevron-down-outline"></ion-icon>
+      <ion-label><b>Filtro por Departamentos</b></ion-label>
+    </ion-item>
+    <ion-item lines="none" [hidden]="ChipVisual">
+      <ion-icon (click)="CancelFilter()" name="close-circle"></ion-icon>
+      <ion-chip>
+        <div *ngFor="let item of ListaDeptselect; let last = last">
+          <ion-label>{{item}}{{ !last ? ',' : '' }}</ion-label>
+        </div>
+      </ion-chip>
+    </ion-item>
+
+    <ion-card [hidden]="Filtro" color="light">
+      <ion-card-content>
+        <div *ngFor="let item of ListaDept">
+          <ion-item lines="full" color="light" class="ion-text-start">
+            <ion-checkbox (ionChange)="DepSelect($event,item)">{{item.nombre}}</ion-checkbox>
+          </ion-item>
+        </div>
+        <ion-button (click)="VerFiltro()"  expand="block" fill="outline" color="secondary">
+          <ion-icon class="m-1" name="eye-off-outline"></ion-icon>
+          Ocultar
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+
     <ion-list class="ion-text-center">
-      
+
       <ion-item class="ion-text-start mt-2">
-        <ion-label class="m-2"><b>Email</b></ion-label>
+        <ion-label class="m-2"><b>Tecnico</b></ion-label>
         <ion-label slot="end"><b>Departamento</b></ion-label>
       </ion-item>
       <ion-item class="ion-text-start mt-2" *ngFor="let item of ListaFiltrado" (click)="DetallesUser(item)">
         <ion-avatar aria-hidden="true" slot="start" class="m-2" *ngIf="item.foto">
           <img alt="" src="{{item.foto}}" />
         </ion-avatar>
-        <ion-label>{{item.email}} </ion-label>
+        <ion-label>{{item.nombre}} </ion-label>
         <ion-label slot="end">
           <ng-container *ngIf="item.departamento">{{ item.departamento }}</ng-container>
           <ng-container *ngIf="!item.departamento">Sin Asignar</ng-container>
@@ -53,8 +71,7 @@
 
     </ion-list>
 
-    <ion-button class="m-2" [hidden]="!Permisos" (click)="btnNuevoTecnico()"><ion-icon name="add-circle-outline"></ion-icon>Añadir tecnico</ion-button>
-
+  </ion-card-content>
   </ion-card>
   <ion-card [hidden]="VisualTecNuevo">
     <ion-card-header class="ion-text-center">
@@ -79,8 +96,8 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    
-    <ion-button  class="m-2" (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
+
+    <ion-button class="m-2" (click)="btnNuevoTecnico()" color="warning">Cancelar</ion-button>
   </ion-card>
 
 

@@ -169,6 +169,8 @@ export class MaterialesPage implements OnInit {
           ...element.payload.doc.data(),
         });
       });
+      this.MetodosComunes.updatePaginatedItems(this.ListaMateriales); // Actualiza los elementos paginados
+
     });
   }
 
@@ -251,6 +253,10 @@ export class MaterialesPage implements OnInit {
       this.EditionMode = true
       this.TextModeEdit = "Desactivar Modo Edición"
     }
+  }
+
+  goToPage(page: number) {
+    this.MetodosComunes.goToPage(page, this.ListaMateriales); // Navega a la página y actualiza los elementos paginados
   }
 
 

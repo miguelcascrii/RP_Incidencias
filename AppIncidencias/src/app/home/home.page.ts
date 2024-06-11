@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild,ElementRef  } from '@angular/core';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -6,14 +6,17 @@ import { Usuario } from '../usuarios';
 import { Centro } from '../centros';
 import { AlertController } from '@ionic/angular';
 import { LoadingController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { ChartComponent } from 'ng-apexcharts';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
-
+export class HomePage implements OnInit {
+  btnTamPantalla : any
   public CodigoCentro: any;
   ListaCentros: Centro[] = [];
   ListaCentrosMostrar: Centro[] = [];
@@ -24,6 +27,7 @@ export class HomePage {
   ModoSoli: boolean = false
   NombreCentroSelect: any
   TextSolicitud: any
+  @ViewChild('miCanvas') miCanvas !: ElementRef<HTMLCanvasElement>;
 
   constructor(
     private authService: AuthService,
@@ -66,8 +70,18 @@ export class HomePage {
         console.log('Usuario no autenticado');
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
+      this.TamañoPantalla()
     });
   }
+
+  TamañoPantalla() {
+    if (window.innerWidth <= 768) {
+      this.btnTamPantalla = false;
+    } else {
+      this.btnTamPantalla = true;
+    }
+  }
+
   onInputChange(event: any) {
     const searchTerm = event.target.value as string;
     this.ListaCentrosMostrar = [];
@@ -155,7 +169,7 @@ export class HomePage {
 
   }
 
-  async mostrarLoader(usuario : Usuario) {
+  async mostrarLoader(usuario: Usuario) {
     const loading = await this.loadingController.create({
       message: 'Mandando Solicitud...', // Mensaje opcional
       duration: 2000, // Duración en milisegundos
@@ -164,7 +178,7 @@ export class HomePage {
     });
     await loading.present();
     await loading.onDidDismiss();
-   
+
     this.authService.UpdateUsuario(usuario);
     this.ModoSoli = true
   }
@@ -173,6 +187,8 @@ export class HomePage {
     this.ModoSoli = false;
     this.cargarCentros();
   }
+
+
 
 
 

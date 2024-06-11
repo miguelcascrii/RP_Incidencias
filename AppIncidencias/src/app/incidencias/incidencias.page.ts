@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../servicios/auth/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
@@ -49,6 +49,11 @@ export class IncidenciasPage implements OnInit {
       this.btnTamPantalla = true;
       this.btnNuevoText = " Nueva Incidencia";
     }
+  }
+  // LLLAMA A TAMAÑOPANTALLA AL REDIMENSIONAR LA PANTALLA
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
   }
 
   ListarIncidencias(centro: string) {
