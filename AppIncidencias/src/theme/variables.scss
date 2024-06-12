@@ -11,10 +11,10 @@
   
   // Tema oscuro
   .dark-theme {
-    --ion-background-color: #333333;
-    --ion-text-color: #ffffff;
-    --ion-item-background-color: #222222;
-    --ion-item-text-color: #ffffff;
+    --ion-background-color: #ffffff;
+     --ion-text-color: #333333;
+     --ion-item-background-color: #ffffff;
+     --ion-item-text-color: #333333;
     // Otros estilos para el tema oscuro
   }
 
@@ -26,3 +26,5 @@
      --ion-item-text-color: #333333;
      // Otros estilos para el tema claro
   }
+
+  

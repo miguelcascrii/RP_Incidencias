@@ -1,9 +1,17 @@
 ion-menu::part(backdrop) {
-    background-color: rgba(51, 85, 234, 0.292);
+    background-color: #96e2e053;
   }
   
   ion-menu::part(container) {
     border-radius: 0 20px 20px 0;
   
-    box-shadow: 4px 0px 16px rgba(43, 0, 255, 0.18);
+    box-shadow: 4px 0px 16px #5ecbc7;
+  }
+
+  .custom-toolbar {
+    //background-color: #1FC2BD !important;
+    --ion-background-color: #1FC2BD;
+  }
+  .toggle-menu{
+ --ion-background-color:  #07c6c092;
   }
