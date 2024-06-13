@@ -67,6 +67,12 @@ export class MetGenerales {
     this.updatePaginatedDept(ListaDept, NumberItems);
   }
 
+  /**
+   * Metodo para abrir nuevas pantallas
+   * @param vntAbrir Ventana a abrir
+   * @param itemDetalles Datos que se pasan de una ventana a otra
+   * @param modoDetalles Si es una ventana de detalles o de listado
+   */
   AbrePantallasGen(vntAbrir: string, itemDetalles?: any, modoDetalles?: boolean) {
     switch (vntAbrir) {
       case "DETALLESINCIDENCIA":
@@ -90,6 +96,13 @@ export class MetGenerales {
     }
   }
 
+  /**
+   * Es el método que redirecciona hacia la ventana deseada
+   * @param NameVentana Ventana a abrir
+   * @param NombreDatos 
+   * @param itemDet 
+   * @param modoDetalles 
+   */
   AbrirVentana(NameVentana: string, NombreDatos: string, itemDet?: any, modoDetalles?: boolean) {
     let datos;
     if (itemDet !== undefined) {
