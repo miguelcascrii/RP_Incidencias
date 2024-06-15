@@ -1,0 +1,145 @@
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="auto">
+            <ion-card-title>
+              {{TitleVnt}}
+            </ion-card-title>
+            <div [hidden]="!ModoDetalles">
+              <ion-card-subtitle [hidden]="!estAtentida" class="mt-2 h5 text-success">
+                <b>Atendida</b>
+              </ion-card-subtitle>
+            </div>
+          </ion-col>
+          <ion-col class="ion-text-end" [hidden]="!ModoDetalles">
+            <ion-button color="danger" [hidden]="!Permisos" (click)="eliminarInci()">
+              <ion-icon name="trash-bin"></ion-icon></ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <form (ngSubmit)="NuevaIncidencia(email.value, nombre.value, aula.value, datetime.value, descripcion.value)">
+
+        <div class="row">
+          <ion-item class="col-md-6">
+            <ion-select [hidden]="ModoDetalles" [(ngModel)]="selectedEmail"
+              (ionChange)="onEmailChange($event.detail.value)" name="email" #email label="Selecciona un email"
+              label-placement="floating" required>
+              <ion-select-option *ngFor="let item of ListaUsuarios" [value]="item.email">
+                {{item.email}}
+              </ion-select-option>
+            </ion-select>
+            <ion-input readonly [hidden]="!ModoDetalles" name="email" [(ngModel)]="selectedEmail" label="Email"
+              label-placement="floating"></ion-input>
+
+          </ion-item>
+          <ion-item class="col-md-6">
+            <ion-input [(ngModel)]="selectedNombre" name="nombre" #nombre label="Nombre"
+              aria-placeholder="Indique su nombre" label-placement="floating" readonly></ion-input>
+          </ion-item>
+        </div>
+        <div class="row">
+          <ion-item class="col-md-6 col-sm-12">
+            <ion-select name="aula" [(ngModel)]="selectedAula" label="Selecciona un aula" label-placement="floating"
+              required #aula [hidden]="ModoDetalles">
+              <ion-select-option *ngFor="let item of ListaAulas" [value]="item.numero">Planta {{item.planta}}, Aula
+                {{item.numero}}</ion-select-option>
+            </ion-select>
+            <ion-input readonly [hidden]="!ModoDetalles" name="aula" [(ngModel)]="selectedAula" label="Aula"
+              label-placement="floating"></ion-input>
+
+          </ion-item>
+          <ion-item class="col-md-6 col-sm-12 mt-2">
+            <ion-label [hidden]="ModoDetalles">Fecha</ion-label>
+            <ion-datetime-button datetime="datetime" [hidden]="ModoDetalles"></ion-datetime-button>
+            <ion-input readonly [hidden]="!ModoDetalles" name="fecha" [(ngModel)]="selectedDate" label="Fecha"
+              label-placement="floating"></ion-input>
+
+          </ion-item>
+        </div>
+        <ion-item>
+          <ion-textarea [readonly]="ModoDetalles" [(ngModel)]="selecteDescripcion" name="descripcion" #descripcion
+            label="Descripción" style="height: 80px;" labelPlacement="floating" maxlength="500"></ion-textarea>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="auto">
+              <ion-button type="submit" [hidden]="ModoDetalles">Notificar Incidencia</ion-button>
+              <div [hidden]="estAtentida">
+                <div [hidden]="!Permisos">
+                  <ion-button type="button" [hidden]="!ModoDetalles" (click)="VerFormAtender()">Atender
+                    Incidencia</ion-button>
+                </div>
+              </div>
+
+            </ion-col>
+            <ion-col class="ion-text-end">
+              <ion-button type="button" color="warning" [hidden]="!btnTamPantalla"
+                (click)="cancel()">Cancelar</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <div [hidden]="!ModoDetalles">
+    <ion-card [hidden]="!estAtentida">
+      <ion-card-content>
+        <ion-card-title class="text-success">
+          Detalles de solución
+        </ion-card-title>
+          
+            <ion-item lines="full">
+              <ion-input [(ngModel)]="selectedComent" name="comentario" #nombre label="Comentario"
+                label-placement="floating" readonly></ion-input>
+            </ion-item>
+            <ion-card>
+              <ion-card-content>
+                <ion-card-title class="h5 ion-text-center">
+                   Materiales Utilizados
+                </ion-card-title>
+                <ion-item lines="full">
+                  <ion-label class="ion-text-center">
+                    <b>Categoria</b>
+                  </ion-label>
+                  <ion-label class="ion-text-center">
+                    <b>Material</b>
+                  </ion-label>
+                  <ion-label class="ion-text-center">
+                    <b>Cantidad</b>
+                  </ion-label>
+                </ion-item>
+                <ion-item lines="full"  *ngFor="let item of ListaMatAtentida">
+                  <ion-label class="ion-text-center">{{item.material.familia}}</ion-label>
+                  <ion-label class="ion-text-center">{{item.material.marca}} {{item.material.modelo}}</ion-label>
+                  <ion-label class="ion-text-center">{{item.cantidad}}</ion-label>
+                </ion-item>
+             
+              </ion-card-content>
+            </ion-card>
+            
+        
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime id="datetime" [showDefaultButtons]="true" #datetime></ion-datetime>
+    </ng-template>
+  </ion-modal>
+
+  <ion-fab class="mb-5" [hidden]="btnTamPantalla" horizontal="end" vertical="bottom" slot="fixed">
+    <ion-fab-button color="warning" (click)="cancel()">
+      <ion-icon name="close"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  
+
+</ion-content>

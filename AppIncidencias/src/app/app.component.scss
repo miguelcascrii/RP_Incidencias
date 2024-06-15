@@ -10,8 +10,18 @@ ion-menu::part(backdrop) {
 
   .custom-toolbar {
     //background-color: #1FC2BD !important;
-    --ion-background-color: #1FC2BD;
+    --ion-background-color: #1FC2BD !important;
   }
   .toggle-menu{
- --ion-background-color:  #07c6c092;
+ --ion-background-color:  #07c6c092 !important;
   }
+
+  .very-small{
+    font-size: xx-small
+  }
+
+  .namecls{
+    font-size: smaller;
+  }
+
+  

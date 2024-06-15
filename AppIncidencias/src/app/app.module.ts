@@ -11,13 +11,11 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
-import { getAuth } from "firebase/auth";
-import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 
 @NgModule({
-  declarations: [AppComponent,SidebarComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule, 
     IonicModule.forRoot(), 

@@ -4,11 +4,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { Usuario } from '../../usuarios';
+import { Usuario } from '../../zClases/usuarios';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
-import { Centro } from 'src/app/centros';
+import { Centro } from 'src/app/zClases/centros';
 import { AlertController } from '@ionic/angular';
 import { Platform } from '@ionic/angular';
 

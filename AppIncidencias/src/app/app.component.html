@@ -2,7 +2,9 @@
   <ion-menu type="overlay" side="start" contentId="main-content" [hidden]="OcultMenu">
     <ion-header>
       <ion-toolbar class="toggle-menu">
-        <ion-title>Menu</ion-title>
+        <ion-title>
+          <img src="../assets/icon/icontextpng.png" width="40%">
+        </ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
@@ -25,7 +27,7 @@
             <ion-label>{{ p.title }}</ion-label>
             <ion-icon *ngIf="p.title === 'Cuenta'" color="danger" slot="end"  [hidden]="FaltaInfo" name="alert-circle-outline" size="large">d</ion-icon>
             <ion-icon *ngIf="p.title === 'Cuenta'" color="success" slot="end"  [hidden]="!FaltaInfo" name="checkmark-circle-outline" size="large">d</ion-icon>
-            <ion-badge *ngIf="p.title === 'Usuarios'" slot="end">{{notificationCount}}</ion-badge>
+            <ion-badge [hidden]="!Permisos" *ngIf="p.title === 'Usuarios'" slot="end">{{notificationCount}}</ion-badge>
           </ion-item>
         </ion-menu-toggle>
         <ion-menu-toggle auto-hide="false">
@@ -39,7 +41,8 @@
   <div class="ion-page" id="main-content">
     <ion-header class="custom-toolbar" >
       <ion-toolbar class="custom-toolbar">
-        <ion-title>GESTIÓN DE INCIDENCIAS</ion-title>
+        <img style="margin-left: 2%;" [hidden]="!btnTamPantalla"  src="../assets/icon/textotoolbar.png" width="20%">
+        <img style="margin-left: 5%;" [hidden]="btnTamPantalla"  src="../assets/icon/textotoolbar.png" width="60%">
         <ion-buttons slot="start" [hidden]="OcultMenu">
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
@@ -48,9 +51,41 @@
     </ion-header>
     <ion-content class="ion-padding"> <ion-router-outlet id="main-content"></ion-router-outlet></ion-content>
     
-    <ion-footer  class="custom-toolbar">
+    <ion-footer  [hidden]="!SesionState"  class="custom-toolbar">
       <ion-toolbar>
-        <ion-title>Footer</ion-title>
+        <ion-grid>
+          <ion-row class="ion-text-center">
+            <ion-col>
+
+             <ion-item lines="none">
+              <b>{{NombreUsu}}</b>
+            </ion-item>
+            </ion-col>
+            <ion-col>
+              <a  href="mailto:miguelcastilla2013@gmail.com" style="text-decoration: none;" ><ion-item lines="none" >
+                <ion-label class="ion-text-end"><b>Ayuda</b></ion-label>
+                <ion-icon color="dark" size="medium" class="m-1" name="help-circle"></ion-icon>
+              </ion-item>
+              </a>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-toolbar>
+    </ion-footer>
+    <ion-footer  [hidden]="SesionState"  class="custom-toolbar">
+      <ion-toolbar>
+        <ion-grid>
+          <ion-row class="ion-text-center">
+            <ion-col>
+              <b><label class="namecls">&copy; 2024 Miguel Castilla</label><br> <label class="very-small">Todos los derechos reservados</label></b>
+            </ion-col>
+            <ion-col class="mt-2">
+              <a target="_blank" href="https://www.linkedin.com/in/miguel-castilla-criado-5a0a28211/" style="color: black; text-decoration: none;"><ion-icon size="large" name="logo-linkedin"></ion-icon></a>
+              <a target="_blank" class="m-4" href="https://www.instagram.com/miguelcascri?utm_source=qr&igsh=MWEzYThkdGhoMXBhdQ== " style="color: black; text-decoration: none;"><ion-icon size="large" name="logo-instagram"></ion-icon></a>
+              <a target="_blank" href="https://github.com/miguelcascri" style="color: black; text-decoration: none;"><ion-icon size="large" name="logo-github"></ion-icon></a>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-toolbar>
     </ion-footer>
   </div>

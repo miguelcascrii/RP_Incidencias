@@ -1,0 +1,273 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="row">
+    <div class="col-md-6">
+      <ion-card>
+        <ion-card-content>
+          <ion-card-title>
+            Datos del Centro
+          </ion-card-title>
+          <div>
+            <form>
+              <div class="form-group mt-2">
+                <label for="centro" class="form-label">Centro</label>
+                <input type="text" class="form-control" id="centro" [value]="CentroUsuario?.nombre" readonly>
+              </div>
+              <div class="row mt-3">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="localidad" class="form-label">Localidad</label>
+                    <input type="text" class="form-control" id="localidad" [value]="CentroUsuario?.localidad" readonly>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="provincia" class="form-label">Provincia</label>
+                    <input type="text" class="form-control" id="provincia" [value]="CentroUsuario?.provincia" readonly>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label for="pais" class="form-label">País</label>
+                    <input type="text" class="form-control" id="pais" [value]="CentroUsuario?.pais" readonly>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="provincia" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="provincia" [value]="CentroUsuario?.direccion" readonly>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col">
+                  <div class="form-group">
+                    <label for="pais" class="form-label">Telefono</label>
+                    <input type="text" class="form-control" id="pais" [value]="CentroUsuario?.telefono" readonly>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div> <!--FIN DE COLUMNA DE CENTRO-->
+    <div class="row " style="margin: auto" [hidden]="btnTamPantalla">
+      <ion-button fill="outline" (click)="VerAulas()">Ver Aulas</ion-button>
+      <ion-button fill="outline" (click)="VerDept()">Ver Departamentos</ion-button>
+    </div>
+    <div class="col-md-3" [hidden]="MostrarAul">
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <ion-card-title>
+                  Aulas
+                </ion-card-title>
+              </ion-col>
+              <ion-col class="ion-text-end" [hidden]="!Permisos">
+                <ion-button id="modal-Aulas"><ion-icon name="add-circle-outline"></ion-icon></ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-list>
+            <ion-item lines="full" class="ion-text-start">
+              <ion-label><b>Numero</b></ion-label>
+              <ion-label><b>Planta</b></ion-label>
+              <!-- <ion-label><b>Pasillo</b></ion-label> -->
+            </ion-item>
+            <div class="item-container" *ngFor="let item of MetodosComunes.paginatedItems">
+              <ion-item lines="full">
+                <ion-label>{{item.numero}}</ion-label>
+                <ion-label>{{item.planta}}</ion-label>
+                <!-- <ion-label *ngIf="item.pasillo === 'izquierda'">Izq</ion-label>
+                <ion-label *ngIf="item.pasillo === 'derecha'">Der</ion-label> -->
+              </ion-item>
+            </div>
+          </ion-list>
+        </ion-card-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button [disabled]="MetodosComunes.currentPage === 1"
+                (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <ion-button [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaAulas.length"
+                (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ion-card>
+    </div> <!--FIN DE COLUMNA DE AULAS-->
+    <div class="col-md-3" [hidden]="MostrarDept">
+      <ion-card>
+        <ion-card-content>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="auto">
+                <ion-card-title>
+                  Departamentos
+                </ion-card-title>
+              </ion-col>
+              <ion-col class="ion-text-end" [hidden]="!Permisos">
+                <ion-button id="open-modal"><ion-icon name="add-circle-outline"></ion-icon></ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-list>
+            <ion-item lines="full" class="ion-text-start">
+              <ion-label><b>Nombre</b></ion-label>
+            </ion-item>
+            <div class="item-container" *ngFor="let item of MetodosComunes.paginatedDept">
+              <ion-item lines="full">
+                <ion-label>{{item.nombre}}</ion-label>
+
+              </ion-item>
+            </div>
+          </ion-list>
+        </ion-card-content>
+        <ion-footer>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-button [disabled]="MetodosComunes.currentPageDpt === 1"
+                (click)="goToPageDept(MetodosComunes.currentPageDpt - 1)">Anterior</ion-button>
+            </ion-buttons>
+            <ion-buttons slot="end">
+              <ion-button [disabled]="(MetodosComunes.currentPageDpt * MetodosComunes.itemsPerPageDPT) >= ListaDept.length"
+                (click)="goToPageDept(MetodosComunes.currentPageDpt + 1)">Siguiente</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-footer>
+      </ion-card>
+    </div> <!--FIN DE COLUMNA DE DEPARTAMENTOS-->
+  </div>
+
+  <!--MODAL DE DEPARTAMENTOS-->
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ng-template>
+      <form (submit)="NuevoDpt(name)" style="height: 100%;">
+        <ion-header>
+          <ion-toolbar color="secondary">
+            <ion-buttons slot="start">
+              <ion-button type="button" (click)="cancel()">Cancelar</ion-button>
+            </ion-buttons>
+            <ion-title class="ion-text-center">Departamentos</ion-title>
+            <ion-buttons slot="end">
+              <ion-button type="submit">Confirmar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-label><b>Nuevo Departamento</b></ion-label>
+            <div class="form-group m-3">
+              <label for="provincia" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="name" #name required>
+              <!-- <ion-input label="Nombre *" id="name" labelPlacement="stacked" aria-placeholder="Indica el nombre del nuevo departamento" type="text" #name aria-required="true"></ion-input> -->
+              <ion-card-subtitle class="mt-1"[hidden]="btnTamPantalla">Indica el nombre del nuevo departamento</ion-card-subtitle>
+            </div>
+          <hr>
+          <ion-card class="mt-1">
+            <ion-card-content>
+              <ion-label><b>Listado de departamentos activos</b></ion-label>
+              <ion-list>
+                <div class="item-container" *ngFor="let item of MetodosComunes.paginatedDept">
+                  <ion-item lines="full">
+                    <ion-label>{{item.nombre}}</ion-label>
+                  </ion-item>
+                </div>
+              </ion-list>
+            </ion-card-content>
+            <ion-footer *ngIf="ListaDept.length !== 0">
+              <ion-toolbar color="secondary">
+                <ion-buttons slot="start">
+                  <ion-button [disabled]="MetodosComunes.currentPageDpt === 1"
+                    (click)="goToPageDept(MetodosComunes.currentPageDpt - 1)">Anterior</ion-button>
+                </ion-buttons>
+                <ion-buttons slot="end">
+                  <ion-button
+                    [disabled]="(MetodosComunes.currentPageDpt * MetodosComunes.itemsPerPageDPT) >= ListaDept.length"
+                    (click)="goToPageDept(MetodosComunes.currentPageDpt + 1)">Siguiente</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-footer>
+          </ion-card>
+        </ion-content>
+      </form>
+    </ng-template>
+  </ion-modal>
+
+  <!-- MODAL PARA INGRESAR AULAS -->
+  <ion-modal trigger="modal-Aulas" (willDismiss)="onWillDismiss($event)" #AulaModal>
+    <ng-template>
+      <form (submit)="NuevaAula(numero,planta)" style="height: 100%;">
+        <ion-header >
+          <ion-toolbar color="secondary">
+            <ion-buttons slot="start">
+              <ion-button type="button" (click)="cancelAulaModal()">Cancelar</ion-button>
+            </ion-buttons>
+            <ion-title class="ion-text-center">Aulas</ion-title>
+            <ion-buttons slot="end">
+              <ion-button type="submit">Confirmar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-label><b>Nueva Aula</b></ion-label>
+          <div class="row">
+            <div class="col-md">
+              <div class="form-group m-3">
+                <label for="numero" class="form-label">Numero o Nombre</label>
+                <input type="text" class="form-control" id="numero" #numero required>
+                <ion-card-subtitle [hidden]="btnTamPantalla">Indica el nombre o numero del aula</ion-card-subtitle>
+              </div>
+            </div>
+            <div class="col-md">
+              <div class="form-group m-3">
+                <label for="numero" class="form-label">Planta</label>
+                <input type="text" class="form-control" id="planta" #planta>
+                <ion-card-subtitle [hidden]="btnTamPantalla">Indica la planta en la que se encuentra el aula</ion-card-subtitle>
+              </div>
+            </div>
+            <hr>
+          </div>
+         
+          <ion-card>
+            <ion-card-content>
+              <ion-label><b>Listado de aulas</b></ion-label>
+              <ion-list>
+                
+                <div class="item-container" *ngFor="let item of MetodosComunes.paginatedItems">
+                  <ion-item lines="full">
+                    <ion-label><b>Aula: </b>{{item.numero}}</ion-label>
+                    <ion-label><b>Planta: </b>{{item.planta}}</ion-label>
+                    <!-- <ion-label *ngIf="item.pasillo === 'izquierda'">Izq</ion-label>
+                    <ion-label *ngIf="item.pasillo === 'derecha'">Der</ion-label> -->
+                  </ion-item>
+                </div>
+              </ion-list>
+            </ion-card-content>
+            <ion-footer *ngIf="ListaAulas.length !== 0">
+              <ion-toolbar color="secondary" >
+                <ion-buttons slot="start">
+                  <ion-button [disabled]="MetodosComunes.currentPage === 1"
+                    (click)="goToPage(MetodosComunes.currentPage - 1)">Anterior</ion-button>
+                </ion-buttons>
+                <ion-buttons slot="end">
+                  <ion-button
+                    [disabled]="(MetodosComunes.currentPage * MetodosComunes.itemsPerPage) >= ListaAulas.length"
+                    (click)="goToPage(MetodosComunes.currentPage + 1)">Siguiente</ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-footer>
+          </ion-card>
+        </ion-content>
+      </form>
+    </ng-template>
+  </ion-modal>
+</ion-content>

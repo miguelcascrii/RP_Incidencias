@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,HostListener } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AuthService } from './servicios/auth/auth.service';
-import { Usuario } from './usuarios';
+import { Usuario } from './zClases/usuarios';
 import { Platform } from '@ionic/angular';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { MetGenerales } from './servicios/general';
 
 @Component({
   selector: 'app-root',
@@ -14,13 +15,18 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   SesionState: boolean = false;
   usuario?: Usuario;
+  usuarioFooter ?: Usuario
   CodCentro: any;
   OcultMenu: boolean = false;
   ListaUsuarios : Usuario[]= [];
   ListaSolicitudes : Usuario[]= [];
   notificationCount : any
   FaltaInfo : boolean = true
-
+  Perm : string = "";
+  Permisos : boolean = false;
+  NombreUsu : any
+  MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
+  btnTamPantalla : any
   constructor(private afAuth: AngularFireAuth, private authService: AuthService, private platform: Platform, private router: Router) {
     this.monitorRouteChanges();
   }
@@ -45,6 +51,8 @@ export class AppComponent implements OnInit {
       if (user) {
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.CodCentro = usuario?.centro;
+          this.NombreUsu = usuario?.nombre + " " + usuario?.apellidos
+          this.VerPermisos(usuario)
           if (this.CodCentro !== "000") {
             if (usuario?.solicitud === "S") {
               this.SesionState = false;
@@ -54,6 +62,7 @@ export class AppComponent implements OnInit {
               this.ObtenerUser();
               this.ListarSolicitudes(this.CodCentro)
               this.ComprobarDatosUsuario(usuario)
+             
             }
           } else {
             this.SesionState = false;
@@ -64,8 +73,39 @@ export class AppComponent implements OnInit {
         this.SesionState = false;
         this.EstadoDesconectado();
         console.log("Sesion: " + this.SesionState);
+       
+      }
+      this.TamañoPantalla()
+      this.preventDarkMode();
+    });
+  }
+
+  TamañoPantalla() {
+    if (window.innerWidth <= 768) {
+      this.btnTamPantalla = false
+      
+    } else {
+      this.btnTamPantalla = true
+      
+    }
+  }
+
+  preventDarkMode() {
+    // Ensure the theme is set to light mode
+    document.body.classList.remove('dark');
+    
+    // Listen for changes in the system's color scheme preference
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    darkModeMediaQuery.addEventListener('change', (e) => {
+      if (e.matches) {
+        document.body.classList.remove('dark');
       }
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.TamañoPantalla();
   }
 
   monitorRouteChanges() {
@@ -76,6 +116,15 @@ export class AppComponent implements OnInit {
         this.OcultMenu = authenticatedRoutes.includes(event.urlAfterRedirects);
         console.log('OcultMenu:', this.OcultMenu); // Esto te ayudará a depurar
       });
+  }
+
+  VerPermisos(usuario ?: Usuario) {
+    this.Perm = this.MetodosComunes.ComprobarPermisos(usuario);
+    if (this.Perm === "N") {
+      this.Permisos = false;
+    } else {
+      this.Permisos = true;
+    }
   }
 
   CerrarSesion() {
