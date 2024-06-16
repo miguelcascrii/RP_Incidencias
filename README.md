@@ -1,2 +1,3 @@
-# RP_Incidencias
- Repositorio para app de incidencias como proyecto final
+# IncidApp
+APP PARA GESTIONAR LAS INCIDENCIAS DE UN CENTRO EDUCATIVO
+ 
