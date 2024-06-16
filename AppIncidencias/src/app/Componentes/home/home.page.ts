@@ -1,11 +1,11 @@
-import { Component,HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../../servicios/auth/auth.service';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Usuario } from '../../zClases/usuarios';
 import { Centro } from '../../zClases/centros';
-import { AlertController } from '@ionic/angular';
-import { LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { Incidencia } from 'src/app/zClases/incidencias';
 
 @Component({
   selector: 'app-home',
@@ -13,17 +13,29 @@ import { LoadingController } from '@ionic/angular';
   styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-  btnTamPantalla : any
+  btnTamPantalla: any;
   public CodigoCentro: any;
   ListaCentros: Centro[] = [];
   ListaCentrosMostrar: Centro[] = [];
   bModoCentroV: boolean = true;
   usuario: Usuario | undefined;
   ResultBusqueda: boolean = true;
-  CentroInvitado: string = ""
-  ModoSoli: boolean = false
-  NombreCentroSelect: any
-  TextSolicitud: any
+  CentroInvitado: string = "";
+  ModoSoli: boolean = false;
+  NombreCentroSelect: any;
+  TextSolicitud: any;
+  UsuMax1 : any;
+  Count1 : any
+  UsuMax2 : any;
+  Count3 : any
+  UsuMax3 : any;
+  Count2 : any
+  ListaIncidencias: Incidencia[] = [];
+  topThreeEmails : any [] = []
+  ListaTop3 : any [] = []
+  CountAtentida : number = 0
+  CountPendiente : number = 0
+  
 
   constructor(
     private authService: AuthService,
@@ -36,28 +48,36 @@ export class HomePage {
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
       if (user) {
+        
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.usuario = usuario;
           if (usuario?.solicitud === 'S') {
-            this.TextSolicitud = true
+            this.TextSolicitud = true;
+
             this.authService.ObtenerCentroPorCod(usuario.centro).subscribe(centro => {
-              this.NombreCentroSelect = centro?.nombre
-              this.ModoSoli = true
-              this.bModoCentroV = false
+              this.NombreCentroSelect = centro?.nombre;
+
+              this.ModoSoli = true;
+              this.bModoCentroV = false;
             });
 
           } else {
             if (this.usuario?.solicitud === 'R') {
-              this.TextSolicitud = false
-              this.ModoSoli = true
-              this.bModoCentroV = false
+              this.TextSolicitud = false;
+              this.ModoSoli = true;
+              this.bModoCentroV = false;
+
             } else {
               if (this.usuario?.centro == '000') {
                 this.bModoCentroV = false;
                 this.cargarCentros();
               } else {
                 this.CodigoCentro = usuario?.centro;
-                this.bModoCentroV = true
+                this.bModoCentroV = true;
+                this.ListarIncidencias(usuario?.centro);
+
+                
+
               }
             }
           }
@@ -66,9 +86,11 @@ export class HomePage {
         console.log('Usuario no autenticado');
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
-      this.TamañoPantalla()
+      this.TamañoPantalla();
+      
     });
   }
+
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
       this.btnTamPantalla = false;
@@ -82,13 +104,26 @@ export class HomePage {
     this.TamañoPantalla();
   }
 
-
-
-
   onInputChange(event: any) {
     const searchTerm = event.target.value as string;
     this.ListaCentrosMostrar = [];
     this.miMetodoDeBusqueda(searchTerm);
+  }
+
+  ListarIncidencias(centro: any) {
+    this.authService.DatoWhere(centro, 'Incidencias', 'centro').subscribe((res) => {
+      this.ListaIncidencias = [];
+      res.forEach((element: any) => {
+        this.ListaIncidencias.push({
+          id: element.payload.doc.id,
+          ...element.payload.doc.data(),
+        });
+      });
+      console.log('Lista de Incidencias:', this.ListaIncidencias);
+      this.ContarIncidencias()
+      
+     
+    });
   }
 
   miMetodoDeBusqueda(searchTerm: string) {
@@ -102,17 +137,11 @@ export class HomePage {
         this.ListaCentrosMostrar.push(centro);
       }
     }
-    if (searchTerm === '') {
-      this.ResultBusqueda = true;
-
-    } else {
-      this.ResultBusqueda = false;
-
-    }
+    this.ResultBusqueda = searchTerm === '';
   }
 
   cargarCentros() {
-    this.ListaCentros = []
+    this.ListaCentros = [];
     this.firestore.collection<Centro>('Centros').get().subscribe(snapshot => {
       snapshot.forEach(doc => {
         this.ListaCentros.push(doc.data() as Centro);
@@ -121,9 +150,7 @@ export class HomePage {
   }
 
   CentroSelect(centroCod: String, centroNombre: String) {
-
-    this.mostrarConfirmacion(centroNombre, centroCod)
-
+    this.mostrarConfirmacion(centroNombre, centroCod);
   }
 
   async mostrarConfirmacion(centro: String, centroCod: String) {
@@ -137,14 +164,11 @@ export class HomePage {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirmación cancelada');
-
           }
         }, {
           text: 'Aceptar',
           handler: () => {
-
-            this.AsignarCentroNewUser(centroCod)
-
+            this.AsignarCentroNewUser(centroCod);
           }
         }
       ]
@@ -152,7 +176,6 @@ export class HomePage {
 
     await alert.present();
   }
-
 
   async AsignarCentroNewUser(codCentro: any) {
     const usuario: Usuario = {
@@ -168,11 +191,10 @@ export class HomePage {
       estado: this.usuario?.estado,
       solicitud: 'S'
     };
-    this.mostrarLoader(usuario)
-
+    this.mostrarLoader(usuario);
   }
 
-  async mostrarLoader(usuario : Usuario) {
+  async mostrarLoader(usuario: Usuario) {
     const loading = await this.loadingController.create({
       message: 'Mandando Solicitud...', // Mensaje opcional
       duration: 2000, // Duración en milisegundos
@@ -181,9 +203,9 @@ export class HomePage {
     });
     await loading.present();
     await loading.onDidDismiss();
-   
+
     this.authService.UpdateUsuario(usuario);
-    this.ModoSoli = true
+    this.ModoSoli = true;
   }
 
   VerCentroBusqueda() {
@@ -191,9 +213,14 @@ export class HomePage {
     this.cargarCentros();
   }
 
-
-
-
-
-
+  ContarIncidencias(){
+    for(let item of this.ListaIncidencias){
+      if(item.atentida === false){
+        this.CountPendiente = this.CountPendiente + 1
+      }else if(item.atentida === true){
+        this.CountAtentida = this.CountAtentida + 1
+      }
+      console.log(item.atentida)
+    }
+  }
 }

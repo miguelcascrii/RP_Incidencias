@@ -128,9 +128,9 @@ export class TecnicosPage implements OnInit {
     this.ListaNOTecnicos = []
     this.ListaTecnicos = []
     for (let item of this.ListaUsuarios)
-      if (item.rol === 1) {
+      if (item.rol === 1 && item.solicitud != "S") {
         this.ListaTecnicos.push(item)
-      } else if (item.rol === 0) {
+      } else if (item.rol === 0 && item.solicitud != "S") {
         this.ListaNOTecnicos.push(item)
       }
 

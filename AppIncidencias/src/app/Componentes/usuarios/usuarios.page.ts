@@ -104,6 +104,8 @@ export class TecnicosPage implements OnInit {
           this.ListaUsuariosSinInvi.push(us)
         }
       }
+      this.MetodosComunes.updatePaginatedItems(this.ListaUsuariosSinInvi); // Actualiza los elementos paginados
+
     });
   }
 
@@ -316,6 +318,10 @@ export class TecnicosPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  goToPage(page: number) {
+    this.MetodosComunes.goToPage(page, this.ListaUsuariosSinInvi); // Navega a la página y actualiza los elementos paginados
   }
 
 }

@@ -49,43 +49,50 @@
       </ion-card-content>
     </ion-card>
   </div>
-  <ion-card [hidden]="!bModoCentroV">
-    <ion-card-content>
-      <ion-card-title class="mb-2 ion-text-center">
-        INCIDENCIAS
-      </ion-card-title>
-      <div class="row">
-        <div class="col">
-          <ion-card class="card-activas">
-            <ion-card-content>
-              <ion-card-title class="ion-text-center">
-                Activas
-              </ion-card-title>
-              <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
-                Numero de incidencias que están por atender
-              </ion-card-subtitle>
-              <div class="mt-2 incidencias-cuadrado">
-                8
-              </div>
-            </ion-card-content>
-          </ion-card>
+  <div [hidden]="!bModoCentroV">
+    <ion-card >
+      <ion-card-content>
+        <ion-card-title class="mb-2 ion-text-start">
+          INCIDENCIAS
+        </ion-card-title>
+        <ion-card-subtitle>
+          Información sobre incidencias.
+        </ion-card-subtitle>
+        <div class="row">
+          <div class="col">
+            <ion-card class="card-activas">
+              <ion-card-content>
+                <ion-card-title class="ion-text-center">
+                  Activas
+                </ion-card-title>
+                <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
+                  Numero de incidencias que están por atender
+                </ion-card-subtitle>
+                <div class="mt-2 incidencias-cuadrado">
+                  {{CountPendiente}}
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <div class="col">
+            <ion-card class="card-atendidas">
+              <ion-card-content>
+                <ion-card-title class="ion-text-center">
+                  Atentidas
+                </ion-card-title>
+                <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
+                  Numero de incidencias que están atendedidas
+                </ion-card-subtitle>
+                <div class="mt-2 incidencias-cuadrado-atendida">
+                  {{CountAtentida}}
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
         </div>
-        <div class="col">
-          <ion-card class="card-atendidas">
-            <ion-card-content>
-              <ion-card-title class="ion-text-center">
-                Atentidas
-              </ion-card-title>
-              <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
-                Numero de incidencias que están atendedidas
-              </ion-card-subtitle>
-              <div class="mt-2 incidencias-cuadrado-atendida">
-                8
-              </div>
-            </ion-card-content>
-          </ion-card>
-        </div>
-      </div>
-    </ion-card-content>
-  </ion-card>
+      </ion-card-content>
+    </ion-card>
+    
+  </div>
+  
 </ion-content>

@@ -82,7 +82,7 @@ export class MetGenerales {
         this.AbrirVentana('nuevaincidencia', 'MISINCIDENCIAS', itemDetalles, modoDetalles);
         break;
       case "NUEVAINCIDENCIA":
-        this.AbrirVentana('nuevaincidencia', 'NUEVAINCIDENCIA');
+        this.AbrirVentana('nuevaincidencia', 'NUEVAINCIDENCIA',modoDetalles);
         break;
       case "ATENDERINCIDENCIA":
         this.AbrirVentana('atender-incidencia', 'ATENDERINCIDENCIA', itemDetalles);
@@ -109,10 +109,10 @@ export class MetGenerales {
 
     if (itemDet !== undefined) {
       datos = { NombreDatos, itemDet, modoDetalles };
-
     } else {
       datos = { NombreDatos, modoDetalles };
     }
+    console.log(datos)
     
     this.router.navigate([NameVentana], { state: datos });
   }

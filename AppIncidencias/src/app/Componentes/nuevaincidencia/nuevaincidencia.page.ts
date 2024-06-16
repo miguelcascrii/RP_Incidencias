@@ -18,7 +18,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class NuevaincidenciaPage implements OnInit {
   CodCentro: any;
-  TitleVnt: String = ""
+  TitleVnt: any
   UsuarioYO?: Usuario;
   VentanaTitulo: string = "";
   btnTamPantalla: any;
@@ -132,10 +132,12 @@ export class NuevaincidenciaPage implements OnInit {
 
         this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
         this.selectedComent = this.IncidenciaRecib?.comentario;
-    } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && this.ModoDetalles) {
+    } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && !this.ModoDetalles) {
         this.ModoDetalles = false;
         this.TitleVnt = "Nueva Incidencia";
     }
+
+   
 }
 
   listarAulas(centro: string) {
