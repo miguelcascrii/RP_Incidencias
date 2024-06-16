@@ -50,20 +50,20 @@
     </ion-card>
   </div>
   <div [hidden]="!bModoCentroV">
+    <ion-card-title class="mt-3 ion-text-center">
+      Estado de Incidencias
+    </ion-card-title>
+    <ion-card-subtitle class="ion-text-center">
+      Conteo sobre las incidencias
+    </ion-card-subtitle>
     <ion-card >
       <ion-card-content>
-        <ion-card-title class="mb-2 ion-text-start">
-          INCIDENCIAS
-        </ion-card-title>
-        <ion-card-subtitle>
-          Información sobre incidencias.
-        </ion-card-subtitle>
         <div class="row">
           <div class="col">
             <ion-card class="card-activas">
               <ion-card-content>
                 <ion-card-title class="ion-text-center">
-                  Activas
+                  <p style="font-size: large;"><b>Pendientes</b></p>
                 </ion-card-title>
                 <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
                   Numero de incidencias que están por atender
@@ -78,7 +78,7 @@
             <ion-card class="card-atendidas">
               <ion-card-content>
                 <ion-card-title class="ion-text-center">
-                  Atentidas
+                  <p style="font-size: large;"> <b>Atentidas</b></p>
                 </ion-card-title>
                 <ion-card-subtitle [hidden]="!btnTamPantalla" class="ion-text-center">
                   Numero de incidencias que están atendedidas
@@ -91,6 +91,26 @@
           </div>
         </div>
       </ion-card-content>
+    </ion-card>
+    <ion-card-title class="m-3 ion-text-center">
+      Usuarios que más notifican
+    </ion-card-title>
+    <ion-card-subtitle  class="m-3 ion-text-center">
+      Tres usuarios que más incidencias notifican
+    </ion-card-subtitle>
+    <ion-card>
+      <ion-item lines="full">
+        <ion-label>
+          <b>Email</b>
+        </ion-label>
+        <ion-label class="ion-text-end">
+          <b>Nº Incidencias</b>
+        </ion-label>
+      </ion-item>
+      <ion-item *ngFor="let item of ListaTop3">
+        <ion-label>{{item.email}}</ion-label>
+        <ion-label class="ion-text-end">{{item.cantidad}}</ion-label>
+      </ion-item>
     </ion-card>
     
   </div>

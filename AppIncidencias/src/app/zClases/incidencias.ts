@@ -1,3 +1,5 @@
+import { Usuario } from "./usuarios";
+
 export interface Incidencia{
     id?: string;
     nombre : string;
@@ -7,6 +9,6 @@ export interface Incidencia{
     fecha : Date;
     atentida : boolean;
     comentario?: string;
-    tecnico ?: string;
+    tecnico ?: Usuario;
     centro : string;    
 }

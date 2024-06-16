@@ -198,7 +198,7 @@ export class NuevaincidenciaPage implements OnInit {
         descripcion: descripcion,
         atentida: false,
         comentario: "",
-        tecnico: "",
+        tecnico: undefined,
         centro: this.UsuarioYO?.centro || ""
     };
 

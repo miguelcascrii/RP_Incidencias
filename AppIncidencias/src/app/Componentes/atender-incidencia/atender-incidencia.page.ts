@@ -7,6 +7,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { MatCantidad } from '../../zClases/materiales';
 import { Incidencia } from '../../zClases/incidencias';
 import { ToastController } from '@ionic/angular';
+import { Usuario } from 'src/app/zClases/usuarios';
 
 @Component({
   selector: 'app-atender-incidencia',
@@ -26,6 +27,7 @@ export class AtenderIncidenciaPage implements OnInit {
   btnTamPantalla: any;
   Perm : string = "";
   Permisos : boolean = false;
+  usuario ?: Usuario;
 
 
   MetodosComunes: MetGenerales = new MetGenerales(this.router, this.afAuth, this.authService);
@@ -49,7 +51,18 @@ export class AtenderIncidenciaPage implements OnInit {
       this.TamañoPantalla()
     });
 
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        console.log(user.email);
+        this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
+          this.usuario = usuario
+        });
+      }else{
+
+      }
+    });
   }
+
   TamañoPantalla() {
     if (window.innerWidth <= 768) {
       this.btnTamPantalla = false;
@@ -189,7 +202,7 @@ export class AtenderIncidenciaPage implements OnInit {
         descripcion: this.IncidenciaRecib.descripcion,
         atentida: true,
         comentario: comentario.value,
-        tecnico: "",
+        tecnico: this.usuario,
         centro: this.IncidenciaRecib.centro || ""
       };
       try {

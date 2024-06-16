@@ -24,18 +24,17 @@ export class HomePage {
   ModoSoli: boolean = false;
   NombreCentroSelect: any;
   TextSolicitud: any;
-  UsuMax1 : any;
-  Count1 : any
-  UsuMax2 : any;
-  Count3 : any
-  UsuMax3 : any;
-  Count2 : any
+  UsuMax1: any;
+  Count1: any;
+  UsuMax2: any;
+  Count3: any;
+  UsuMax3: any;
+  Count2: any;
   ListaIncidencias: Incidencia[] = [];
-  topThreeEmails : any [] = []
-  ListaTop3 : any [] = []
-  CountAtentida : number = 0
-  CountPendiente : number = 0
-  
+  topThreeEmails: any[] = [];
+  ListaTop3: any[] = [];
+  CountAtentida: number = 0;
+  CountPendiente: number = 0;
 
   constructor(
     private authService: AuthService,
@@ -48,25 +47,20 @@ export class HomePage {
   ngOnInit(): void {
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        
         this.authService.obtenerUsuarioPorEmail(user.email).subscribe(usuario => {
           this.usuario = usuario;
           if (usuario?.solicitud === 'S') {
             this.TextSolicitud = true;
-
             this.authService.ObtenerCentroPorCod(usuario.centro).subscribe(centro => {
               this.NombreCentroSelect = centro?.nombre;
-
               this.ModoSoli = true;
               this.bModoCentroV = false;
             });
-
           } else {
             if (this.usuario?.solicitud === 'R') {
               this.TextSolicitud = false;
               this.ModoSoli = true;
               this.bModoCentroV = false;
-
             } else {
               if (this.usuario?.centro == '000') {
                 this.bModoCentroV = false;
@@ -75,9 +69,6 @@ export class HomePage {
                 this.CodigoCentro = usuario?.centro;
                 this.bModoCentroV = true;
                 this.ListarIncidencias(usuario?.centro);
-
-                
-
               }
             }
           }
@@ -87,7 +78,6 @@ export class HomePage {
         // Realiza cualquier otra acción que necesites cuando el usuario no esté autenticado
       }
       this.TamañoPantalla();
-      
     });
   }
 
@@ -120,9 +110,9 @@ export class HomePage {
         });
       });
       console.log('Lista de Incidencias:', this.ListaIncidencias);
-      this.ContarIncidencias()
-      
-     
+      this.ContarIncidencias();
+      this.ListaTop3 = this.obtenerTop3EmailsConIncidencias(this.ListaIncidencias);
+      console.log('Top 3 emails con más incidencias:', this.ListaTop3);
     });
   }
 
@@ -213,14 +203,41 @@ export class HomePage {
     this.cargarCentros();
   }
 
-  ContarIncidencias(){
-    for(let item of this.ListaIncidencias){
-      if(item.atentida === false){
-        this.CountPendiente = this.CountPendiente + 1
-      }else if(item.atentida === true){
-        this.CountAtentida = this.CountAtentida + 1
+  ContarIncidencias() {
+    for (let item of this.ListaIncidencias) {
+      if (item.atentida === false) {
+        this.CountPendiente = this.CountPendiente + 1;
+      } else if (item.atentida === true) {
+        this.CountAtentida = this.CountAtentida + 1;
       }
-      console.log(item.atentida)
+      console.log(item.atentida);
     }
+  }
+
+  public obtenerTop3EmailsConIncidencias(listaDeIncidencias: Incidencia[]): { email: string, cantidad: number }[] {
+    // Contador de incidencias por usuario
+    const incidenciasPorUsuario = new Map<string, number>();
+
+    // Contar las incidencias por usuario
+    listaDeIncidencias.forEach(incidencia => {
+      const emailUsuario = incidencia.email;
+      if (incidenciasPorUsuario.has(emailUsuario)) {
+        incidenciasPorUsuario.set(emailUsuario, incidenciasPorUsuario.get(emailUsuario)! + 1);
+      } else {
+        incidenciasPorUsuario.set(emailUsuario, 1);
+      }
+    });
+
+    // Convertir el mapa a un array de objetos { email: string, cantidad: number }
+    const usuariosConIncidencias: { email: string, cantidad: number }[] = [];
+    incidenciasPorUsuario.forEach((cantidad, emailUsuario) => {
+      usuariosConIncidencias.push({ email: emailUsuario, cantidad: cantidad });
+    });
+
+    // Ordenar por la cantidad de incidencias en orden descendente
+    usuariosConIncidencias.sort((a, b) => b.cantidad - a.cantidad);
+
+    // Tomar los primeros 3 usuarios y retornar el array
+    return usuariosConIncidencias.slice(0, 3);
   }
 }
