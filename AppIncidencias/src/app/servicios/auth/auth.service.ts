@@ -122,7 +122,6 @@ export class AuthService {
 
   async loginGoogle() {
     try {
-      this.logout()
       let result;
   
       if (this.platform.is('capacitor') || this.platform.is('cordova')) {
@@ -187,6 +186,7 @@ export class AuthService {
                     text: 'Aceptar',
                     handler: () => {
                       this.UpdateUsuario(usuario);
+                      this.UsuarioConect = usuario;
                       this.router.navigate(['home']);
                     }
                   }
@@ -222,10 +222,12 @@ export class AuthService {
 
 async logout(): Promise<void> {
   try {
+    console.log("++" + this.UsuarioConect)
     // Actualizar el estado del usuario a "Desconectado" antes de cerrar sesión
     if (this.UsuarioConect) {
       this.UsuarioConect.estado = 'Desconectado';
       await this.UpdateUsuario(this.UsuarioConect);
+      console.log("++" + this.UsuarioConect)
     }
     await this.afAuth.signOut();
     this.router.navigate(['/autenticacion']);
