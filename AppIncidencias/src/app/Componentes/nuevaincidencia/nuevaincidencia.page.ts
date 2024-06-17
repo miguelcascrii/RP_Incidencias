@@ -31,8 +31,10 @@ export class NuevaincidenciaPage implements OnInit {
   selectedDate?: string;
   selectedAula?: string;
   selecteDescripcion?: string;
+  selectedFecha : any;
   selectedID?: string;
   selectedComent?: string;
+  selectedTecnico ?: Usuario;
   IncidenciaRecib?: Incidencia;
   ModoDetalles: boolean = false;
   Permisos: boolean = false;
@@ -129,10 +131,15 @@ export class NuevaincidenciaPage implements OnInit {
                                 String(dateObj.getMonth() + 1).padStart(2, '0') + '/' +
                                 dateObj.getFullYear();
         }
-
+        this.selectedFecha = this.IncidenciaRecib?.fecha
         this.selecteDescripcion = this.IncidenciaRecib?.descripcion;
         this.selectedComent = this.IncidenciaRecib?.comentario;
+        this.selectedTecnico = this.IncidenciaRecib?.tecnico
     } else if (this.VentanaTitulo === "NUEVAINCIDENCIA" && !this.ModoDetalles) {
+
+        this.selectedAula = "";
+        this.selectedFecha = ""
+        this.selecteDescripcion = ""
         this.ModoDetalles = false;
         this.TitleVnt = "Nueva Incidencia";
     }
@@ -198,12 +205,12 @@ export class NuevaincidenciaPage implements OnInit {
         descripcion: descripcion,
         atentida: false,
         comentario: "",
-        tecnico: undefined,
         centro: this.UsuarioYO?.centro || ""
     };
 
     try {
       if (incidencia.aula && incidencia.descripcion) {
+        console.log(incidencia)
         await this.authService.GuardarCualDato(incidencia, 'Incidencias');
         const toast = await this.toastController.create({
             message: '¡La incidencia está en manos de los técnicos!',

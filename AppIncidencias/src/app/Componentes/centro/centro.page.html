@@ -78,12 +78,14 @@
             <ion-item lines="full" class="ion-text-start">
               <ion-label><b>Numero</b></ion-label>
               <ion-label><b>Planta</b></ion-label>
+              <ion-label [hidden]="!Permisos" class="ion-text-end"></ion-label>
               <!-- <ion-label><b>Pasillo</b></ion-label> -->
             </ion-item>
             <div class="item-container" *ngFor="let item of MetodosComunes.paginatedItems">
               <ion-item lines="full">
                 <ion-label>{{item.numero}}</ion-label>
                 <ion-label>{{item.planta}}</ion-label>
+                <ion-label [hidden]="!Permisos"  class="ion-text-end"><ion-button color="danger" (click)="delete(item,'AULA')"><ion-icon size="largue"  name="close-circle-outline"></ion-icon></ion-button></ion-label>
                 <!-- <ion-label *ngIf="item.pasillo === 'izquierda'">Izq</ion-label>
                 <ion-label *ngIf="item.pasillo === 'derecha'">Der</ion-label> -->
               </ion-item>
@@ -123,11 +125,12 @@
           <ion-list>
             <ion-item lines="full" class="ion-text-start">
               <ion-label><b>Nombre</b></ion-label>
+              <ion-label [hidden]="!Permisos"  class="ion-text-end"></ion-label>
             </ion-item>
             <div class="item-container" *ngFor="let item of MetodosComunes.paginatedDept">
               <ion-item lines="full">
                 <ion-label>{{item.nombre}}</ion-label>
-
+                <ion-label [hidden]="!Permisos"  class="ion-text-end"><ion-button color="danger" (click)="delete(item,'DEPT')"><ion-icon size="largue"  name="close-circle-outline"></ion-icon></ion-button></ion-label>
               </ion-item>
             </div>
           </ion-list>

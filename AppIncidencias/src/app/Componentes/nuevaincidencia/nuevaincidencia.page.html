@@ -51,10 +51,16 @@
               label-placement="floating"></ion-input>
 
           </ion-item>
-          <ion-item class="col-md-6 col-sm-12 mt-2">
+          <ion-item class="col-md-6 col-sm-12 mt-2" [hidden]="ModoDetalles">
             <ion-label [hidden]="ModoDetalles">Fecha</ion-label>
             <ion-datetime-button datetime="datetime" [hidden]="ModoDetalles"></ion-datetime-button>
             <ion-input readonly [hidden]="!ModoDetalles" name="fecha" [(ngModel)]="selectedDate" label="Fecha"
+              label-placement="floating"></ion-input>
+
+          </ion-item>
+          <ion-item class="col-md-6 col-sm-12 mt-2" [hidden]="!ModoDetalles">
+            <ion-label [hidden]="ModoDetalles">Fecha</ion-label>
+            <ion-input readonly [hidden]="!ModoDetalles" name="fecha" [(ngModel)]="selectedFecha" label="Fecha"
               label-placement="floating"></ion-input>
 
           </ion-item>
@@ -88,17 +94,35 @@
   <div [hidden]="!ModoDetalles">
     <ion-card [hidden]="!estAtentida">
       <ion-card-content>
-        <ion-card-title class="text-success">
+        <ion-card-title class="mb-3 text-success">
           Detalles de solución
         </ion-card-title>
-          
+
+        <div class="row">
+          <div class="col-md-6">
+            <ion-item lines="none" color="light" style="border-radius: 3px;">
+              <b>Técnico</b>
+             </ion-item>
+             <ion-item lines="none" color="light" style="border-radius: 3px;">
+               <ion-avatar aria-hidden="true" slot="start" class="m-2">
+                 <img alt="" src="{{IncidenciaRecib?.tecnico?.foto}}" />
+               </ion-avatar>
+               <ion-label>{{IncidenciaRecib?.tecnico?.nombre}} {{IncidenciaRecib?.tecnico?.apellidos}}</ion-label>
+             </ion-item>
+             <ion-item class="mb-3" lines="none" color="light" style="border-radius: 3px;">
+               <ion-label>{{IncidenciaRecib?.tecnico?.email}}</ion-label>
+             </ion-item>
+          </div>
+          <div class="col-md-6">
+            <ion-label class="mb-2" ><b>Comentario</b></ion-label>
             <ion-item lines="full">
-              <ion-input [(ngModel)]="selectedComent" name="comentario" #nombre label="Comentario"
-                label-placement="floating" readonly></ion-input>
+              {{selectedComent}}
             </ion-item>
+          </div>
+        </div>
             <ion-card>
               <ion-card-content>
-                <ion-card-title class="h5 ion-text-center">
+                <ion-card-title class="h6 ion-text-center">
                    Materiales Utilizados
                 </ion-card-title>
                 <ion-item lines="full">

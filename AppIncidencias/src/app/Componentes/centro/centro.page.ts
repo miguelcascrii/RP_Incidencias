@@ -9,6 +9,7 @@ import { IonModal, ToastController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { MetGenerales } from '../../servicios/general';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-centro',
@@ -41,7 +42,8 @@ export class CentroPage implements OnInit {
     private afAuth: AngularFireAuth,
     private authService: AuthService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
   ) { }
 
   ngOnInit() {
@@ -269,5 +271,57 @@ export class CentroPage implements OnInit {
         this.MostrarAul = true
       }
     }
+  }
+
+  async delete(item : any, btn : string){
+    let NombreColeccion : string
+    let nameDelete : string
+    if(btn === "AULA"){
+      NombreColeccion = "Aulas"
+      nameDelete = "aula"
+    }else if(btn === "DEPT"){
+      NombreColeccion = "Departamentos"
+      nameDelete = "departamento"
+    }
+
+
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: `¿Estás seguro de que deseas eliminar?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Cancelado');
+          }
+        },
+        {
+          text: 'Eliminar',
+          //role:"cancel",
+          handler: async () => {
+            const idItem = item.id;
+            if (idItem) {
+              await this.authService.DeleteDatos(idItem,NombreColeccion);
+              const toast = await this.toastController.create({
+                message: '¡El'+ nameDelete +' ha sido eliminado!',
+                duration: 800,
+                position: 'top',
+                color: 'danger',
+              });
+              toast.present();
+            }
+            await alert.dismiss(); // Espera a que la alerta se cierre antes de continuar
+            this.ngOnInit
+            // this.listarAulas()
+            // this.listarDept()
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+
   }
 }

@@ -28,22 +28,24 @@
   <ion-card>
 
     <!-- Listado de Incidencias -->
-    <ion-list>
-      <ion-item>
+   
+      <ion-item lines="full">
         <ion-label><b>Aula</b></ion-label>
         <ion-label><b>Fecha</b></ion-label>
         <ion-label><b>Estado</b></ion-label>
+        <ion-label class="ion-text-end" *ngIf="btnTamPantalla"></ion-label>
       </ion-item>
       <div *ngFor="let item of MetodosComunes.paginatedItems" class="item-container" [ngClass]="{'false-status': !item.atentida, 'true-status': item.atentida}" 
       (click)="AbrirDetallesIncidencia(item)">
-        <ion-item>
+        <ion-item lines="full">
           <ion-label hidden>{{item.id}}</ion-label>
           <ion-label>{{ item.aula }}</ion-label>
           <ion-label>{{ item.fecha }}</ion-label>
           <ion-label>{{ item.atentida ? 'Atentida' : 'Pendiente' }}</ion-label>
+          <ion-label class="ion-text-end" *ngIf="btnTamPantalla"><ion-icon name="chevron-forward-outline"></ion-icon></ion-label>
         </ion-item>
       </div>
-    </ion-list>
+    
 
     <!-- Paginación del listado -->
     <ion-footer>
